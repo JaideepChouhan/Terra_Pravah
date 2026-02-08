@@ -1,0 +1,207 @@
+# ================================================================
+# Terra Pravah - Docker Compose Configuration
+# Professional Drainage Network Analysis Platform
+# ================================================================
+# 
+# Usage:
+#   Development:  docker-compose up -d
+#   Production:   docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#   Build:        docker-compose build
+#   Logs:         docker-compose logs -f
+#   Stop:         docker-compose down
+#
+# ================================================================
+
+version: '3.8'
+
+services:
+  # ============================================================
+  # Backend API Service
+  # ============================================================
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: terrapravah-backend
+    restart: unless-stopped
+    environment:
+      - FLASK_ENV=${FLASK_ENV:-development}
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key-change-in-production}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-jwt-secret-key-change-in-production}
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///database/terrapravah.db}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      - WBT_PATH=/opt/WBT
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:3000,http://localhost:5173}
+    volumes:
+      - ./uploads:/app/uploads
+      - ./results:/app/results
+      - ./database:/app/database
+      - ./config:/app/config:ro
+    ports:
+      - "${BACKEND_PORT:-5000}:5000"
+    depends_on:
+      - redis
+    networks:
+      - terrapravah-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # ============================================================
+  # Frontend Service
+  # ============================================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: terrapravah-frontend
+    restart: unless-stopped
+    environment:
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:5000}
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      - backend
+    networks:
+      - terrapravah-network
+
+  # ============================================================
+  # Redis Cache & Message Queue
+  # ============================================================
+  redis:
+    image: redis:7-alpine
+    container_name: terrapravah-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-data:/data
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    networks:
+      - terrapravah-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================================
+  # PostgreSQL Database (Production)
+  # ============================================================
+  postgres:
+    image: postgis/postgis:15-3.3-alpine
+    container_name: terrapravah-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-terrapravah}
+      - POSTGRES_USER=${POSTGRES_USER:-terrapravah}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-changeme}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    networks:
+      - terrapravah-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-terrapravah}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    profiles:
+      - production
+
+  # ============================================================
+  # Nginx Reverse Proxy (Production)
+  # ============================================================
+  nginx:
+    image: nginx:alpine
+    container_name: terrapravah-nginx
+    restart: unless-stopped
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./frontend/dist:/usr/share/nginx/html:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - terrapravah-network
+    profiles:
+      - production
+
+  # ============================================================
+  # Celery Worker (Background Tasks)
+  # ============================================================
+  celery-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: terrapravah-celery-worker
+    restart: unless-stopped
+    command: celery -A backend.celery_app worker --loglevel=info --concurrency=2
+    environment:
+      - FLASK_ENV=${FLASK_ENV:-development}
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key-change-in-production}
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///database/terrapravah.db}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      - WBT_PATH=/opt/WBT
+    volumes:
+      - ./uploads:/app/uploads
+      - ./results:/app/results
+      - ./database:/app/database
+    depends_on:
+      - redis
+      - backend
+    networks:
+      - terrapravah-network
+    profiles:
+      - workers
+
+  # ============================================================
+  # Celery Beat Scheduler
+  # ============================================================
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: terrapravah-celery-beat
+    restart: unless-stopped
+    command: celery -A backend.celery_app beat --loglevel=info
+    environment:
+      - FLASK_ENV=${FLASK_ENV:-development}
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key-change-in-production}
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///database/terrapravah.db}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+    volumes:
+      - ./database:/app/database
+    depends_on:
+      - redis
+      - celery-worker
+    networks:
+      - terrapravah-network
+    profiles:
+      - workers
+
+# ============================================================
+# Networks
+# ============================================================
+networks:
+  terrapravah-network:
+    driver: bridge
+    name: terrapravah-network
+
+# ============================================================
+# Volumes
+# ============================================================
+volumes:
+  redis-data:
+    name: terrapravah-redis-data
+  postgres-data:
+    name: terrapravah-postgres-data

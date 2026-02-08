@@ -1,0 +1,385 @@
+/* Import Google Fonts - must be first */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: 99 102 241;
+    --color-secondary: 14 165 233;
+    --color-accent: 139 92 246;
+    --background: 3 7 18;
+    --foreground: 248 250 252;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-slate-950 text-slate-200 antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  ::selection {
+    @apply bg-indigo-500/40 text-white;
+  }
+
+  /* Premium scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-1.5;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-700/50 rounded-full hover:bg-slate-600/50;
+  }
+
+  *:focus-visible {
+    @apply outline-none ring-2 ring-indigo-500/50 ring-offset-2 ring-offset-slate-950;
+  }
+}
+
+@layer components {
+  /* Premium Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/40 hover:-translate-y-0.5 active:translate-y-0;
+  }
+
+  .btn-secondary {
+    @apply btn bg-slate-800/80 text-slate-200 border border-slate-700/50 hover:bg-slate-700/80 hover:border-slate-600/50 backdrop-blur-sm;
+  }
+
+  .btn-outline {
+    @apply btn bg-transparent border-2 border-indigo-500/50 text-indigo-400 hover:bg-indigo-500/10 hover:border-indigo-400;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-slate-400 hover:bg-slate-800/50 hover:text-white;
+  }
+
+  .btn-glow {
+    @apply btn relative overflow-hidden bg-slate-900 text-white border border-indigo-500/30;
+  }
+
+  .btn-glow::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-indigo-600/20 via-violet-600/20 to-indigo-600/20 opacity-0 transition-opacity duration-300;
+  }
+
+  .btn-glow:hover::before {
+    @apply opacity-100;
+  }
+
+  /* Premium Cards */
+  .card {
+    @apply bg-slate-900/60 backdrop-blur-xl border border-slate-800/50 rounded-2xl p-6 transition-all duration-500;
+  }
+
+  .card-hover {
+    @apply card hover:border-indigo-500/30 hover:bg-slate-900/80 hover:shadow-2xl hover:shadow-indigo-500/5;
+  }
+
+  .card-glass {
+    @apply bg-white/[0.03] backdrop-blur-2xl border border-white/[0.05] rounded-2xl;
+  }
+
+  /* Premium Inputs */
+  .input {
+    @apply w-full px-4 py-3.5 bg-slate-900/50 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:border-indigo-500/50 focus:bg-slate-900/80 focus:ring-0 transition-all duration-300;
+  }
+
+  .input-error {
+    @apply input border-rose-500/50 focus:border-rose-500;
+  }
+
+  .input-label {
+    @apply block text-sm font-medium text-slate-300 mb-2;
+  }
+
+  /* Premium Badges */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold tracking-wide;
+  }
+
+  .badge-primary {
+    @apply badge bg-indigo-500/15 text-indigo-400 border border-indigo-500/20;
+  }
+
+  .badge-secondary {
+    @apply badge bg-sky-500/15 text-sky-400 border border-sky-500/20;
+  }
+
+  .badge-success {
+    @apply badge bg-emerald-500/15 text-emerald-400 border border-emerald-500/20;
+  }
+
+  .badge-warning {
+    @apply badge bg-amber-500/15 text-amber-400 border border-amber-500/20;
+  }
+
+  .badge-error {
+    @apply badge bg-rose-500/15 text-rose-400 border border-rose-500/20;
+  }
+
+  /* Premium Gradients */
+  .gradient-text {
+    @apply bg-gradient-to-r from-indigo-400 via-violet-400 to-purple-400 bg-clip-text text-transparent;
+  }
+
+  .gradient-text-blue {
+    @apply bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent;
+  }
+
+  .gradient-border {
+    @apply relative;
+    background: linear-gradient(var(--background), var(--background)) padding-box,
+                linear-gradient(135deg, rgba(99, 102, 241, 0.4), rgba(139, 92, 246, 0.4), rgba(99, 102, 241, 0.4)) border-box;
+    border: 1px solid transparent;
+  }
+
+  /* Section Headers */
+  .section-title {
+    @apply text-4xl md:text-5xl font-bold tracking-tight mb-4;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .section-subtitle {
+    @apply text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed;
+  }
+
+  /* Navigation */
+  .nav-link {
+    @apply text-slate-400 hover:text-white transition-colors duration-200 font-medium text-sm;
+  }
+
+  .nav-link-active {
+    @apply text-white;
+  }
+
+  /* Sidebar */
+  .sidebar-item {
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all duration-200;
+  }
+
+  .sidebar-item-active {
+    @apply bg-indigo-500/10 text-indigo-400 border-l-2 border-indigo-500;
+  }
+
+  /* Tables */
+  .table-container {
+    @apply overflow-x-auto rounded-xl border border-slate-800/50;
+  }
+
+  .table {
+    @apply w-full text-left;
+  }
+
+  .table th {
+    @apply px-6 py-4 bg-slate-900/50 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800/50;
+  }
+
+  .table td {
+    @apply px-6 py-4 text-sm text-slate-300 border-b border-slate-800/30;
+  }
+
+  .table tbody tr:hover {
+    @apply bg-slate-800/30;
+  }
+
+  /* Modal */
+  .modal-backdrop {
+    @apply fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50;
+  }
+
+  .modal-content {
+    @apply fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-slate-900 border border-slate-800/50 rounded-2xl shadow-2xl z-50 p-6;
+  }
+
+  /* Stats */
+  .stat-card {
+    @apply card flex flex-col;
+  }
+
+  .stat-value {
+    @apply text-3xl font-bold text-white mb-1;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .stat-label {
+    @apply text-sm text-slate-500;
+  }
+
+  /* Glow effects */
+  .glow-indigo {
+    box-shadow: 0 0 60px -15px rgba(99, 102, 241, 0.5);
+  }
+
+  .glow-violet {
+    box-shadow: 0 0 60px -15px rgba(139, 92, 246, 0.5);
+  }
+
+  /* ========================================
+     DRAINAGE NETWORK SPECIFIC STYLES
+     ======================================== */
+
+  /* Drainage type colors */
+  .drainage-primary {
+    @apply bg-sky-600 text-white;
+  }
+
+  .drainage-secondary {
+    @apply bg-teal-500 text-white;
+  }
+
+  .drainage-tertiary {
+    @apply bg-green-500 text-white;
+  }
+
+  .drainage-primary-text {
+    @apply text-sky-400;
+  }
+
+  .drainage-secondary-text {
+    @apply text-teal-400;
+  }
+
+  .drainage-tertiary-text {
+    @apply text-green-400;
+  }
+
+  /* Drainage badges */
+  .badge-drainage-primary {
+    @apply badge bg-sky-500/15 text-sky-400 border border-sky-500/20;
+  }
+
+  .badge-drainage-secondary {
+    @apply badge bg-teal-500/15 text-teal-400 border border-teal-500/20;
+  }
+
+  .badge-drainage-tertiary {
+    @apply badge bg-green-500/15 text-green-400 border border-green-500/20;
+  }
+
+  /* Drainage legend */
+  .drainage-legend {
+    @apply flex items-center gap-6 p-4 bg-slate-900/60 rounded-xl border border-slate-800/50;
+  }
+
+  .drainage-legend-item {
+    @apply flex items-center gap-2 text-sm;
+  }
+
+  .drainage-legend-dot {
+    @apply w-3 h-3 rounded-full;
+  }
+
+  /* Viewer controls */
+  .viewer-toolbar {
+    @apply absolute top-4 right-4 z-20 flex items-center gap-2 bg-slate-900/90 backdrop-blur-sm rounded-lg p-1;
+  }
+
+  .viewer-toolbar-btn {
+    @apply p-2 hover:bg-slate-800 rounded-lg transition-colors text-slate-400 hover:text-white;
+  }
+
+  /* Analysis cards */
+  .analysis-metric-card {
+    @apply bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 hover:border-slate-600/50 transition-colors;
+  }
+
+  .analysis-metric-value {
+    @apply text-2xl font-bold text-white;
+  }
+
+  .analysis-metric-label {
+    @apply text-sm text-slate-400 mt-1;
+  }
+
+  /* Channel type indicators */
+  .channel-type-indicator {
+    @apply flex items-center gap-3 p-3 bg-slate-800/30 rounded-lg;
+  }
+
+  /* Map overlay styles */
+  .map-overlay-panel {
+    @apply absolute bottom-4 left-4 z-20 bg-slate-900/95 backdrop-blur-xl border border-slate-800/50 rounded-xl p-4 min-w-64;
+  }
+
+  /* Topographic color stops for terrain */
+  .terrain-gradient {
+    background: linear-gradient(
+      to top,
+      #0f5e0a 0%,      /* Low elevation - dark green */
+      #4a9f4a 20%,     /* Low-mid - green */
+      #c9b85c 40%,     /* Mid - tan/yellow */
+      #a67c52 60%,     /* Mid-high - brown */
+      #8b6914 80%,     /* High - darker brown */
+      #ffffff 100%    /* Peak - white/snow */
+    );
+  }
+}
+
+@layer utilities {
+  /* Animation utilities */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from { box-shadow: 0 0 20px -10px rgba(99, 102, 241, 0.5); }
+    to { box-shadow: 0 0 40px -10px rgba(99, 102, 241, 0.8); }
+  }
+
+  /* Noise texture overlay */
+  .noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.02;
+  }
+
+  /* Container utilities */
+  .container-narrow {
+    @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-wide {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Mesh gradient backgrounds */
+  .mesh-gradient {
+    background: 
+      radial-gradient(at 40% 20%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, rgba(139, 92, 246, 0.1) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, rgba(14, 165, 233, 0.1) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, rgba(168, 85, 247, 0.1) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(99, 102, 241, 0.1) 0px, transparent 50%);
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "dtm_resolution": 1.0,
+  "nodata_value": -9999.0,
+  "epsg_code": null,
+  
+  "flow_accumulation_threshold": 500,
+  "flow_direction_algorithm": "D8",
+  "min_stream_length": 100.0,
+  
+  "slope_flat": 0.2,
+  "slope_shallow": 2.0,
+  "slope_moderate": 5.0,
+  "slope_steep": 10.0,
+  
+  "width_depth_ratio_min": 2.0,
+  "width_depth_ratio_max": 4.0,
+  "min_longitudinal_slope": 0.5,
+  
+  "manning_grass": 0.035,
+  "manning_riprap": 0.040,
+  "manning_concrete": 0.015,
+  "manning_earthen": 0.025,
+  
+  "design_storm_return_period": 10,
+  "safety_factor": 1.25,
+  "vegetation_buffer_width": 2.0,
+  "service_corridor_width": 1.0,
+  
+  "runoff_coeff_urban": 0.85,
+  "runoff_coeff_suburban": 0.50,
+  "runoff_coeff_rural": 0.30,
+  "runoff_coeff_forest": 0.20,
+  "default_runoff_coeff": 0.40,
+  
+  "climate_region": "default",
+  "antecedent_moisture": "normal",
+  "soil_type": "normal",
+  "tc_method": "kirpich",
+  
+  "idf_regions": {
+    "default": {"a": 1000, "b": 10, "n": 0.8},
+    "rajasthan_arid": {"a": 850, "b": 8, "n": 0.75},
+    "delhi_ncr": {"a": 1100, "b": 12, "n": 0.82},
+    "mumbai_coastal": {"a": 1500, "b": 15, "n": 0.85},
+    "chennai_coastal": {"a": 1400, "b": 14, "n": 0.83},
+    "bengaluru_deccan": {"a": 1000, "b": 11, "n": 0.78},
+    "kolkata_gangetic": {"a": 1200, "b": 13, "n": 0.80},
+    "northeast_hills": {"a": 1800, "b": 18, "n": 0.88}
+  },
+  
+  "max_area_km2": 10.0,
+  "processing_chunk_size": 1000,
+  
+  "output_format": "GPKG",
+  "create_3d_viz": true,
+  "create_animations": false
+}
