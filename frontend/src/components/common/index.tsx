@@ -498,7 +498,7 @@ interface UploadZoneProps {
 
 export function UploadZone({
   onFileSelect,
-  accept = '.tif,.tiff',
+  accept = '.tif,.tiff,.las,.laz',
   maxSize = 500 * 1024 * 1024,
   isDragging = false,
   onDragOver,
@@ -547,7 +547,7 @@ export function UploadZone({
         or click to browse
       </p>
       <p className="text-xs text-slate-500">
-        Supported: GeoTIFF (.tif, .tiff) • Max size: {(maxSize / (1024 * 1024)).toFixed(0)}MB
+        Supported: GeoTIFF (.tif, .tiff), LiDAR (.las, .laz) • Max size: {(maxSize / (1024 * 1024)).toFixed(0)}MB
       </p>
     </div>
   )

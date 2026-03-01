@@ -15,6 +15,7 @@ import os
 import threading
 
 from backend.models.models import db, Project, User
+from backend.services.dtm_builder_service import DTMBuilderService
 
 uploads_bp = Blueprint('uploads', __name__)
 
@@ -64,6 +65,11 @@ def allowed_file(filename):
     """Check if file extension is allowed."""
     allowed = current_app.config.get('ALLOWED_EXTENSIONS', {'tif', 'tiff'})
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed
+
+
+def allowed_lidar_file(filename):
+    """Check if LiDAR file extension is allowed for DTM generation."""
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'las', 'laz'}
 
 
 def get_file_info(file_path):
@@ -191,6 +197,168 @@ def upload_dtm():
         'project_id': project_id,
         'visualization_status': 'generating'
     })
+
+
+@uploads_bp.route('/las', methods=['POST'])
+@jwt_required()
+def upload_las():
+    """Upload a LAS/LAZ file for built-in DTM generation."""
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file provided'}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'error': 'No file selected'}), 400
+
+    if not allowed_lidar_file(file.filename):
+        return jsonify({'error': 'Invalid file type. Supported formats: LAS/LAZ (.las, .laz)'}), 400
+
+    file.seek(0, os.SEEK_END)
+    file_size = file.tell()
+    file.seek(0)
+
+    plan = current_app.config['PLANS'].get(user.subscription_plan, {})
+    max_size = plan.get('max_file_size_mb', 100) * 1024 * 1024
+    if file_size > max_size:
+        return jsonify({
+            'error': f'File too large. Maximum size for your plan: {plan.get("max_file_size_mb", 100)}MB'
+        }), 413
+
+    project_id = request.form.get('project_id') or request.args.get('project_id')
+    if not project_id:
+        return jsonify({'error': 'Project ID is required'}), 400
+
+    project = Project.query.get(project_id)
+    if not project:
+        return jsonify({'error': 'Project not found'}), 404
+
+    if project.owner_id != user_id:
+        return jsonify({'error': 'Access denied'}), 403
+
+    filename = secure_filename(file.filename)
+    file_id = str(uuid.uuid4())[:8]
+    save_filename = f"{file_id}_{filename}"
+
+    upload_dir = Path(current_app.config['UPLOAD_FOLDER']) / project_id
+    upload_dir.mkdir(parents=True, exist_ok=True)
+
+    save_path = upload_dir / save_filename
+    file.save(str(save_path))
+
+    user.storage_used_bytes += file_size
+    project.status = 'draft'
+    db.session.commit()
+
+    return jsonify({
+        'message': 'LAS/LAZ file uploaded successfully.',
+        'file': {
+            'name': save_path.name,
+            'path': str(save_path),
+            'size_bytes': file_size,
+            'size_mb': file_size / (1024 * 1024),
+            'extension': save_path.suffix.lower()
+        },
+        'project_id': project_id
+    })
+
+
+@uploads_bp.route('/build-dtm', methods=['POST'])
+@jwt_required()
+def build_dtm_from_las():
+    """
+    Build a hydrologically conditioned DTM from a LAS/LAZ file.
+
+    Body (JSON):
+    {
+      "project_id": "...",               # required
+      "filename": "survey_site.las",     # required
+      "resolution": 1.0,                   # optional
+      "epsg": "EPSG:32644"               # optional
+    }
+    """
+    user_id = get_jwt_identity()
+    data = request.get_json(silent=True) or {}
+
+    project_id = data.get('project_id')
+    filename = data.get('filename')
+    epsg = data.get('epsg')
+
+    if not project_id:
+        return jsonify({'error': 'project_id is required'}), 400
+    if not filename:
+        return jsonify({'error': 'filename is required'}), 400
+
+    try:
+        resolution = float(data.get('resolution', 1.0))
+    except (TypeError, ValueError):
+        return jsonify({'error': 'resolution must be a number'}), 400
+
+    if resolution <= 0:
+        return jsonify({'error': 'resolution must be greater than 0'}), 400
+
+    project = Project.query.get(project_id)
+    if not project:
+        return jsonify({'error': 'Project not found'}), 404
+    if project.owner_id != user_id:
+        return jsonify({'error': 'Access denied'}), 403
+
+    safe_name = secure_filename(filename)
+    if not allowed_lidar_file(safe_name):
+        return jsonify({'error': 'filename must be a .las or .laz file'}), 400
+
+    project_results_folder = Path(current_app.config['RESULTS_FOLDER']) / project_id
+    project_results_folder.mkdir(parents=True, exist_ok=True)
+
+    try:
+        service = DTMBuilderService(
+            upload_folder=str(current_app.config['UPLOAD_FOLDER']),
+            results_folder=str(project_results_folder),
+        )
+
+        project.status = 'processing'
+        db.session.commit()
+
+        relative_las_path = os.path.join(project_id, safe_name)
+        result = service.process_las(
+            las_filename=relative_las_path,
+            resolution=resolution,
+            epsg=epsg,
+        )
+
+        dtm_path = result.get('dtm_path')
+        metadata = result.get('metadata', {})
+        bounds = metadata.get('bounds')
+
+        if dtm_path and os.path.exists(dtm_path):
+            project.dtm_file_path = dtm_path
+            project.dtm_file_size = os.path.getsize(dtm_path)
+            project.results_path = str(project_results_folder)
+
+        if bounds and len(bounds) == 4:
+            xmin, xmax, ymin, ymax = bounds
+            project.bounding_box = [xmin, ymin, xmax, ymax]
+
+        project.processed_at = datetime.utcnow()
+        project.status = 'completed'
+        db.session.commit()
+
+        return jsonify(result), 200
+
+    except FileNotFoundError as exc:
+        project.status = 'failed'
+        db.session.commit()
+        return jsonify({'error': str(exc)}), 404
+    except Exception as exc:
+        current_app.logger.exception('DTM build failed')
+        project.status = 'failed'
+        db.session.commit()
+        return jsonify({'error': str(exc)}), 500
 
 
 @uploads_bp.route('/preview/<project_id>', methods=['GET'])
@@ -365,6 +533,20 @@ def list_sample_files():
                     'size_mb': f.stat().st_size / (1024 * 1024),
                     'location': sample_dir.name
                 })
+            for f in sample_dir.glob('*.las'):
+                samples.append({
+                    'name': f.name,
+                    'path': str(f),
+                    'size_mb': f.stat().st_size / (1024 * 1024),
+                    'location': sample_dir.name
+                })
+            for f in sample_dir.glob('*.laz'):
+                samples.append({
+                    'name': f.name,
+                    'path': str(f),
+                    'size_mb': f.stat().st_size / (1024 * 1024),
+                    'location': sample_dir.name
+                })
     
     return jsonify({
         'samples': samples
@@ -417,12 +599,13 @@ def use_sample_file(filename):
     # Get file info
     file_info = get_file_info(dest_path)
     
-    # Update project
-    project.dtm_file_path = str(dest_path)
-    project.dtm_file_size = dest_path.stat().st_size
-    
-    if file_info.get('bounds'):
-        project.bounding_box = file_info['bounds']
+    # Update project only when sample is an existing GeoTIFF DTM
+    if dest_path.suffix.lower() in {'.tif', '.tiff'}:
+        project.dtm_file_path = str(dest_path)
+        project.dtm_file_size = dest_path.stat().st_size
+
+        if file_info.get('bounds'):
+            project.bounding_box = file_info['bounds']
     
     db.session.commit()
     

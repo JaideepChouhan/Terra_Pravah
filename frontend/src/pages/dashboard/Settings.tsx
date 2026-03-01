@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { 
   Settings as SettingsIcon, 
   User, 
@@ -13,7 +13,7 @@ import {
   Building2,
   Globe
 } from 'lucide-react'
-import { useAuth } from '../../context/AuthContext'
+import { useAuthStore } from '../../store/authStore'
 
 interface UserProfile {
   name: string
@@ -31,16 +31,16 @@ interface Preferences {
 }
 
 export default function Settings() {
-  const { user } = useAuth()
+  const { user } = useAuthStore()
   const [activeTab, setActiveTab] = useState<'profile' | 'preferences' | 'notifications' | 'security'>('profile')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   
   const [profile, setProfile] = useState<UserProfile>({
-    name: user?.name || '',
+    name: `${user?.firstName || ''} ${user?.lastName || ''}`.trim(),
     email: user?.email || '',
-    company: '',
-    role: 'Engineer'
+    company: user?.company || '',
+    role: user?.role || 'Engineer'
   })
   
   const [preferences, setPreferences] = useState<Preferences>({

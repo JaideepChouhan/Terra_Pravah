@@ -19,6 +19,7 @@ interface FileInfo {
   name: string
   size: number
   type: string
+  extension: string
 }
 
 type Step = 'details' | 'upload' | 'configure' | 'complete'
@@ -46,6 +47,8 @@ export default function NewProject() {
   const [designStormYears, setDesignStormYears] = useState(10)
   const [runoffCoefficient, setRunoffCoefficient] = useState(0.5)
   const [flowAlgorithm, setFlowAlgorithm] = useState('d8')  // D8 is faster default
+  const [dtmResolution, setDtmResolution] = useState(1.0)
+  const [epsgCode, setEpsgCode] = useState('')
   
   // Status
   const [error, setError] = useState<string | null>(null)
@@ -54,12 +57,12 @@ export default function NewProject() {
 
   // File validation
   const validateFile = (file: File): string | null => {
-    const allowedTypes = ['.tif', '.tiff']
+    const allowedTypes = ['.tif', '.tiff', '.las', '.laz']
     const maxSize = 500 * 1024 * 1024 // 500MB
     
     const ext = '.' + file.name.split('.').pop()?.toLowerCase()
     if (!allowedTypes.includes(ext)) {
-      return 'Invalid file type. Please upload a GeoTIFF file (.tif, .tiff)'
+      return 'Invalid file type. Please upload GeoTIFF (.tif, .tiff) or LiDAR (.las, .laz)'
     }
     
     if (file.size > maxSize) {
@@ -67,6 +70,17 @@ export default function NewProject() {
     }
     
     return null
+  }
+
+  const getFileExtension = (fileName: string): string => {
+    const ext = fileName.split('.').pop()?.toLowerCase()
+    return ext ? `.${ext}` : ''
+  }
+
+  const isLidarFile = (file: File | null) => {
+    if (!file) return false
+    const ext = getFileExtension(file.name)
+    return ext === '.las' || ext === '.laz'
   }
 
   // Handle file selection
@@ -81,7 +95,8 @@ export default function NewProject() {
     setFileInfo({
       name: file.name,
       size: file.size,
-      type: file.type || 'image/tiff'
+      type: file.type || 'application/octet-stream',
+      extension: getFileExtension(file.name)
     })
     setError(null)
   }
@@ -124,7 +139,7 @@ export default function NewProject() {
     }
     
     if (!selectedFile) {
-      setError('Please upload a DTM file')
+      setError('Please upload a terrain file')
       return
     }
     
@@ -145,11 +160,32 @@ export default function NewProject() {
       const projectId = projectResponse.data.project.id
       setCreatedProjectId(projectId)
       
-      // Step 2: Upload DTM file
+      // Step 2: Upload terrain file / generate DTM
       setIsUploading(true)
-      await uploadsApi.uploadDTM(projectId, selectedFile, (progress) => {
-        setUploadProgress(progress)
-      })
+
+      if (isLidarFile(selectedFile)) {
+        const uploadResponse = await uploadsApi.uploadLAS(projectId, selectedFile, (progress) => {
+          setUploadProgress(progress)
+        })
+
+        setUploadProgress(100)
+
+        const uploadedFilename = uploadResponse.data?.file?.name
+        if (!uploadedFilename) {
+          throw new Error('LAS upload completed but filename was not returned by server')
+        }
+
+        await uploadsApi.buildDTMFromLAS({
+          project_id: projectId,
+          filename: uploadedFilename,
+          resolution: dtmResolution,
+          epsg: epsgCode.trim() || undefined,
+        })
+      } else {
+        await uploadsApi.uploadDTM(projectId, selectedFile, (progress) => {
+          setUploadProgress(progress)
+        })
+      }
       
       setIsUploading(false)
       setCurrentStep('complete')
@@ -319,8 +355,8 @@ export default function NewProject() {
         {currentStep === 'upload' && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-xl font-semibold text-white mb-2">Upload DTM File</h2>
-              <p className="text-dark-400">Upload your Digital Terrain Model (LiDAR data) in GeoTIFF format</p>
+              <h2 className="text-xl font-semibold text-white mb-2">Upload Terrain File</h2>
+              <p className="text-dark-400">Upload GeoTIFF directly, or upload LAS/LAZ to generate DTM automatically</p>
             </div>
             
             {/* File drop zone */}
@@ -342,7 +378,7 @@ export default function NewProject() {
               <input
                 ref={fileInputRef}
                 type="file"
-                accept=".tif,.tiff"
+                accept=".tif,.tiff,.las,.laz"
                 onChange={handleFileInputChange}
                 className="hidden"
               />
@@ -377,7 +413,7 @@ export default function NewProject() {
                       {isDragging ? 'Drop your file here' : 'Drag and drop your DTM file here'}
                     </p>
                     <p className="text-dark-400 text-sm mt-1">
-                      or click to browse • GeoTIFF (.tif, .tiff) • Max 500MB
+                      or click to browse • GeoTIFF (.tif, .tiff) / LAS / LAZ • Max 500MB
                     </p>
                   </div>
                 </div>
@@ -387,8 +423,8 @@ export default function NewProject() {
             <div className="bg-dark-700/50 rounded-lg p-4">
               <h4 className="text-sm font-medium text-dark-200 mb-2">Supported Data Formats</h4>
               <ul className="text-sm text-dark-400 space-y-1">
-                <li>• GeoTIFF (.tif, .tiff) - Digital Terrain Models</li>
-                <li>• LiDAR-derived DEMs and DSMs</li>
+                <li>• GeoTIFF (.tif, .tiff) - Upload ready DTM directly</li>
+                <li>• LAS/LAZ (.las, .laz) - Auto-generate DTM in Terra Pravah</li>
                 <li>• Coordinate systems: Any projected CRS (UTM recommended)</li>
               </ul>
             </div>
@@ -403,7 +439,7 @@ export default function NewProject() {
               <button
                 onClick={() => {
                   if (!selectedFile) {
-                    setError('Please upload a DTM file')
+                    setError('Please upload a terrain file')
                     return
                   }
                   goToStep('configure')
@@ -424,6 +460,42 @@ export default function NewProject() {
               <h2 className="text-xl font-semibold text-white mb-2">Analysis Configuration</h2>
               <p className="text-dark-400">Configure parameters for drainage network analysis</p>
             </div>
+
+            {isLidarFile(selectedFile) && (
+              <div className="bg-primary-500/10 border border-primary-500/20 rounded-lg p-4">
+                <h4 className="text-sm font-medium text-primary-300 mb-3">LAS/LAZ to DTM Generation</h4>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-dark-200 mb-2">
+                      DTM Resolution (m)
+                    </label>
+                    <input
+                      type="number"
+                      min={0.25}
+                      step={0.25}
+                      value={dtmResolution}
+                      onChange={(e) => setDtmResolution(Number(e.target.value || 1.0))}
+                      className="input w-full"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-dark-200 mb-2">
+                      EPSG (optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={epsgCode}
+                      onChange={(e) => setEpsgCode(e.target.value)}
+                      placeholder="EPSG:32644"
+                      className="input w-full"
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-dark-400 mt-3">
+                  Terra Pravah will upload your LAS/LAZ file, generate DTM, apply hydrological conditioning, and use that DTM for analysis.
+                </p>
+              </div>
+            )}
             
             <div className="grid md:grid-cols-2 gap-6">
               <div>
@@ -495,6 +567,18 @@ export default function NewProject() {
                   <span className="text-dark-400">File:</span>
                   <span className="text-white ml-2">{fileInfo?.name}</span>
                 </div>
+                {isLidarFile(selectedFile) && (
+                  <>
+                    <div>
+                      <span className="text-dark-400">DTM Resolution:</span>
+                      <span className="text-white ml-2">{dtmResolution} m</span>
+                    </div>
+                    <div>
+                      <span className="text-dark-400">EPSG:</span>
+                      <span className="text-white ml-2">{epsgCode.trim() || 'Auto-detect'}</span>
+                    </div>
+                  </>
+                )}
                 <div>
                   <span className="text-dark-400">Algorithm:</span>
                   <span className="text-white ml-2">{flowAlgorithm === 'd8' ? 'D8 (Fast)' : 'D-Infinity (Accurate)'}</span>
@@ -522,12 +606,16 @@ export default function NewProject() {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    {isUploading ? `Uploading... ${uploadProgress}%` : 'Creating Project...'}
+                    {isUploading
+                      ? isLidarFile(selectedFile)
+                        ? `Uploading LAS/LAZ... ${uploadProgress}%`
+                        : `Uploading DTM... ${uploadProgress}%`
+                      : 'Creating Project...'}
                   </>
                 ) : (
                   <>
                     <Upload className="w-4 h-4" />
-                    Create Project & Upload
+                    Create Project
                   </>
                 )}
               </button>
@@ -559,7 +647,9 @@ export default function NewProject() {
             
             <h2 className="text-2xl font-bold text-white mb-2">Project Created Successfully!</h2>
             <p className="text-dark-400 mb-8 max-w-md mx-auto">
-              Your DTM file has been uploaded. You can now run drainage analysis to visualize the network.
+              {isLidarFile(selectedFile)
+                ? 'Your LAS/LAZ file was uploaded and DTM has been generated. You can now run drainage analysis.'
+                : 'Your DTM file has been uploaded. You can now run drainage analysis to visualize the network.'}
             </p>
             
             <div className="flex justify-center gap-4">

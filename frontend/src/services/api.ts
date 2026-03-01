@@ -163,6 +163,25 @@ export const uploadsApi = {
       },
     })
   },
+
+  uploadLAS: (projectId: string, file: File, onProgress?: (progress: number) => void) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('project_id', projectId)
+
+    return api.post('/api/uploads/las', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress: (progressEvent) => {
+        if (onProgress && progressEvent.total) {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          onProgress(progress)
+        }
+      },
+    })
+  },
+
+  buildDTMFromLAS: (data: { project_id: string; filename: string; resolution?: number; epsg?: string }) =>
+    api.post('/api/uploads/build-dtm', data),
   
   getPreview: (projectId: string) => 
     api.get(`/api/uploads/${projectId}/preview`),

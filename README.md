@@ -75,6 +75,7 @@ This system automates the complete drainage network design workflow, from terrai
 ## ✨ Key Features
 
 ### Hydrological Processing
+- **Built-in LAS/LAZ → DTM Generator** - AI-driven ground extraction (PMF), IDW interpolation, and sink-filled GeoTIFF generation
 - **Automated DEM conditioning** - Breach/fill depressions for proper flow routing
 - **D8 Flow Direction (Default)** - Fast, industry-standard single-direction flow routing
 - **D-Infinity Flow Direction** - Optional multi-direction flow for higher accuracy
@@ -110,6 +111,8 @@ This system automates the complete drainage network design workflow, from terrai
 
 ```
 backend/services/
+├── dtm_builder.py                # Core LAS/LAZ -> DTM processing pipeline
+├── dtm_builder_service.py        # API-facing DTM orchestration wrapper
 ├── drainage_service.py           # Main drainage analysis (D∞ embedded)
 ├── visualization_service.py      # 3D visualization generation
 └── email_service.py              # Notification service
@@ -249,6 +252,24 @@ python run.py
 |-------|-------|
 | Email | `admin@terrapravah.com` |
 | Password | `admin123` |
+
+### Built-in DTM Generator (UI Flow)
+
+You can now generate DTM directly inside Terra Pravah without pre-processing externally:
+
+1. Go to **Dashboard → Projects → New Project**
+2. Upload either:
+    - **GeoTIFF** (`.tif`, `.tiff`) for direct DTM use, or
+    - **LiDAR** (`.las`, `.laz`) for automatic DTM generation
+3. For LAS/LAZ, set optional:
+    - `DTM Resolution (m)` (default `1.0`)
+    - `EPSG` (optional; auto-detect if omitted)
+4. Create project; Terra Pravah will:
+    - upload LAS/LAZ,
+    - build raw DTM,
+    - apply sink filling (hydrological conditioning),
+    - store conditioned GeoTIFF and attach it to the project
+5. Open the project analysis page and run drainage analysis as usual
 
 ### Server Commands
 
@@ -689,6 +710,8 @@ AIR_Terra_Pravah/
 │   │   └── models.py                 # SQLAlchemy models
 │   │
 │   ├── 📁 services/
+│   │   ├── dtm_builder.py          # LAS/LAZ -> raw DTM + conditioning utilities
+│   │   ├── dtm_builder_service.py  # Service wrapper used by uploads API
 │   │   ├── drainage_service.py       # Core drainage analysis engine
 │   │   ├── visualization_service.py  # 3D Plotly visualization
 │   │   └── email_service.py          # Email notifications
@@ -752,6 +775,36 @@ For detailed usage instructions, see the **[User Guide](USER_GUIDE.md)** which c
 ---
 
 ## 📚 API Reference
+
+### DTMBuilderService
+
+```python
+class DTMBuilderService:
+        """Service for generating conditioned DTMs from LAS/LAZ point clouds."""
+
+        def __init__(self, upload_folder: str, results_folder: str): ...
+        def process_las(self, las_filename: str, resolution: float = 1.0,
+                                        epsg: str = None, progress_callback=None) -> dict: ...
+```
+
+### Uploads API (DTM Generation)
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/uploads/las` | `POST` | Upload LAS/LAZ file to a project |
+| `/api/uploads/build-dtm` | `POST` | Build conditioned DTM (`.tif`) from uploaded LAS/LAZ |
+| `/api/uploads/dtm` | `POST` | Upload an already-generated GeoTIFF DTM |
+
+`/api/uploads/build-dtm` request body:
+
+```json
+{
+    "project_id": "<project_uuid>",
+    "filename": "<uploaded_file_name>.las",
+    "resolution": 1.0,
+    "epsg": "EPSG:32644"
+}
+```
 
 ### DrainageAnalysisService (Main Interface)
 
