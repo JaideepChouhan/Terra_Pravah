@@ -32,6 +32,13 @@ pyproj>=3.2.0
 rasterio>=1.2.0
 GDAL>=3.4.0
 
+# ==================== Hackathon Pipeline (MoPR PS2) ====================
+pdal>=3.0.0                 # SMRF ground classification (USGS-grade)
+pykrige>=1.7.0              # Ordinary Kriging interpolation + uncertainty
+scikit-learn>=1.0.0         # Cross-validation accuracy metrics (KFold)
+anthropic>=0.18.0           # Claude API — adaptive params + report generation
+deap>=1.4.0                 # Genetic algorithm for pipe network optimization
+
 # ==================== WhiteboxTools ====================
 whitebox>=2.1.0
 whiteboxgui>=0.7.0  # Optional: GUI for WhiteboxTools
