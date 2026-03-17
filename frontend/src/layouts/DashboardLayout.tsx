@@ -8,7 +8,6 @@ import {
   DocumentTextIcon,
   UsersIcon,
   Cog6ToothIcon,
-  CreditCardIcon,
   UserCircleIcon,
   ArrowRightOnRectangleIcon,
   Bars3Icon,
@@ -30,7 +29,6 @@ const navigation = [
 
 const bottomNavigation = [
   { name: 'Settings', href: '/dashboard/settings', icon: Cog6ToothIcon },
-  { name: 'Billing', href: '/dashboard/billing', icon: CreditCardIcon },
 ]
 
 export default function DashboardLayout() {
@@ -207,19 +205,6 @@ export default function DashboardLayout() {
                           >
                             <Cog6ToothIcon className="w-5 h-5" />
                             Settings
-                          </Link>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <Link
-                            to="/dashboard/billing"
-                            className={`flex items-center gap-2 px-4 py-2 text-sm ${
-                              active ? 'bg-dark-700 text-white' : 'text-dark-300'
-                            }`}
-                          >
-                            <CreditCardIcon className="w-5 h-5" />
-                            Billing
                           </Link>
                         )}
                       </Menu.Item>

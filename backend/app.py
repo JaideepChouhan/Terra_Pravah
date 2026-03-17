@@ -154,7 +154,6 @@ def register_blueprints(app):
     from backend.api.teams import teams_bp
     from backend.api.uploads import uploads_bp
     from backend.api.reports import reports_bp
-    from backend.api.billing import billing_bp
     from backend.api.admin import admin_bp
     
     # API routes
@@ -165,7 +164,6 @@ def register_blueprints(app):
     app.register_blueprint(teams_bp, url_prefix='/api/teams')
     app.register_blueprint(uploads_bp, url_prefix='/api/uploads')
     app.register_blueprint(reports_bp, url_prefix='/api/reports')
-    app.register_blueprint(billing_bp, url_prefix='/api/billing')
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
     
     # Health check endpoint

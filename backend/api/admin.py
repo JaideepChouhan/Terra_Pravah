@@ -22,10 +22,14 @@ def require_admin(f):
     def decorated_function(*args, **kwargs):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
-        
-        # Check if user is admin (you can add an is_admin field to User model)
-        # For now, check if user has enterprise plan or specific email domain
-        if not user or user.subscription_plan != 'enterprise':
+
+        admin_emails = {
+            email.strip().lower()
+            for email in current_app.config.get('ADMIN_EMAILS', '').split(',')
+            if email.strip()
+        }
+
+        if not user or (admin_emails and user.email.lower() not in admin_emails):
             return jsonify({'error': 'Admin access required'}), 403
         
         return f(*args, **kwargs)
@@ -48,12 +52,6 @@ def admin_dashboard():
         User.last_login_at >= datetime.utcnow() - timedelta(days=7)
     ).count()
     
-    # Subscription breakdown
-    subscription_stats = db.session.query(
-        User.subscription_plan,
-        func.count(User.id)
-    ).group_by(User.subscription_plan).all()
-    
     # Project statistics
     total_projects = Project.query.count()
     completed_projects = Project.query.filter_by(status='completed').count()
@@ -70,8 +68,7 @@ def admin_dashboard():
         'users': {
             'total': total_users,
             'new_30d': new_users_30d,
-            'active_7d': active_users_7d,
-            'by_plan': {plan: count for plan, count in subscription_stats}
+            'active_7d': active_users_7d
         },
         'projects': {
             'total': total_projects,
@@ -100,7 +97,6 @@ def list_all_users():
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 50, type=int)
     search = request.args.get('search', '').strip()
-    plan = request.args.get('plan')
     sort_by = request.args.get('sort_by', 'created_at')
     sort_order = request.args.get('sort_order', 'desc')
     
@@ -112,9 +108,6 @@ def list_all_users():
             User.first_name.ilike(f'%{search}%') |
             User.last_name.ilike(f'%{search}%')
         )
-    
-    if plan:
-        query = query.filter(User.subscription_plan == plan)
     
     # Sort
     sort_column = getattr(User, sort_by, User.created_at)
@@ -159,33 +152,6 @@ def get_user_details(user_id):
             'resource_type': log.resource_type,
             'created_at': log.created_at.isoformat()
         } for log in recent_activity]
-    })
-
-
-@admin_bp.route('/users/<user_id>/subscription', methods=['PUT'])
-@jwt_required()
-@require_admin
-def update_user_subscription(user_id):
-    """Update a user's subscription (admin override)."""
-    
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
-    
-    data = request.get_json()
-    
-    if 'subscription_plan' in data:
-        user.subscription_plan = data['subscription_plan']
-    if 'subscription_status' in data:
-        user.subscription_status = data['subscription_status']
-    if 'subscription_expires_at' in data:
-        user.subscription_expires_at = datetime.fromisoformat(data['subscription_expires_at'])
-    
-    db.session.commit()
-    
-    return jsonify({
-        'message': 'Subscription updated',
-        'user': user.to_dict(include_private=True)
     })
 
 

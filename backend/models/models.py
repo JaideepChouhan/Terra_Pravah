@@ -110,7 +110,7 @@ class User(db.Model):
             'job_title': self.job_title,
             'subscription_plan': self.subscription_plan,
             'subscription_tier': self.subscription_plan,  # Alias for frontend compatibility
-            'role': 'admin' if self.subscription_plan == 'enterprise' else 'user',  # Derive role
+            'role': 'user',
             'created_at': self.created_at.isoformat() if self.created_at else None
         }
         if include_private:

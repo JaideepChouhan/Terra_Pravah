@@ -214,20 +214,3 @@ export const teamsApi = {
   removeMember: (teamId: string, userId: string) =>
     api.delete(`/api/teams/${teamId}/members/${userId}`),
 }
-
-export const billingApi = {
-  getSubscription: () => 
-    api.get('/api/billing/subscription'),
-  
-  getPlans: () => 
-    api.get('/api/billing/plans'),
-  
-  subscribe: (planId: string) => 
-    api.post('/api/billing/subscribe', { plan_id: planId }),
-  
-  cancelSubscription: () => 
-    api.post('/api/billing/cancel'),
-  
-  getInvoices: () => 
-    api.get('/api/billing/invoices'),
-}

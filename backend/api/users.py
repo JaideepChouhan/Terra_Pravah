@@ -5,7 +5,7 @@ User profile and settings management.
 """
 
 from datetime import datetime
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from backend.models.models import db, User, Notification, AuditLog, APIKey
@@ -273,13 +273,6 @@ def create_api_key():
     
     if not user:
         return jsonify({'error': 'User not found'}), 404
-    
-    # Check subscription for API access
-    plan = current_app.config['PLANS'].get(user.subscription_plan, {})
-    if 'api_access' not in plan.get('features', []):
-        return jsonify({
-            'error': 'API access requires Professional or Enterprise plan'
-        }), 403
     
     data = request.get_json()
     name = data.get('name', '').strip()

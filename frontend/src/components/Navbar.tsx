@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useAuthStore } from '../store/authStore'
 
 const navigation = [
   { name: 'Features', href: '#features' },
-  { name: 'Pricing', href: '#pricing' },
   { name: 'Testimonials', href: '#testimonials' },
   { name: 'Documentation', href: '/docs' },
 ]
@@ -64,7 +63,7 @@ export default function Navbar() {
                   Sign In
                 </Link>
                 <Link to="/register" className="btn-primary">
-                  Start Free Trial
+                  Get Started
                 </Link>
               </>
             )}
@@ -120,7 +119,7 @@ export default function Navbar() {
                       className="btn-primary w-full"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Start Free Trial
+                      Get Started
                     </Link>
                   </>
                 )}

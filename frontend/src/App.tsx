@@ -19,7 +19,6 @@ import Analysis from './pages/dashboard/Analysis'
 import Reports from './pages/dashboard/Reports'
 import Settings from './pages/dashboard/Settings'
 import Profile from './pages/dashboard/Profile'
-import Billing from './pages/dashboard/Billing'
 import Teams from './pages/dashboard/Teams'
 import NotFound from './pages/NotFound'
 
@@ -116,7 +115,6 @@ export default function App() {
         <Route path="teams" element={<Teams />} />
         <Route path="settings" element={<Settings />} />
         <Route path="profile" element={<Profile />} />
-        <Route path="billing" element={<Billing />} />
       </Route>
 
       {/* 404 */}

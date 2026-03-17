@@ -8,7 +8,6 @@ interface User {
   firstName: string
   lastName: string
   role: string
-  subscriptionTier: string
   avatar?: string
   company?: string
   createdAt: string
@@ -64,7 +63,6 @@ export const useAuthStore = create<AuthState>()(
               firstName: user.first_name,
               lastName: user.last_name,
               role: user.role,
-              subscriptionTier: user.subscription_tier,
               avatar: user.avatar_url,
               company: user.company,
               createdAt: user.created_at,
@@ -104,7 +102,6 @@ export const useAuthStore = create<AuthState>()(
               firstName: user.first_name,
               lastName: user.last_name,
               role: user.role,
-              subscriptionTier: user.subscription_tier,
               avatar: user.avatar_url,
               company: user.company,
               createdAt: user.created_at,
@@ -168,7 +165,6 @@ export const useAuthStore = create<AuthState>()(
               firstName: user.first_name,
               lastName: user.last_name,
               role: user.role,
-              subscriptionTier: user.subscription_tier,
               avatar: user.avatar_url,
               company: user.company,
               createdAt: user.created_at,

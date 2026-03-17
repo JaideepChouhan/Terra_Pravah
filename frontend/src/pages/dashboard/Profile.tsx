@@ -32,7 +32,6 @@ interface UserProfile {
   timezone?: string
   language?: string
   created_at: string
-  subscription_plan?: string
 }
 
 interface Preferences {
@@ -259,9 +258,6 @@ export default function Profile() {
                 {firstName && lastName ? `${firstName} ${lastName}` : profile?.email}
               </h3>
               <p className="text-dark-400">{profile?.email}</p>
-              <span className="inline-block mt-2 px-2 py-1 bg-primary-500/20 text-primary-400 text-xs rounded-full capitalize">
-                {profile?.subscription_plan || 'Free'} Plan
-              </span>
             </div>
           </div>
 

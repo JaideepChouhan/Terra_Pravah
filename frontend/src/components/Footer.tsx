@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 const footerLinks = {
   product: [
     { name: 'Features', href: '#features' },
-    { name: 'Pricing', href: '#pricing' },
     { name: 'Demo', href: '/demo' },
     { name: 'API', href: '/api' },
   ],

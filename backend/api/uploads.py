@@ -129,12 +129,11 @@ def upload_dtm():
     file_size = file.tell()
     file.seek(0)
     
-    plan = current_app.config['PLANS'].get(user.subscription_plan, {})
-    max_size = plan.get('max_file_size_mb', 100) * 1024 * 1024
-    
+    max_size = int(current_app.config.get('MAX_CONTENT_LENGTH', 500 * 1024 * 1024))
     if file_size > max_size:
+        max_size_mb = round(max_size / (1024 * 1024), 2)
         return jsonify({
-            'error': f'File too large. Maximum size for your plan: {plan.get("max_file_size_mb", 100)}MB'
+            'error': f'File too large. Maximum upload size is {max_size_mb}MB'
         }), 413
     
     # Get project ID from form or query
@@ -223,11 +222,11 @@ def upload_las():
     file_size = file.tell()
     file.seek(0)
 
-    plan = current_app.config['PLANS'].get(user.subscription_plan, {})
-    max_size = plan.get('max_file_size_mb', 100) * 1024 * 1024
+    max_size = int(current_app.config.get('MAX_CONTENT_LENGTH', 500 * 1024 * 1024))
     if file_size > max_size:
+        max_size_mb = round(max_size / (1024 * 1024), 2)
         return jsonify({
-            'error': f'File too large. Maximum size for your plan: {plan.get("max_file_size_mb", 100)}MB'
+            'error': f'File too large. Maximum upload size is {max_size_mb}MB'
         }), 413
 
     project_id = request.form.get('project_id') or request.args.get('project_id')

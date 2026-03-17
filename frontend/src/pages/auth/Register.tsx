@@ -101,7 +101,7 @@ export default function Register() {
             </p>
             
             <div className="mt-8 space-y-4">
-              {['14-day free trial included', 'No credit card required', 'Cancel anytime'].map((item) => (
+              {['Full platform access', 'No payment setup required', 'Create unlimited projects'].map((item) => (
                 <div key={item} className="flex items-center gap-3">
                   <div className="w-5 h-5 rounded-full bg-indigo-500/20 flex items-center justify-center">
                     <CheckIcon className="w-3 h-3 text-indigo-400" />
@@ -142,7 +142,7 @@ export default function Register() {
             <h2 className="text-3xl font-bold text-white mb-2" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
               Create your account
             </h2>
-            <p className="text-slate-400">Start your 14-day free trial today</p>
+            <p className="text-slate-400">Get started with full access today</p>
           </div>
 
           {error && (

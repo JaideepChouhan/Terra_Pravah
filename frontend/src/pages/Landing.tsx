@@ -8,7 +8,6 @@ import {
   DocumentChartBarIcon,
   UsersIcon,
   ArrowRightIcon,
-  CheckIcon,
   SparklesIcon,
   GlobeAltIcon,
   RocketLaunchIcon,
@@ -54,34 +53,6 @@ const stats = [
   { value: '< 5min', label: 'Analysis Time' },
 ]
 
-const pricingPlans = [
-  {
-    name: 'Starter',
-    price: 'Free',
-    description: 'Perfect for learning and small projects',
-    features: ['3 active projects', 'Basic analysis tools', '2D visualization', 'Community support', '100MB storage'],
-    cta: 'Get Started',
-    popular: false,
-  },
-  {
-    name: 'Professional',
-    price: '$99',
-    period: '/month',
-    description: 'For professional engineers and consultants',
-    features: ['Unlimited projects', 'Full AI analysis suite', '3D visualization & export', 'Priority support', '50GB storage', 'Team collaboration', 'Custom reports'],
-    cta: 'Start Free Trial',
-    popular: true,
-  },
-  {
-    name: 'Enterprise',
-    price: 'Custom',
-    description: 'For large organizations with custom needs',
-    features: ['Everything in Professional', 'Unlimited team members', 'On-premise deployment', 'Custom integrations', 'Dedicated support', 'SLA guarantee'],
-    cta: 'Contact Sales',
-    popular: false,
-  },
-]
-
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -110,7 +81,6 @@ export default function Landing() {
           
           <div className="hidden md:flex items-center gap-8">
             <a href="#features" className="nav-link">Features</a>
-            <a href="#pricing" className="nav-link">Pricing</a>
             <a href="#about" className="nav-link">About</a>
           </div>
           
@@ -156,7 +126,7 @@ export default function Landing() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link to="/register" className="btn-primary text-lg px-8 py-4 group">
-                Start Free Trial
+                Get Started
                 <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <a href="#demo" className="btn-secondary text-lg px-8 py-4">
@@ -165,7 +135,7 @@ export default function Landing() {
             </div>
 
             <p className="mt-6 text-sm text-slate-500">
-              No credit card required • 14-day free trial • Cancel anytime
+              Full platform access from day one.
             </p>
           </motion.div>
 
@@ -281,73 +251,10 @@ export default function Landing() {
                 Join thousands of engineering professionals who are already delivering projects faster with Terra Pravah.
               </p>
               <Link to="/register" className="btn-primary text-lg px-8 py-4">
-                Start Your Free Trial
+                Create Your Workspace
                 <ArrowRightIcon className="w-5 h-5" />
               </Link>
             </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section className="py-24" id="pricing">
-        <div className="container-wide">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="section-title">
-              Simple, <span className="gradient-text">transparent pricing</span>
-            </h2>
-            <p className="section-subtitle">
-              Choose the plan that fits your needs. All plans include a 14-day free trial.
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto"
-          >
-            {pricingPlans.map((plan) => (
-              <motion.div
-                key={plan.name}
-                variants={itemVariants}
-                className={`card relative ${plan.popular ? 'border-indigo-500/50 bg-slate-900/80' : ''}`}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="badge-primary">Most Popular</span>
-                  </div>
-                )}
-                <div className="text-center mb-6 pt-2">
-                  <h3 className="text-lg font-semibold text-white mb-2">{plan.name}</h3>
-                  <div className="flex items-baseline justify-center gap-1">
-                    <span className="text-4xl font-bold text-white" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>{plan.price}</span>
-                    {plan.period && <span className="text-slate-500">{plan.period}</span>}
-                  </div>
-                  <p className="text-sm text-slate-500 mt-2">{plan.description}</p>
-                </div>
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3 text-sm">
-                      <CheckIcon className="w-5 h-5 text-indigo-400 flex-shrink-0 mt-0.5" />
-                      <span className="text-slate-300">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  to="/register"
-                  className={`w-full ${plan.popular ? 'btn-primary' : 'btn-secondary'} justify-center`}
-                >
-                  {plan.cta}
-                </Link>
-              </motion.div>
-            ))}
           </motion.div>
         </div>
       </section>

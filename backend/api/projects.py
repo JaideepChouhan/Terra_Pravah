@@ -111,16 +111,6 @@ def create_project():
     if not user:
         return jsonify({'error': 'User not found'}), 404
     
-    # Check project limit for free tier
-    plan = current_app.config['PLANS'].get(user.subscription_plan, {})
-    max_projects = plan.get('max_projects', 3)
-    
-    if max_projects > 0 and user.projects_count >= max_projects:
-        return jsonify({
-            'error': 'Project limit reached',
-            'message': f'Your {user.subscription_plan} plan allows {max_projects} projects. Upgrade to create more.'
-        }), 403
-    
     data = request.get_json()
     
     # Validate required fields
