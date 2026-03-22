@@ -55,18 +55,21 @@ export default function NewProject() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [createdProjectId, setCreatedProjectId] = useState<string | null>(null)
 
-  // File validation
+  // File validation - simplified to rely more on backend validation
   const validateFile = (file: File): string | null => {
-    const allowedTypes = ['.tif', '.tiff', '.las', '.laz']
     const maxSize = 500 * 1024 * 1024 // 500MB
     
-    const ext = '.' + file.name.split('.').pop()?.toLowerCase()
-    if (!allowedTypes.includes(ext)) {
-      return 'Invalid file type. Please upload GeoTIFF (.tif, .tiff) or LiDAR (.las, .laz)'
-    }
-    
+    // Basic size check
     if (file.size > maxSize) {
       return 'File too large. Maximum size is 500MB'
+    }
+    
+    // Basic extension check (backend will do comprehensive validation)
+    const ext = '.' + file.name.split('.').pop()?.toLowerCase()
+    const commonExtensions = ['.tif', '.tiff', '.las', '.laz', '.geotiff', '.img', '.asc', '.grd', '.dem']
+    
+    if (!commonExtensions.includes(ext)) {
+      return 'Unsupported file format. Please upload a raster file (GeoTIFF, COG, TIFF, etc.) or LiDAR file (LAS, LAZ)'
     }
     
     return null

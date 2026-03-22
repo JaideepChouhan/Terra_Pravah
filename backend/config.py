@@ -40,8 +40,28 @@ class Config:
     # File Storage
     UPLOAD_FOLDER = BASE_DIR / 'uploads'
     RESULTS_FOLDER = BASE_DIR / 'results'
-    MAX_CONTENT_LENGTH = 500 * 1024 * 1024  # 500MB
-    ALLOWED_EXTENSIONS = {'tif', 'tiff', 'geotiff', 'las', 'laz', 'shp', 'geojson', 'kml', 'dxf'}
+    MAX_CONTENT_LENGTH = int(os.getenv('MAX_FILE_SIZE_MB', 500)) * 1024 * 1024
+    
+    # File format support - now using smart detection instead of hardcoded extensions
+    # The file validator will auto-detect format from content
+    RASTER_FORMATS = {'.tif', '.tiff', '.geotiff', '.img', '.asc', '.grd', '.dem'}
+    LIDAR_FORMATS = {'.las', '.laz'}
+    VECTOR_FORMATS = {'.shp', '.geojson', '.kml', '.gpkg', '.gml', '.dxf'}
+    
+    # Combined allowed extensions (for backward compatibility)
+    ALLOWED_EXTENSIONS = RASTER_FORMATS | LIDAR_FORMATS | VECTOR_FORMATS
+    
+    # Enable Cloud Optimized GeoTIFF (COG) support
+    ENABLE_COG_SUPPORT = os.getenv('ENABLE_COG_SUPPORT', 'true').lower() == 'true'
+    
+    # Sample data configuration
+    ENABLE_SAMPLE_DATA = os.getenv('ENABLE_SAMPLE_DATA', 'true').lower() == 'true'
+    SAMPLE_DATA_PATH = BASE_DIR / 'sample_data'
+    
+    # Default admin user (configurable via environment variables)
+    DEFAULT_ADMIN_EMAIL = os.getenv('DEFAULT_ADMIN_EMAIL', None)
+    DEFAULT_ADMIN_PASSWORD = os.getenv('DEFAULT_ADMIN_PASSWORD', None)
+    CREATE_DEFAULT_ADMIN = os.getenv('CREATE_DEFAULT_ADMIN', 'false').lower() == 'true'
     
     # JWT Authentication
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', SECRET_KEY)

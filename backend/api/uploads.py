@@ -3,6 +3,7 @@ Terra Pravah - Uploads API
 ==========================
 File upload handling for DTM and other geospatial files.
 Auto-generates DTM visualization after upload.
+Uses smart file format detection instead of extension-only validation.
 """
 
 from datetime import datetime
@@ -16,6 +17,7 @@ import threading
 
 from backend.models.models import db, Project, User
 from backend.services.dtm_builder_service import DTMBuilderService
+from backend.utils.file_validator import FileFormatDetector, validate_uploaded_file
 
 uploads_bp = Blueprint('uploads', __name__)
 
@@ -61,52 +63,56 @@ def generate_dtm_visualization_async(project_id: str, dtm_path: str, app):
                 db.session.commit()
 
 
-def allowed_file(filename):
-    """Check if file extension is allowed."""
-    allowed = current_app.config.get('ALLOWED_EXTENSIONS', {'tif', 'tiff'})
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed
-
-
-def allowed_lidar_file(filename):
-    """Check if LiDAR file extension is allowed for DTM generation."""
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'las', 'laz'}
-
-
-def get_file_info(file_path):
-    """Get information about an uploaded file."""
+def validate_and_get_file_info(file_path):
+    """
+    Validate file and get comprehensive information using smart detection.
+    
+    Returns:
+        tuple: (is_valid, file_info_or_error_dict)
+    """
     path = Path(file_path)
+    
+    # Get max file size from config
+    max_size_mb = int(current_app.config.get('MAX_FILE_SIZE_MB', 500))
+    
+    # Perform comprehensive validation
+    validation_result = validate_uploaded_file(path, max_size_mb)
+    
+    if not validation_result['is_valid']:
+        return False, {
+            'errors': validation_result['errors'],
+            'warnings': validation_result.get('warnings', [])
+        }
+    
+    # Build file info from validation result
+    format_info = validation_result['format_info']
     
     info = {
         'name': path.name,
         'size_bytes': path.stat().st_size,
         'size_mb': path.stat().st_size / (1024 * 1024),
-        'extension': path.suffix.lower()
+        'extension': format_info['extension'],
+        'format_type': format_info['format_type'],
+        'mime_type': format_info.get('mime_type'),
+        'is_cog': format_info.get('is_cog', False),
+        **format_info.get('details', {})
     }
     
-    # Try to get geospatial info if it's a GeoTIFF
-    if path.suffix.lower() in ['.tif', '.tiff']:
-        try:
-            import rasterio
-            with rasterio.open(str(path)) as src:
-                info.update({
-                    'width': src.width,
-                    'height': src.height,
-                    'crs': str(src.crs) if src.crs else None,
-                    'bounds': list(src.bounds) if src.bounds else None,
-                    'resolution': src.res,
-                    'dtype': str(src.dtypes[0]),
-                    'band_count': src.count
-                })
-        except Exception as e:
-            current_app.logger.warning(f"Could not read raster info: {e}")
+    # Add warnings if any
+    if validation_result.get('warnings'):
+        info['warnings'] = validation_result['warnings']
     
-    return info
+    return True, info
 
 
 @uploads_bp.route('/dtm', methods=['POST'])
 @jwt_required()
 def upload_dtm():
-    """Upload a DTM file for a project."""
+    """
+    Upload a raster DTM file for a project.
+    Supports GeoTIFF, Cloud Optimized GeoTIFF (COG), and other raster formats.
+    Uses smart file format detection.
+    """
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
     
@@ -120,21 +126,6 @@ def upload_dtm():
     file = request.files['file']
     if file.filename == '':
         return jsonify({'error': 'No file selected'}), 400
-    
-    if not allowed_file(file.filename):
-        return jsonify({'error': 'Invalid file type. Supported formats: GeoTIFF (.tif, .tiff)'}), 400
-    
-    # Check file size
-    file.seek(0, os.SEEK_END)
-    file_size = file.tell()
-    file.seek(0)
-    
-    max_size = int(current_app.config.get('MAX_CONTENT_LENGTH', 500 * 1024 * 1024))
-    if file_size > max_size:
-        max_size_mb = round(max_size / (1024 * 1024), 2)
-        return jsonify({
-            'error': f'File too large. Maximum upload size is {max_size_mb}MB'
-        }), 413
     
     # Get project ID from form or query
     project_id = request.form.get('project_id') or request.args.get('project_id')
@@ -160,10 +151,29 @@ def upload_dtm():
     upload_dir.mkdir(parents=True, exist_ok=True)
     
     save_path = upload_dir / save_filename
+    
+    # Save file temporarily
     file.save(str(save_path))
     
-    # Get file info
-    file_info = get_file_info(save_path)
+    # Validate file and get comprehensive info
+    is_valid, file_info = validate_and_get_file_info(save_path)
+    
+    if not is_valid:
+        # Delete invalid file
+        save_path.unlink(missing_ok=True)
+        return jsonify({
+            'error': 'File validation failed',
+            'details': file_info.get('errors', ['Unknown error'])
+        }), 400
+    
+    # Check if format is raster
+    if file_info['format_type'] != 'raster':
+        save_path.unlink(missing_ok=True)
+        return jsonify({
+            'error': f'Invalid file type. Expected raster format (GeoTIFF, COG, TIFF), got {file_info["format_type"]}'
+        }), 400
+    
+    file_size = file_info['size_bytes']
     
     # Update project
     project.dtm_file_path = str(save_path)
@@ -178,6 +188,10 @@ def upload_dtm():
     
     db.session.commit()
     
+    # Log COG detection
+    if file_info.get('is_cog'):
+        current_app.logger.info(f"Cloud Optimized GeoTIFF detected for project {project_id}")
+    
     # Start background generation of DTM visualization
     app = current_app._get_current_object()
     thread = threading.Thread(
@@ -189,10 +203,7 @@ def upload_dtm():
     
     return jsonify({
         'message': 'File uploaded successfully. DTM visualization is being generated.',
-        'file': {
-            'path': str(save_path),
-            **file_info
-        },
+        'file': file_info,
         'project_id': project_id,
         'visualization_status': 'generating'
     })
@@ -201,7 +212,10 @@ def upload_dtm():
 @uploads_bp.route('/las', methods=['POST'])
 @jwt_required()
 def upload_las():
-    """Upload a LAS/LAZ file for built-in DTM generation."""
+    """
+    Upload a LAS/LAZ file for built-in DTM generation.
+    Uses smart file format detection.
+    """
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
 
@@ -214,20 +228,6 @@ def upload_las():
     file = request.files['file']
     if file.filename == '':
         return jsonify({'error': 'No file selected'}), 400
-
-    if not allowed_lidar_file(file.filename):
-        return jsonify({'error': 'Invalid file type. Supported formats: LAS/LAZ (.las, .laz)'}), 400
-
-    file.seek(0, os.SEEK_END)
-    file_size = file.tell()
-    file.seek(0)
-
-    max_size = int(current_app.config.get('MAX_CONTENT_LENGTH', 500 * 1024 * 1024))
-    if file_size > max_size:
-        max_size_mb = round(max_size / (1024 * 1024), 2)
-        return jsonify({
-            'error': f'File too large. Maximum upload size is {max_size_mb}MB'
-        }), 413
 
     project_id = request.form.get('project_id') or request.args.get('project_id')
     if not project_id:
@@ -250,18 +250,35 @@ def upload_las():
     save_path = upload_dir / save_filename
     file.save(str(save_path))
 
+    # Validate file and get info
+    is_valid, file_info = validate_and_get_file_info(save_path)
+    
+    if not is_valid:
+        # Delete invalid file
+        save_path.unlink(missing_ok=True)
+        return jsonify({
+            'error': 'File validation failed',
+            'details': file_info.get('errors', ['Unknown error'])
+        }), 400
+    
+    # Check if format is LiDAR
+    if file_info['format_type'] != 'lidar':
+        save_path.unlink(missing_ok=True)
+        return jsonify({
+            'error': f'Invalid file type. Expected LiDAR format (LAS, LAZ), got {file_info["format_type"]}'
+        }), 400
+
+    file_size = file_info['size_bytes']
     user.storage_used_bytes += file_size
-    project.status = 'draft'
     db.session.commit()
 
     return jsonify({
-        'message': 'LAS/LAZ file uploaded successfully.',
+        'message': 'LAS/LAZ file uploaded successfully',
         'file': {
-            'name': save_path.name,
+            'name': file_info['name'],
             'path': str(save_path),
-            'size_bytes': file_size,
-            'size_mb': file_size / (1024 * 1024),
-            'extension': save_path.suffix.lower()
+            'size_mb': file_info['size_mb'],
+            **file_info
         },
         'project_id': project_id
     })
