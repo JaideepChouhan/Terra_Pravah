@@ -152,7 +152,14 @@ def create_project():
     )
     db.session.add(log)
     
-    db.session.commit()
+    try:
+        db.session.commit()
+        # Refresh to load relationships  
+        db.session.refresh(project)
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Error creating project: {e}")
+        return jsonify({'error': f'Database error: {str(e)}'}), 500
     
     return jsonify({
         'message': 'Project created successfully',

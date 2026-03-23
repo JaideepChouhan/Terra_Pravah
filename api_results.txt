@@ -1,0 +1,35 @@
+Final Build DTM result: 200
+{
+  "dtm_path": "D:\\GIT\\Terra_Pravah\\results\\978d1ae3-14fd-4a26-a08b-c926dac7a237\\978d1ae3-14fd-4a26-a08b-c926dac7a237\\bf16c06b_67169_5NKR_CHAKHIRASINGH_dtm.tif",
+  "metadata": {
+    "bounds": [
+      437199.27996474033,
+      438109.4399647403,
+      3302948.110356681,
+      3303944.8503566813
+    ],
+    "crs": "EPSG:32644",
+    "grid_shape": [
+      997,
+      911
+    ],
+    "ground_points": 4979320,
+    "output_tif": "C:\\Users\\shail\\AppData\\Local\\Temp\\tmp7of_g4vk\\978d1ae3-14fd-4a26-a08b-c926dac7a237\\bf16c06b_67169_5NKR_CHAKHIRASINGH_raw.tif",
+    "pre_filtered": false,
+    "resolution_m": 1.0,
+    "total_input_points": 9839175
+  },
+  "validation": {
+    "cols": 911,
+    "crs": "EPSG:32644",
+    "file": "D:\\GIT\\Terra_Pravah\\results\\978d1ae3-14fd-4a26-a08b-c926dac7a237\\978d1ae3-14fd-4a26-a08b-c926dac7a237\\bf16c06b_67169_5NKR_CHAKHIRASINGH_dtm.tif",
+    "nodata_pct": 0.0,
+    "pass": true,
+    "resolution_m": 1.0,
+    "rows": 997,
+    "z_max": 160.16603088378906,
+    "z_mean": 141.7289276123047,
+    "z_min": 139.65882873535156,
+    "z_std": 1.8498892784118652
+  }
+}

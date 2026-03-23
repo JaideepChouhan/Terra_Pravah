@@ -166,9 +166,8 @@ def _compute_local_minima(points: np.ndarray, cell_size: float) -> np.ndarray:
     min_vals = np.minimum.reduceat(z_sorted, split[:-1])
     unique_cells = cell_id_sorted[split[:-1]]
 
-    # Map every cell_id to its min value
-    cell_min_map = dict(zip(unique_cells, min_vals))
-    local_min_sorted = np.array([cell_min_map[c] for c in cell_id_sorted])
+    # Fast numpy mapping
+    local_min_sorted = np.repeat(min_vals, np.diff(split))
 
     # Restore original point order
     local_min = np.empty(len(points), dtype=np.float64)
@@ -371,7 +370,7 @@ class IDWInterpolator:
             query_pts,
             k=min(self.max_points, len(ground_points)),
             distance_upper_bound=self.search_radius,
-            workers=-1          # use all CPU cores (scipy ≥ 1.9)
+            workers=1          # use 1 core to avoid segfaults on Windows
         )
 
         # Handle case where tree.query returns 1-D for k=1
@@ -379,27 +378,54 @@ class IDWInterpolator:
             dists = dists[:, np.newaxis]
             idxs = idxs[:, np.newaxis]
 
+        logger.info("  Computing vectorized IDW in batches...")
         total_cells = ny * nx
-        for flat_i in range(total_cells):
-            d = dists[flat_i]
-            idx = idxs[flat_i]
-            valid = d < np.inf
-            if not np.any(valid):
+        batch_size = 50000
+        grid_1d = np.full(total_cells, np.nan, dtype=np.float32)
+
+        for i in range(0, total_cells, batch_size):
+            end_i = min(i + batch_size, total_cells)
+            b_dists = dists[i:end_i]
+            b_idxs = idxs[i:end_i]
+
+            b_valid = b_dists < np.inf
+            b_row_valid = b_valid.any(axis=1)
+
+            if not b_row_valid.any():
                 continue
 
-            d_v = d[valid]
-            z_v = ground_points[idx[valid], 2]
+            v_dists = b_dists[b_row_valid]
+            v_valid = b_valid[b_row_valid]
+            v_idxs = b_idxs[b_row_valid].copy()
+            
+            # Safe indexing
+            v_idxs[~v_valid] = 0
+            
+            z_vals = ground_points[v_idxs, 2]
+            
+            local_density = v_valid.sum(axis=1) / (np.pi * self.search_radius ** 2 + 1e-9)
+            z_nan = np.where(v_valid, z_vals, np.nan)
+            
+            import warnings
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", category=RuntimeWarning)
+                local_roughness = np.nanstd(z_nan, axis=1)
+                
+            local_roughness[np.isnan(local_roughness)] = 0.0
 
-            # Adaptive power
-            local_density = valid.sum() / (np.pi * self.search_radius ** 2 + 1e-9)
-            local_roughness = float(np.std(z_v)) if len(z_v) > 1 else 0.0
-            p = adaptive_power(local_density, local_roughness)
+            p = 2.0 + np.clip(local_density / 1000.0, 0.1, 0.3) - np.clip(local_roughness * 10.0, -0.5, 0.5)
+            p = np.clip(p, 1.0, 4.0)[:, np.newaxis]
 
-            # IDW
-            w = 1.0 / (d_v ** p + 1e-9)
-            row = flat_i // nx
-            col = flat_i % nx
-            grid[row, col] = float(np.sum(w * z_v) / np.sum(w))
+            w = np.where(v_valid, 1.0 / (v_dists ** p + 1e-9), 0.0)
+            z_est = np.sum(w * np.where(v_valid, z_vals, 0.0), axis=1) / (np.sum(w, axis=1) + 1e-9)
+            
+            global_row_valid = np.zeros(end_i - i, dtype=bool)
+            global_row_valid[:] = b_row_valid
+            batch_result = np.full(end_i - i, np.nan, dtype=np.float32)
+            batch_result[global_row_valid] = z_est
+            grid_1d[i:end_i] = batch_result
+
+        grid = grid_1d.reshape((ny, nx))
 
         nan_pct = np.isnan(grid).sum() / grid.size * 100
         logger.info(f"  Interpolation complete. NaN cells: {nan_pct:.1f}%")
@@ -457,11 +483,23 @@ def condition_dtm_whitebox(input_tif: str, output_tif: str) -> str:
     wbt = whitebox.WhiteboxTools()
     wbt.verbose = False
     logger.info("  Filling depressions with WhiteboxTools …")
+    import os
+    abs_input = os.path.abspath(input_tif)
+    abs_output = os.path.abspath(output_tif)
+    
+    # Ensure output directory exists
+    os.makedirs(os.path.dirname(abs_output), exist_ok=True)
+
     wbt.fill_depressions(
-        dem=input_tif,
-        output=output_tif,
+        dem=abs_input,
+        output=abs_output,
         fix_flats=True
     )
+    
+    if not os.path.exists(abs_output):
+        logger.error(f"WhiteboxTools failed to create output at {abs_output}. Falling back to scipy.")
+        return condition_dtm_scipy(input_tif, output_tif)
+        
     logger.info(f"  Conditioned DTM saved: {output_tif}")
     return output_tif
 

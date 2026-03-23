@@ -5,7 +5,7 @@ Provides smart file format detection and validation for geospatial data.
 
 import mimetypes
 from pathlib import Path
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, Any
 import rasterio
 from rasterio.errors import RasterioIOError
 
@@ -31,7 +31,7 @@ class FileFormatDetector:
     }
     
     @classmethod
-    def detect_format(cls, file_path: Path) -> Dict[str, any]:
+    def detect_format(cls, file_path: Path) -> Dict[str, Any]:
         """
         Detect file format using multiple methods:
         1. File signature (magic bytes)

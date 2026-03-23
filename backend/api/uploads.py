@@ -325,7 +325,7 @@ def build_dtm_from_las():
         return jsonify({'error': 'Access denied'}), 403
 
     safe_name = secure_filename(filename)
-    if not allowed_lidar_file(safe_name):
+    if not (safe_name.lower().endswith('.las') or safe_name.lower().endswith('.laz')):
         return jsonify({'error': 'filename must be a .las or .laz file'}), 400
 
     project_results_folder = Path(current_app.config['RESULTS_FOLDER']) / project_id
@@ -366,15 +366,10 @@ def build_dtm_from_las():
 
         return jsonify(result), 200
 
-    except FileNotFoundError as exc:
-        project.status = 'failed'
-        db.session.commit()
-        return jsonify({'error': str(exc)}), 404
-    except Exception as exc:
-        current_app.logger.exception('DTM build failed')
-        project.status = 'failed'
-        db.session.commit()
-        return jsonify({'error': str(exc)}), 500
+    except Exception as e:
+        import traceback
+        current_app.logger.error(f"Error building DTM: {e}\n{traceback.format_exc()}")
+        return jsonify({'error': str(e), 'traceback': traceback.format_exc()}), 500
 
 
 @uploads_bp.route('/preview/<project_id>', methods=['GET'])
