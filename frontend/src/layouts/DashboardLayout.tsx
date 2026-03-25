@@ -42,7 +42,7 @@ export default function DashboardLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-dark-900">
+    <div className="min-h-screen bg-[#F8F6F6] text-text-main font-display">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div
@@ -53,18 +53,18 @@ export default function DashboardLayout() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-dark-800 border-r border-dark-700 transform transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-muted/30 transform transition-transform duration-300 lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-between h-16 px-6 border-b border-dark-700">
-            <Link to="/dashboard" className="text-xl font-bold gradient-text font-display">
+          <div className="flex items-center justify-between h-16 px-6 border-b border-muted/30">
+            <Link to="/dashboard" className="text-xl font-bold text-text-main font-heading">
               Terra Pravah
             </Link>
             <button
-              className="lg:hidden text-dark-400 hover:text-white"
+              className="lg:hidden text-muted hover:text-text-main"
               onClick={() => setSidebarOpen(false)}
             >
               <XMarkIcon className="w-6 h-6" />
@@ -90,7 +90,7 @@ export default function DashboardLayout() {
           </nav>
 
           {/* Bottom navigation */}
-          <div className="px-4 py-4 border-t border-dark-700 space-y-1">
+          <div className="px-4 py-4 border-t border-muted/30 space-y-1">
             {bottomNavigation.map((item) => (
               <NavLink
                 key={item.name}
@@ -107,16 +107,16 @@ export default function DashboardLayout() {
           </div>
 
           {/* User section */}
-          <div className="p-4 border-t border-dark-700">
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-dark-700/50">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold">
+          <div className="p-4 border-t border-muted/30">
+            <div className="flex items-center gap-3 p-3 rounded-sm hover:bg-muted/10 transition-colors">
+              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
                 {user?.firstName?.charAt(0) || 'U'}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">
+                <p className="text-sm font-medium truncate text-text-main">
                   {user?.firstName} {user?.lastName}
                 </p>
-                <p className="text-xs text-dark-400 truncate">{user?.email}</p>
+                <p className="text-xs text-muted truncate">{user?.email}</p>
               </div>
             </div>
           </div>
@@ -126,11 +126,11 @@ export default function DashboardLayout() {
       {/* Main content */}
       <div className="lg:pl-64">
         {/* Top bar */}
-        <header className="sticky top-0 z-30 bg-dark-900/80 backdrop-blur-lg border-b border-dark-700">
+        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-muted/30">
           <div className="flex items-center justify-between h-16 px-4 lg:px-8">
             {/* Mobile menu button */}
             <button
-              className="lg:hidden text-dark-400 hover:text-white"
+              className="lg:hidden text-muted hover:text-text-main"
               onClick={() => setSidebarOpen(true)}
             >
               <Bars3Icon className="w-6 h-6" />
@@ -139,11 +139,11 @@ export default function DashboardLayout() {
             {/* Search */}
             <div className="hidden md:flex flex-1 max-w-md mx-4">
               <div className="relative w-full">
-                <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-dark-400" />
+                <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
                 <input
                   type="text"
                   placeholder="Search projects, reports..."
-                  className="w-full pl-10 pr-4 py-2 bg-dark-800 border border-dark-700 rounded-lg text-sm text-white placeholder-dark-400 focus:outline-none focus:border-primary-500"
+                  className="w-full pl-10 pr-4 py-2 bg-background-light border border-muted/30 rounded-sm text-sm text-text-main placeholder-muted focus:outline-none focus:border-primary"
                 />
               </div>
             </div>
@@ -151,15 +151,15 @@ export default function DashboardLayout() {
             {/* Right side */}
             <div className="flex items-center gap-4">
               {/* Notifications */}
-              <button className="relative text-dark-400 hover:text-white">
+              <button className="relative text-muted hover:text-text-main">
                 <BellIcon className="w-6 h-6" />
-                <span className="absolute top-0 right-0 w-2 h-2 bg-primary-500 rounded-full" />
+                <span className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full" />
               </button>
 
               {/* User menu */}
               <Menu as="div" className="relative">
-                <Menu.Button className="flex items-center gap-2 text-dark-300 hover:text-white">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white text-sm font-bold">
+                <Menu.Button className="flex items-center gap-2 text-text-main hover:text-primary transition-colors">
+                  <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary text-sm font-bold">
                     {user?.firstName?.charAt(0) || 'U'}
                   </div>
                   <ChevronDownIcon className="w-4 h-4" />
@@ -174,12 +174,12 @@ export default function DashboardLayout() {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="absolute right-0 mt-2 w-56 bg-dark-800 border border-dark-700 rounded-lg shadow-xl overflow-hidden focus:outline-none">
-                    <div className="px-4 py-3 border-b border-dark-700">
-                      <p className="text-sm font-medium">
+                  <Menu.Items className="absolute right-0 mt-2 w-56 bg-white border border-muted/30 rounded-sm shadow-xl overflow-hidden focus:outline-none z-50">
+                    <div className="px-4 py-3 border-b border-muted/30">
+                      <p className="text-sm font-medium text-text-main">
                         {user?.firstName} {user?.lastName}
                       </p>
-                      <p className="text-xs text-dark-400 truncate">{user?.email}</p>
+                      <p className="text-xs text-muted truncate">{user?.email}</p>
                     </div>
                     <div className="py-1">
                       <Menu.Item>
@@ -187,7 +187,7 @@ export default function DashboardLayout() {
                           <Link
                             to="/dashboard/profile"
                             className={`flex items-center gap-2 px-4 py-2 text-sm ${
-                              active ? 'bg-dark-700 text-white' : 'text-dark-300'
+                              active ? 'bg-background-light text-text-main' : 'text-text-main'
                             }`}
                           >
                             <UserCircleIcon className="w-5 h-5" />
@@ -200,7 +200,7 @@ export default function DashboardLayout() {
                           <Link
                             to="/dashboard/settings"
                             className={`flex items-center gap-2 px-4 py-2 text-sm ${
-                              active ? 'bg-dark-700 text-white' : 'text-dark-300'
+                              active ? 'bg-background-light text-text-main' : 'text-text-main'
                             }`}
                           >
                             <Cog6ToothIcon className="w-5 h-5" />
@@ -209,13 +209,13 @@ export default function DashboardLayout() {
                         )}
                       </Menu.Item>
                     </div>
-                    <div className="border-t border-dark-700 py-1">
+                    <div className="border-t border-muted/30 py-1">
                       <Menu.Item>
                         {({ active }) => (
                           <button
                             onClick={handleLogout}
                             className={`flex items-center gap-2 px-4 py-2 text-sm w-full text-left ${
-                              active ? 'bg-dark-700 text-red-400' : 'text-red-400'
+                              active ? 'bg-background-light text-error-dark' : 'text-error-dark'
                             }`}
                           >
                             <ArrowRightOnRectangleIcon className="w-5 h-5" />
@@ -232,7 +232,7 @@ export default function DashboardLayout() {
         </header>
 
         {/* Page content */}
-        <main className="p-4 lg:p-8">
+        <main className="p-4 lg:p-8 text-text-main">
           <Outlet />
         </main>
       </div>
