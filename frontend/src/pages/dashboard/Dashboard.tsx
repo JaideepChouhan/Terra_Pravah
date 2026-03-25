@@ -120,28 +120,28 @@ export default function Dashboard() {
       value: stats.totalProjects,
       change: stats.projectsChange,
       icon: FolderIcon,
-      color: 'from-blue-500 to-cyan-500',
+      color: 'bg-primary/10 text-primary',
     },
     {
       name: 'Active Analyses',
       value: stats.activeAnalyses,
       change: stats.analysesChange,
       icon: ChartBarIcon,
-      color: 'from-purple-500 to-pink-500',
+      color: 'bg-primary/10 text-primary',
     },
     {
       name: 'Reports Generated',
       value: stats.reportsGenerated,
       change: 8,
       icon: DocumentTextIcon,
-      color: 'from-green-500 to-emerald-500',
+      color: 'bg-primary/10 text-primary',
     },
     {
       name: 'Storage Used',
       value: stats.storageUsed,
       change: null,
       icon: ClockIcon,
-      color: 'from-orange-500 to-red-500',
+      color: 'bg-primary/10 text-primary',
     },
   ]
 
@@ -165,11 +165,11 @@ export default function Dashboard() {
       {/* Welcome Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-3xl font-bold text-text-main font-heading">
             Welcome back, {user?.firstName || 'Engineer'}! 👋
           </h1>
-          <p className="text-dark-400 mt-1">
-            Here's what's happening with your drainage projects.
+          <p className="text-muted mt-1">
+            Here's what's happening with your planetary scale projects.
           </p>
         </div>
         <Link to="/dashboard/projects/new" className="btn-primary">
@@ -186,20 +186,18 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
-            className="card"
+            className="card bg-white"
           >
             <div className="flex items-start justify-between">
               <div
-                className={`w-12 h-12 rounded-lg bg-gradient-to-r ${stat.color} p-0.5`}
+                className={`w-12 h-12 rounded-sm flex items-center justify-center ${stat.color}`}
               >
-                <div className="w-full h-full bg-dark-800 rounded-lg flex items-center justify-center">
-                  <stat.icon className="w-6 h-6 text-white" />
-                </div>
+                <stat.icon className="w-6 h-6" />
               </div>
               {stat.change !== null && (
                 <span
                   className={`flex items-center text-sm font-medium ${
-                    stat.change >= 0 ? 'text-green-400' : 'text-red-400'
+                    stat.change >= 0 ? 'text-green-600' : 'text-rose-600'
                   }`}
                 >
                   {stat.change >= 0 ? (
@@ -212,8 +210,8 @@ export default function Dashboard() {
               )}
             </div>
             <div className="mt-4">
-              <h3 className="text-2xl font-bold">{stat.value}</h3>
-              <p className="text-dark-400 text-sm">{stat.name}</p>
+              <h3 className="text-3xl font-bold font-heading">{stat.value}</h3>
+              <p className="text-muted text-sm">{stat.name}</p>
             </div>
           </motion.div>
         ))}
@@ -221,10 +219,10 @@ export default function Dashboard() {
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Recent Projects */}
-        <div className="lg:col-span-2 card">
+        <div className="lg:col-span-2 card bg-white">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold">Recent Projects</h2>
-            <Link to="/dashboard/projects" className="text-sm text-primary-400 hover:text-primary-300">
+            <h2 className="text-xl font-bold font-heading">Recent Projects</h2>
+            <Link to="/dashboard/projects" className="text-sm text-primary hover:text-[#D69176] transition-colors">
               View all →
             </Link>
           </div>
@@ -232,8 +230,8 @@ export default function Dashboard() {
           {isLoading ? (
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="flex items-center gap-4 p-4 rounded-lg bg-dark-700/50">
-                  <div className="w-12 h-12 skeleton rounded-lg" />
+                <div key={i} className="flex items-center gap-4 p-4 rounded-sm bg-background-light">
+                  <div className="w-12 h-12 skeleton rounded-sm" />
                   <div className="flex-1">
                     <div className="h-4 w-32 skeleton rounded mb-2" />
                     <div className="h-3 w-24 skeleton rounded" />
@@ -247,14 +245,14 @@ export default function Dashboard() {
                 <Link
                   key={project.id}
                   to={`/dashboard/projects/${project.id}`}
-                  className="flex items-center gap-4 p-4 rounded-lg bg-dark-700/50 hover:bg-dark-700 transition-colors"
+                  className="flex items-center gap-4 p-4 rounded-sm bg-background-light hover:bg-muted/10 transition-colors border border-transparent hover:border-muted/20"
                 >
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold">
+                  <div className="w-12 h-12 rounded-sm bg-primary/10 flex items-center justify-center text-primary font-bold">
                     {project.name.charAt(0)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-medium truncate">{project.name}</h3>
-                    <p className="text-sm text-dark-400">Updated {project.updatedAt}</p>
+                    <h3 className="font-medium truncate text-text-main">{project.name}</h3>
+                    <p className="text-sm text-muted">Updated {project.updatedAt}</p>
                   </div>
                   <span className={getStatusColor(project.status)}>{project.status}</span>
                 </Link>
@@ -262,8 +260,8 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="text-center py-8">
-              <FolderIcon className="w-12 h-12 text-dark-600 mx-auto mb-4" />
-              <p className="text-dark-400 mb-4">No projects yet</p>
+              <FolderIcon className="w-12 h-12 text-muted mx-auto mb-4" />
+              <p className="text-muted mb-4">No projects yet</p>
               <Link to="/dashboard/projects/new" className="btn-primary">
                 Create Your First Project
               </Link>
@@ -272,21 +270,13 @@ export default function Dashboard() {
         </div>
 
         {/* Recent Activity */}
-        <div className="card">
-          <h2 className="text-xl font-semibold mb-6">Recent Activity</h2>
+        <div className="card bg-white">
+          <h2 className="text-xl font-bold font-heading mb-6">Recent Activity</h2>
           <div className="space-y-4">
             {recentActivity.map((activity) => (
               <div key={activity.id} className="flex gap-3">
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                    activity.type === 'analysis'
-                      ? 'bg-purple-500/20 text-purple-400'
-                      : activity.type === 'report'
-                      ? 'bg-green-500/20 text-green-400'
-                      : activity.type === 'project'
-                      ? 'bg-blue-500/20 text-blue-400'
-                      : 'bg-orange-500/20 text-orange-400'
-                  }`}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-primary/10 text-primary`}
                 >
                   {activity.type === 'analysis' ? (
                     <ChartBarIcon className="w-4 h-4" />
@@ -299,8 +289,8 @@ export default function Dashboard() {
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-dark-200 truncate">{activity.message}</p>
-                  <p className="text-xs text-dark-500">{activity.timestamp}</p>
+                  <p className="text-sm text-text-main truncate">{activity.message}</p>
+                  <p className="text-xs text-muted">{activity.timestamp}</p>
                 </div>
               </div>
             ))}
@@ -309,55 +299,55 @@ export default function Dashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="card">
-        <h2 className="text-xl font-semibold mb-6">Quick Actions</h2>
+      <div className="card bg-white">
+        <h2 className="text-xl font-bold font-heading mb-6">Quick Actions</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link
             to="/dashboard/projects/new"
-            className="flex items-center gap-3 p-4 rounded-lg bg-dark-700/50 hover:bg-dark-700 transition-colors"
+            className="flex items-center gap-3 p-4 rounded-sm bg-background-light hover:bg-muted/10 transition-colors"
           >
-            <div className="w-10 h-10 rounded-lg bg-primary-500/20 flex items-center justify-center">
-              <PlusIcon className="w-5 h-5 text-primary-400" />
+            <div className="w-10 h-10 rounded-sm bg-primary/10 flex items-center justify-center">
+              <PlusIcon className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h3 className="font-medium">New Project</h3>
-              <p className="text-sm text-dark-400">Start fresh</p>
+              <h3 className="font-medium text-text-main">New Project</h3>
+              <p className="text-sm text-muted">Start fresh</p>
             </div>
           </Link>
           <Link
             to="/dashboard/analysis"
-            className="flex items-center gap-3 p-4 rounded-lg bg-dark-700/50 hover:bg-dark-700 transition-colors"
+            className="flex items-center gap-3 p-4 rounded-sm bg-background-light hover:bg-muted/10 transition-colors"
           >
-            <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
-              <ChartBarIcon className="w-5 h-5 text-purple-400" />
+            <div className="w-10 h-10 rounded-sm bg-primary/10 flex items-center justify-center">
+              <ChartBarIcon className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h3 className="font-medium">Run Analysis</h3>
-              <p className="text-sm text-dark-400">Process data</p>
+              <h3 className="font-medium text-text-main">Run Analysis</h3>
+              <p className="text-sm text-muted">Process data</p>
             </div>
           </Link>
           <Link
             to="/dashboard/reports"
-            className="flex items-center gap-3 p-4 rounded-lg bg-dark-700/50 hover:bg-dark-700 transition-colors"
+            className="flex items-center gap-3 p-4 rounded-sm bg-background-light hover:bg-muted/10 transition-colors"
           >
-            <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
-              <DocumentTextIcon className="w-5 h-5 text-green-400" />
+            <div className="w-10 h-10 rounded-sm bg-primary/10 flex items-center justify-center">
+              <DocumentTextIcon className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h3 className="font-medium">Generate Report</h3>
-              <p className="text-sm text-dark-400">Export results</p>
+              <h3 className="font-medium text-text-main">Generate Report</h3>
+              <p className="text-sm text-muted">Export results</p>
             </div>
           </Link>
           <Link
             to="/dashboard/teams"
-            className="flex items-center gap-3 p-4 rounded-lg bg-dark-700/50 hover:bg-dark-700 transition-colors"
+            className="flex items-center gap-3 p-4 rounded-sm bg-background-light hover:bg-muted/10 transition-colors"
           >
-            <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
-              <FolderIcon className="w-5 h-5 text-blue-400" />
+            <div className="w-10 h-10 rounded-sm bg-primary/10 flex items-center justify-center">
+              <FolderIcon className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h3 className="font-medium">Invite Team</h3>
-              <p className="text-sm text-dark-400">Collaborate</p>
+              <h3 className="font-medium text-text-main">Invite Team</h3>
+              <p className="text-sm text-muted">Collaborate</p>
             </div>
           </Link>
         </div>

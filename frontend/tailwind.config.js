@@ -9,42 +9,36 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          50: '#eef2ff',
-          100: '#e0e7ff',
-          200: '#c7d2fe',
-          300: '#a5b4fc',
-          400: '#818cf8',
-          500: '#6366f1',
-          600: '#4f46e5',
-          700: '#4338ca',
-          800: '#3730a3',
-          900: '#312e81',
-          950: '#1e1b4b',
+          DEFAULT: '#e98963',
+          50: '#fdf4f0',
+          100: '#fae4da',
+          200: '#f5c9b6',
+          300: '#f0a283',
+          400: '#e98963',
+          500: '#e86a3d',
+          600: '#db4f1f',
+          700: '#b73c15',
+          800: '#923318',
+          900: '#752b16',
+          950: '#3f1308',
         },
-        secondary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
+        background: {
+          light: '#F7F3EB',
+          dark: '#211611',
         },
-        accent: {
-          50: '#faf5ff',
-          100: '#f3e8ff',
-          200: '#e9d5ff',
-          300: '#d8b4fe',
-          400: '#c084fc',
-          500: '#a855f7',
-          600: '#9333ea',
-          700: '#7e22ce',
-          800: '#6b21a8',
-          900: '#581c87',
+        surface: '#212C43',
+        text: {
+          main: '#121826',
+          inverse: '#F7F3EB',
         },
+        muted: '#829AB1',
+        accent: '#C3D2D5',
+        'error-dark': '#991b1b',
+        navy: {
+          DEFAULT: '#121826',
+          muted: '#212C43'
+        },
+        // Keeping legacy colors for compatibility but mapping some to new ones to ease transition, although we'll replace most usage
         dark: {
           50: '#f8fafc',
           100: '#f1f5f9',
@@ -58,11 +52,36 @@ module.exports = {
           900: '#0f172a',
           950: '#020617',
         },
+        secondary: {
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          800: '#1e40af',
+          900: '#1e3a8a',
+        },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        display: ['Poppins', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['Inter', 'DM Sans', 'sans-serif'],
+        heading: ['Fraunces', 'serif'],
+        sans: ['Inter', 'DM Sans', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+      },
+      borderRadius: {
+        'DEFAULT': '2px',
+        'lg': '2px',
+        'xl': '2px',
+        'full': '2px',
+        'none': '0px',
+        'sm': '2px',
+        'md': '2px',
+      },
+      letterSpacing: {
+        tightest: '-.04em',
       },
       spacing: {
         '18': '4.5rem',
@@ -77,7 +96,7 @@ module.exports = {
         'spin-slow': 'spin 3s linear infinite',
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'bounce-slow': 'bounce 2s infinite',
-        'gradient': 'gradient 3s ease infinite',
+        'draw-path': 'drawPath 1.5s ease-out forwards',
       },
       keyframes: {
         fadeIn: {
@@ -96,32 +115,11 @@ module.exports = {
           '0%': { transform: 'scale(0.95)', opacity: '0' },
           '100%': { transform: 'scale(1)', opacity: '1' },
         },
-        gradient: {
-          '0%, 100%': {
-            'background-size': '200% 200%',
-            'background-position': 'left center'
-          },
-          '50%': {
-            'background-size': '200% 200%',
-            'background-position': 'right center'
-          },
-        },
-      },
-      boxShadow: {
-        'glow': '0 0 20px rgba(74, 222, 128, 0.3)',
-        'glow-lg': '0 0 40px rgba(74, 222, 128, 0.4)',
-        'inner-glow': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.1)',
-      },
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'mesh-gradient': 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
-      },
-      borderRadius: {
-        '4xl': '2rem',
-      },
-      backdropBlur: {
-        xs: '2px',
+        drawPath: {
+          to: {
+            strokeDashoffset: '0',
+          }
+        }
       },
     },
   },
