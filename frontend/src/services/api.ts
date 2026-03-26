@@ -98,7 +98,7 @@ export const projectsApi = {
   get: async (id: string) => {
     if (isDemo()) {
       await demoDelay(500);
-      return { data: { project: { id, name: 'Demo Project', status: 'completed', design_storm_years: 10, runoff_coefficient: 0.5, flow_algorithm: 'd8' } } };
+      return { data: { project: { id, name: 'Demo Project', status: 'completed', design_storm_years: 10, runoff_coefficient: 0.5, flow_algorithm: 'd8', dtm_file_path: 'mock/path', visualization_path: 'mock/path' } } };
     }
     return api.get(`/api/projects/${id}`);
   },
