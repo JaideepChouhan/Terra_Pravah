@@ -61,6 +61,8 @@ export default function DrainageViewer({
 </html>`
     }
     return undefined;
+  }
+
   useEffect(() => {
     setLoading(true)
     setError(null)
