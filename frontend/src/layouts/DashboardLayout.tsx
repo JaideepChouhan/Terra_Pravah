@@ -53,14 +53,14 @@ export default function DashboardLayout() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-muted/30 transform transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-surface text-text-inverse border-r border-[#121826] transform transition-transform duration-300 lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-between h-16 px-6 border-b border-muted/30">
-            <Link to="/dashboard" className="text-xl font-bold text-text-main font-heading">
+          <div className="flex items-center justify-between h-16 px-6 border-b border-muted">
+            <Link to="/dashboard" className="text-xl font-bold text-text-inverse font-heading">
               Terra Pravah
             </Link>
             <button
@@ -90,7 +90,7 @@ export default function DashboardLayout() {
           </nav>
 
           {/* Bottom navigation */}
-          <div className="px-4 py-4 border-t border-muted/30 space-y-1">
+          <div className="px-4 py-4 border-t border-muted space-y-1">
             {bottomNavigation.map((item) => (
               <NavLink
                 key={item.name}
@@ -107,13 +107,13 @@ export default function DashboardLayout() {
           </div>
 
           {/* User section */}
-          <div className="p-4 border-t border-muted/30">
-            <div className="flex items-center gap-3 p-3 rounded-sm hover:bg-muted/10 transition-colors">
+          <div className="p-4 border-t border-muted">
+            <div className="flex items-center gap-3 p-3 rounded-none hover:bg-muted/10 transition-colors">
               <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
                 {user?.firstName?.charAt(0) || 'U'}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate text-text-main">
+                <p className="text-sm font-medium truncate text-text-inverse">
                   {user?.firstName} {user?.lastName}
                 </p>
                 <p className="text-xs text-muted truncate">{user?.email}</p>
@@ -126,7 +126,7 @@ export default function DashboardLayout() {
       {/* Main content */}
       <div className="lg:pl-64">
         {/* Top bar */}
-        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-muted/30">
+        <header className="sticky top-0 z-30 bg-background-light/90 backdrop-blur-lg border-b border-muted">
           <div className="flex items-center justify-between h-16 px-4 lg:px-8">
             {/* Mobile menu button */}
             <button
@@ -143,7 +143,7 @@ export default function DashboardLayout() {
                 <input
                   type="text"
                   placeholder="Search projects, reports..."
-                  className="w-full pl-10 pr-4 py-2 bg-background-light border border-muted/30 rounded-sm text-sm text-text-main placeholder-muted focus:outline-none focus:border-primary"
+                  className="w-full pl-10 pr-4 py-2 bg-background-light border border-muted rounded-none text-sm text-text-main placeholder-muted focus:outline-none focus:border-primary"
                 />
               </div>
             </div>
@@ -174,8 +174,8 @@ export default function DashboardLayout() {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="absolute right-0 mt-2 w-56 bg-white border border-muted/30 rounded-sm shadow-xl overflow-hidden focus:outline-none z-50">
-                    <div className="px-4 py-3 border-b border-muted/30">
+                  <Menu.Items className="absolute right-0 mt-2 w-56 bg-white border border-muted rounded-none shadow-xl overflow-hidden focus:outline-none z-50">
+                    <div className="px-4 py-3 border-b border-muted">
                       <p className="text-sm font-medium text-text-main">
                         {user?.firstName} {user?.lastName}
                       </p>
@@ -209,7 +209,7 @@ export default function DashboardLayout() {
                         )}
                       </Menu.Item>
                     </div>
-                    <div className="border-t border-muted/30 py-1">
+                    <div className="border-t border-muted py-1">
                       <Menu.Item>
                         {({ active }) => (
                           <button

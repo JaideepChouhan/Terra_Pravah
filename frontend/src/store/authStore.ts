@@ -24,6 +24,7 @@ interface AuthState {
   login: (email: string, password: string) => Promise<void>
   register: (data: RegisterData) => Promise<void>
   logout: () => void
+  demoLogin: () => void
   updateUser: (data: Partial<User>) => void
   setUser: (user: Partial<User>) => void
   checkAuth: () => Promise<void>
@@ -151,6 +152,24 @@ export const useAuthStore = create<AuthState>()(
           return
         }
 
+        if (token === 'demo-token-123') {
+          set({
+            user: {
+              id: 'demo-user',
+              email: 'demo@terrapravah.com',
+              firstName: 'Demo',
+              lastName: 'Engineer',
+              role: 'admin',
+              company: 'Terra Pravah',
+              createdAt: new Date().toISOString()
+            },
+            token,
+            isAuthenticated: true,
+            isLoading: false,
+          })
+          return;
+        }
+
         set({ isLoading: true })
         api.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
@@ -187,6 +206,27 @@ export const useAuthStore = create<AuthState>()(
 
       clearError: () => {
         set({ error: null })
+      },
+      
+      demoLogin: () => {
+        const token = 'demo-token-123';
+        localStorage.setItem('token', token);
+        // api.defaults.headers.common['Authorization'] = Bearer \ // Ignoring for demo
+        set({
+          user: {
+            id: 'demo-user',
+            email: 'demo@terrapravah.com',
+            firstName: 'Demo',
+            lastName: 'Engineer',
+            role: 'admin',
+            company: 'Terra Pravah',
+            createdAt: new Date().toISOString()
+          },
+          token,
+          isAuthenticated: true,
+          isLoading: false,
+          error: null
+        })
       },
     }),
     {

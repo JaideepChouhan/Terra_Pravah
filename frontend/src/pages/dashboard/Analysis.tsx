@@ -219,7 +219,7 @@ export default function Analysis() {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
           <Loader2 className="w-10 h-10 text-primary-500 animate-spin mx-auto mb-4" />
-          <p className="text-dark-400">Loading project...</p>
+          <p className="text-navy/60">Loading project...</p>
         </div>
       </div>
     )
@@ -230,8 +230,8 @@ export default function Analysis() {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center max-w-md">
           <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-white mb-2">Error Loading Project</h2>
-          <p className="text-dark-400 mb-6">{error || 'Project not found'}</p>
+          <h2 className="text-xl font-semibold text-navy mb-2">Error Loading Project</h2>
+          <p className="text-navy/60 mb-6">{error || 'Project not found'}</p>
           <Link to="/dashboard/projects" className="btn-primary">
             Back to Projects
           </Link>
@@ -254,13 +254,13 @@ export default function Analysis() {
         <div className="flex items-center gap-4">
           <Link 
             to="/dashboard/projects" 
-            className="p-2 hover:bg-dark-800 rounded-lg transition-colors"
+            className="p-2 hover:bg-white rounded-none transition-colors"
           >
-            <ArrowLeft className="w-5 h-5 text-dark-400" />
+            <ArrowLeft className="w-5 h-5 text-navy/60" />
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-white">{project.name}</h1>
-            <p className="text-dark-400">
+            <h1 className="text-2xl font-bold text-navy">{project.name}</h1>
+            <p className="text-navy/60">
               {project.description || 'Drainage Network Analysis'}
             </p>
           </div>
@@ -291,7 +291,7 @@ export default function Analysis() {
 
       {/* Error display */}
       {error && (
-        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 flex items-start gap-3">
+        <div className="bg-red-500/10 border border-red-500/20 rounded-none p-4 flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-red-400 mt-0.5" />
           <div>
             <p className="text-red-400">{error}</p>
@@ -301,38 +301,38 @@ export default function Analysis() {
 
       {/* Processing status */}
       {isProcessing && (
-        <div className="bg-dark-800 rounded-xl p-6 border border-primary-500/20">
+        <div className="bg-white rounded-none p-6 border border-primary-500/20">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-12 h-12 bg-primary-500/20 rounded-full flex items-center justify-center">
               <Loader2 className="w-6 h-6 text-primary-400 animate-spin" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-white">Analysis in Progress</h3>
-              <p className="text-dark-400">{job?.current_step || 'Processing...'}</p>
+              <h3 className="text-lg font-semibold text-navy">Analysis in Progress</h3>
+              <p className="text-navy/60">{job?.current_step || 'Processing...'}</p>
             </div>
-            <RefreshCw className="w-5 h-5 text-dark-400 animate-spin" />
+            <RefreshCw className="w-5 h-5 text-navy/60 animate-spin" />
           </div>
           
-          <div className="w-full bg-dark-700 rounded-full h-3 overflow-hidden">
+          <div className="w-full bg-neutral-100 rounded-full h-3 overflow-hidden">
             <div 
               className="h-full bg-gradient-to-r from-primary-500 to-violet-500 transition-all duration-500"
               style={{ width: `${job?.progress || 0}%` }}
             />
           </div>
-          <p className="text-sm text-dark-400 mt-2 text-right">{job?.progress || 0}% complete</p>
+          <p className="text-sm text-navy/60 mt-2 ">{job?.progress || 0}% complete</p>
         </div>
       )}
 
       {/* No DTM warning */}
       {!hasDTM && (
-        <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-6">
+        <div className="bg-amber-500/10 border border-amber-500/20 rounded-none p-6">
           <div className="flex items-start gap-4">
             <div className="w-10 h-10 bg-amber-500/20 rounded-full flex items-center justify-center shrink-0">
               <MapPin className="w-5 h-5 text-amber-400" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white mb-1">No DTM File Uploaded</h3>
-              <p className="text-dark-400 mb-4">
+              <h3 className="text-lg font-semibold text-navy mb-1">No DTM File Uploaded</h3>
+              <p className="text-navy/60 mb-4">
                 Upload a Digital Terrain Model (DTM) file to begin drainage analysis.
               </p>
               <Link 
@@ -390,26 +390,26 @@ export default function Analysis() {
 
       {/* Terrain Info */}
       {report?.terrain && (
-        <div className="bg-dark-800 rounded-xl p-6 border border-dark-700">
-          <h3 className="text-lg font-semibold text-white mb-4">Terrain Information</h3>
+        <div className="bg-white rounded-none p-6 border border-navy/10">
+          <h3 className="text-lg font-semibold text-navy mb-4">Terrain Information</h3>
           <div className="grid md:grid-cols-4 gap-4">
             <div>
-              <span className="text-sm text-dark-400">Dimensions</span>
-              <p className="text-white font-medium">{report.terrain.dimensions}</p>
+              <span className="text-sm text-navy/60">Dimensions</span>
+              <p className="text-navy font-medium">{report.terrain.dimensions}</p>
             </div>
             <div>
-              <span className="text-sm text-dark-400">Resolution</span>
-              <p className="text-white font-medium">{report.terrain.resolution_m} m</p>
+              <span className="text-sm text-navy/60">Resolution</span>
+              <p className="text-navy font-medium">{report.terrain.resolution_m} m</p>
             </div>
             <div>
-              <span className="text-sm text-dark-400">Elevation Range</span>
-              <p className="text-white font-medium">
+              <span className="text-sm text-navy/60">Elevation Range</span>
+              <p className="text-navy font-medium">
                 {report.terrain.elevation_min?.toFixed(1)} - {report.terrain.elevation_max?.toFixed(1)} m
               </p>
             </div>
             <div>
-              <span className="text-sm text-dark-400">Relief</span>
-              <p className="text-white font-medium">{report.terrain.elevation_range?.toFixed(1)} m</p>
+              <span className="text-sm text-navy/60">Relief</span>
+              <p className="text-navy font-medium">{report.terrain.elevation_range?.toFixed(1)} m</p>
             </div>
           </div>
         </div>
@@ -417,20 +417,20 @@ export default function Analysis() {
 
       {/* Hydraulic Design Info */}
       {report?.hydraulics && (
-        <div className="bg-dark-800 rounded-xl p-6 border border-dark-700">
-          <h3 className="text-lg font-semibold text-white mb-4">Hydraulic Design</h3>
+        <div className="bg-white rounded-none p-6 border border-navy/10">
+          <h3 className="text-lg font-semibold text-navy mb-4">Hydraulic Design</h3>
           <div className="grid md:grid-cols-3 gap-4">
             <div>
-              <span className="text-sm text-dark-400">Design Method</span>
-              <p className="text-white font-medium">{report.hydraulics.design_method}</p>
+              <span className="text-sm text-navy/60">Design Method</span>
+              <p className="text-navy font-medium">{report.hydraulics.design_method}</p>
             </div>
             <div>
-              <span className="text-sm text-dark-400">Flow Routing</span>
-              <p className="text-white font-medium">{report.hydraulics.flow_routing}</p>
+              <span className="text-sm text-navy/60">Flow Routing</span>
+              <p className="text-navy font-medium">{report.hydraulics.flow_routing}</p>
             </div>
             <div>
-              <span className="text-sm text-dark-400">Pipe Sizing</span>
-              <p className="text-white font-medium">{report.hydraulics.pipe_sizing}</p>
+              <span className="text-sm text-navy/60">Pipe Sizing</span>
+              <p className="text-navy font-medium">{report.hydraulics.pipe_sizing}</p>
             </div>
           </div>
         </div>
@@ -438,18 +438,18 @@ export default function Analysis() {
 
       {/* Channel Details */}
       {report?.channels && report.channels.length > 0 && (
-        <div className="bg-dark-800 rounded-xl border border-dark-700 overflow-hidden">
+        <div className="bg-white rounded-none border border-navy/10 overflow-hidden">
           <button
             onClick={() => setShowChannelDetails(!showChannelDetails)}
-            className="w-full p-4 flex items-center justify-between hover:bg-dark-700/50 transition-colors"
+            className="w-full p-4 flex items-center justify-between hover:bg-neutral-100/50 transition-colors"
           >
-            <h3 className="text-lg font-semibold text-white">
+            <h3 className="text-lg font-semibold text-navy">
               Channel Details ({report.channels.length} channels)
             </h3>
             {showChannelDetails ? (
-              <ChevronUp className="w-5 h-5 text-dark-400" />
+              <ChevronUp className="w-5 h-5 text-navy/60" />
             ) : (
-              <ChevronDown className="w-5 h-5 text-dark-400" />
+              <ChevronDown className="w-5 h-5 text-navy/60" />
             )}
           </button>
           
@@ -457,38 +457,38 @@ export default function Analysis() {
             <div className="p-4 pt-0 overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-dark-700">
-                    <th className="text-left py-2 px-3 text-dark-400 font-medium">Type</th>
-                    <th className="text-right py-2 px-3 text-dark-400 font-medium">Length (m)</th>
-                    <th className="text-right py-2 px-3 text-dark-400 font-medium">Slope (%)</th>
-                    <th className="text-right py-2 px-3 text-dark-400 font-medium">Flow (m³/s)</th>
-                    <th className="text-right py-2 px-3 text-dark-400 font-medium">Pipe (mm)</th>
-                    <th className="text-right py-2 px-3 text-dark-400 font-medium">Velocity (m/s)</th>
+                  <tr className="border-b border-navy/10">
+                    <th className="text-left py-2 px-3 text-navy/60 font-medium">Type</th>
+                    <th className=" py-2 px-3 text-navy/60 font-medium">Length (m)</th>
+                    <th className=" py-2 px-3 text-navy/60 font-medium">Slope (%)</th>
+                    <th className=" py-2 px-3 text-navy/60 font-medium">Flow (m³/s)</th>
+                    <th className=" py-2 px-3 text-navy/60 font-medium">Pipe (mm)</th>
+                    <th className=" py-2 px-3 text-navy/60 font-medium">Velocity (m/s)</th>
                   </tr>
                 </thead>
                 <tbody>
                   {report.channels.slice(0, 20).map((channel, idx) => (
-                    <tr key={idx} className="border-b border-dark-700/50 hover:bg-dark-700/30">
+                    <tr key={idx} className="border-b border-navy/10/50 hover:bg-neutral-100/30">
                       <td className="py-2 px-3">
                         <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${
                           channel.type === 'primary' ? 'bg-blue-500/20 text-blue-400' :
                           channel.type === 'secondary' ? 'bg-cyan-500/20 text-cyan-400' :
-                          'bg-dark-600 text-dark-300'
+                          'bg-neutral-200 text-navy-muted'
                         }`}>
                           {channel.type}
                         </span>
                       </td>
-                      <td className="py-2 px-3 text-right text-white">{channel.length_m?.toFixed(1)}</td>
-                      <td className="py-2 px-3 text-right text-white">{channel.slope_pct?.toFixed(2)}</td>
-                      <td className="py-2 px-3 text-right text-white">{channel.peak_flow_m3s?.toFixed(3)}</td>
-                      <td className="py-2 px-3 text-right text-white">{channel.pipe_diameter_mm}</td>
-                      <td className="py-2 px-3 text-right text-white">{channel.velocity_ms?.toFixed(2)}</td>
+                      <td className="py-2 px-3  text-navy">{channel.length_m?.toFixed(1)}</td>
+                      <td className="py-2 px-3  text-navy">{channel.slope_pct?.toFixed(2)}</td>
+                      <td className="py-2 px-3  text-navy">{channel.peak_flow_m3s?.toFixed(3)}</td>
+                      <td className="py-2 px-3  text-navy">{channel.pipe_diameter_mm}</td>
+                      <td className="py-2 px-3  text-navy">{channel.velocity_ms?.toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
               {report.channels.length > 20 && (
-                <p className="text-sm text-dark-400 mt-3 text-center">
+                <p className="text-sm text-navy/60 mt-3 text-center">
                   Showing 20 of {report.channels.length} channels. Download full report for complete data.
                 </p>
               )}
@@ -501,7 +501,7 @@ export default function Analysis() {
       {hasDTMVisualization && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-white">3D Visualization</h2>
+            <h2 className="text-lg font-semibold text-navy">3D Visualization</h2>
             <VisualizationControls 
               mode={viewMode} 
               onModeChange={setViewMode}
@@ -518,8 +518,8 @@ export default function Analysis() {
 
       {/* Reports & Downloads Section */}
       {hasResults && (
-        <div className="bg-dark-800 rounded-xl p-6 border border-dark-700">
-          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+        <div className="bg-white rounded-none p-6 border border-navy/10">
+          <h2 className="text-lg font-semibold text-navy mb-4 flex items-center gap-2">
             <Download className="w-5 h-5 text-primary-400" />
             Reports & Downloads
           </h2>
@@ -529,14 +529,14 @@ export default function Analysis() {
             <a
               href={`/api/analysis/projects/${projectId}/download/report?token=${localStorage.getItem('token')}`}
               download
-              className="flex items-center gap-4 p-4 bg-dark-700/50 hover:bg-dark-700 rounded-lg border border-dark-600 transition-all hover:border-primary-500/50 group"
+              className="flex items-center gap-4 p-4 bg-neutral-100/50 hover:bg-neutral-100 rounded-none border border-navy/20 transition-all hover:border-primary-500/50 group"
             >
-              <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 bg-blue-500/20 rounded-none flex items-center justify-center group-hover:scale-110 transition-transform">
                 <FileText className="w-6 h-6 text-blue-400" />
               </div>
               <div>
-                <h3 className="font-medium text-white">Analysis Report</h3>
-                <p className="text-sm text-dark-400">Complete analysis in JSON format</p>
+                <h3 className="font-medium text-navy">Analysis Report</h3>
+                <p className="text-sm text-navy/60">Complete analysis in JSON format</p>
               </div>
             </a>
 
@@ -544,14 +544,14 @@ export default function Analysis() {
             <a
               href={`/api/analysis/projects/${projectId}/download/geojson?token=${localStorage.getItem('token')}`}
               download
-              className="flex items-center gap-4 p-4 bg-dark-700/50 hover:bg-dark-700 rounded-lg border border-dark-600 transition-all hover:border-green-500/50 group"
+              className="flex items-center gap-4 p-4 bg-neutral-100/50 hover:bg-neutral-100 rounded-none border border-navy/20 transition-all hover:border-green-500/50 group"
             >
-              <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 bg-green-500/20 rounded-none flex items-center justify-center group-hover:scale-110 transition-transform">
                 <FileJson className="w-6 h-6 text-green-400" />
               </div>
               <div>
-                <h3 className="font-medium text-white">GeoJSON Network</h3>
-                <p className="text-sm text-dark-400">Drainage network for GIS</p>
+                <h3 className="font-medium text-navy">GeoJSON Network</h3>
+                <p className="text-sm text-navy/60">Drainage network for GIS</p>
               </div>
             </a>
 
@@ -559,14 +559,14 @@ export default function Analysis() {
             <a
               href={`/api/analysis/projects/${projectId}/download/csv?token=${localStorage.getItem('token')}`}
               download
-              className="flex items-center gap-4 p-4 bg-dark-700/50 hover:bg-dark-700 rounded-lg border border-dark-600 transition-all hover:border-violet-500/50 group"
+              className="flex items-center gap-4 p-4 bg-neutral-100/50 hover:bg-neutral-100 rounded-none border border-navy/20 transition-all hover:border-violet-500/50 group"
             >
-              <div className="w-12 h-12 bg-violet-500/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 bg-violet-500/20 rounded-none flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Layers className="w-6 h-6 text-violet-400" />
               </div>
               <div>
-                <h3 className="font-medium text-white">Channel Data (CSV)</h3>
-                <p className="text-sm text-dark-400">Spreadsheet-compatible export</p>
+                <h3 className="font-medium text-navy">Channel Data (CSV)</h3>
+                <p className="text-sm text-navy/60">Spreadsheet-compatible export</p>
               </div>
             </a>
           </div>
@@ -574,26 +574,26 @@ export default function Analysis() {
       )}
 
       {/* Help section */}
-      <div className="bg-dark-800/50 rounded-xl p-6 border border-dark-700">
-        <h3 className="text-lg font-semibold text-white mb-4">About the Analysis</h3>
+      <div className="bg-white/50 rounded-none p-6 border border-navy/10">
+        <h3 className="text-lg font-semibold text-navy mb-4">About the Analysis</h3>
         <div className="grid md:grid-cols-3 gap-6">
           <div>
             <h4 className="font-medium text-primary-400 mb-2">D∞ Flow Algorithm</h4>
-            <p className="text-sm text-dark-400">
+            <p className="text-sm text-navy/60">
               Uses D-Infinity algorithm (Tarboton, 1997) for accurate flow distribution 
               across multiple downslope cells.
             </p>
           </div>
           <div>
             <h4 className="font-medium text-primary-400 mb-2">Rational Method</h4>
-            <p className="text-sm text-dark-400">
+            <p className="text-sm text-navy/60">
               Peak flow calculated using Q=CIA where C is runoff coefficient, 
               I is rainfall intensity, and A is catchment area.
             </p>
           </div>
           <div>
             <h4 className="font-medium text-primary-400 mb-2">Manning's Equation</h4>
-            <p className="text-sm text-dark-400">
+            <p className="text-sm text-navy/60">
               Pipe sizing and velocity validation using Manning's equation for 
               open channel and pipe flow calculations.
             </p>
@@ -612,14 +612,14 @@ function StatCard({ icon, label, value, bgColor }: {
   bgColor: string 
 }) {
   return (
-    <div className="bg-dark-800 rounded-xl p-4 border border-dark-700">
+    <div className="bg-white rounded-none p-4 border border-navy/10">
       <div className="flex items-center gap-3 mb-2">
-        <div className={`w-8 h-8 ${bgColor} rounded-lg flex items-center justify-center`}>
+        <div className={`w-8 h-8 ${bgColor} rounded-none flex items-center justify-center`}>
           {icon}
         </div>
-        <span className="text-sm text-dark-400">{label}</span>
+        <span className="text-sm text-navy/60">{label}</span>
       </div>
-      <p className="text-2xl font-bold text-white">{value}</p>
+      <p className="text-2xl font-bold text-navy">{value}</p>
     </div>
   )
 }

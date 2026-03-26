@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 
 export default function Landing() {
@@ -9,7 +10,12 @@ export default function Landing() {
       <section className="flex-grow flex items-center pt-10 pb-20">
         <div className="max-w-7xl mx-auto w-full px-6 py-12 md:py-24 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left: Typography & CTA (60%) */}
-          <div className="lg:col-span-7 flex flex-col gap-8 lg:pr-12">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="lg:col-span-7 flex flex-col gap-8 lg:pr-12"
+          >
             <h1 className="text-5xl md:text-6xl lg:text-[72px] font-black leading-[1.1] tracking-[-0.03em] text-text-main font-heading">
               Precision in <br className="hidden lg:block"/> Planetary Scale.
             </h1>
@@ -22,10 +28,15 @@ export default function Landing() {
                 <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right: Abstract Visualization (40%) */}
-          <div className="lg:col-span-5 relative h-[400px] lg:h-[600px] w-full flex items-center justify-center bg-[#F7F3EB]/50 rounded-xl overflow-hidden border border-muted/10">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            className="lg:col-span-5 relative h-[400px] lg:h-[600px] w-full flex items-center justify-center bg-[#F7F3EB]/50 rounded-none overflow-hidden border border-muted/10"
+          >
             {/* Abstract Topological Map SVG */}
             <svg aria-label="Abstract topological map animation" className="w-full h-full opacity-80" data-alt="Abstract topological lines animating" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
               <g className="text-primary/40" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -39,13 +50,19 @@ export default function Landing() {
                 <circle className="animate-pulse" cx="150" cy="320" fill="#e98963" r="2" stroke="none" style={{ animationDelay: "0.8s" }}></circle>
               </g>
             </svg>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Mission Section */}
       <section id="mission" className="w-full flex flex-col bg-surface items-center py-20 md:py-32 px-4 md:px-8 relative z-10">
-        <div className="max-w-[800px] w-full flex flex-col items-center text-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+          className="max-w-[800px] w-full flex flex-col items-center text-center"
+        >
           <h4 className="text-primary text-[14px] font-display uppercase tracking-[2px] mb-8 font-medium">
             THE PHILOSOPHY
           </h4>
@@ -73,20 +90,32 @@ export default function Landing() {
               <span className="text-muted font-display text-base">System Uptime</span>
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Solutions Hub */}
       <section id="solutions" className="py-20 md:py-32 bg-background-light text-text-main px-4 md:px-10 z-10 relative">
         <div className="flex flex-col gap-20 max-w-[1200px] mx-auto">
-          <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-col items-center text-center max-w-3xl mx-auto mb-10"
+          >
             <h1 className="text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em] mb-6 font-heading">Solutions Hub</h1>
             <p className="text-lg text-muted">Comprehensive capabilities for planetary-scale environmental operations. Explore how our platform integrates with your infrastructure.</p>
-          </div>
+          </motion.div>
 
           {/* Feature 1 */}
-          <div className="flex flex-col md:flex-row items-center gap-10 md:gap-20">
-            <div className="w-full md:w-1/2 relative group rounded-sm overflow-hidden shadow-sm">
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col md:flex-row items-center gap-10 md:gap-20"
+          >
+            <div className="w-full md:w-1/2 relative group rounded-none overflow-hidden ">
               <div className="aspect-[3/2] w-full bg-cover bg-center" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAF_VPwP3-a6FNz-OJt4FSsxwQrBS2TjFnIfg8MrwNXYrf73-Cq-xC6qxyyFoBfOw8bnVSo7b4FXs3-BdqkOhNDh4NALsbifgh7s-LbpXkiyVqn3enw458DBnmsrsHprFckl3u9RfU1OxJElnP21wVUngpVXQ55Df1QgmF9mbqeazIzovC890As8tZ4IJvZ1VXTMjaz76WNdnZMY3scfcp1DU-G7wEYNPOFNtKShMjYuBKbiZqNKubfktfgLWnk9VWG8hlOYSACak_5')" }}></div>
               <div className="absolute inset-0 bg-accent/60 mix-blend-multiply transition-opacity duration-300 ease-in-out group-hover:opacity-0"></div>
             </div>
@@ -99,11 +128,17 @@ export default function Landing() {
                 <li>Granular data filtering by facility, region, or product line</li>
               </ul>
             </div>
-          </div>
+          </motion.div>
 
           {/* Feature 2 */}
-          <div className="flex flex-col md:flex-row-reverse items-center gap-10 md:gap-20">
-            <div className="w-full md:w-1/2 relative group rounded-sm overflow-hidden shadow-sm">
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col md:flex-row-reverse items-center gap-10 md:gap-20"
+          >
+            <div className="w-full md:w-1/2 relative group rounded-none overflow-hidden ">
               <div className="aspect-[3/2] w-full bg-cover bg-center" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDXpNQSzLCtX9geI8A9VPdNOY4cZ3EehT7AfrPtFcS1toZORJnyb7k0C3zN5EQU5BceLXyMFqchGfl0M8pRWx05T5dk5T6ME4_PDBG1Kc31GvqAa8Fp2UbxhbHSKg3XQ2s5vzeY6ITPWDKwThNuokm-25egqzNDL_m5UjpGocgvgTbk0fg_2pau5NBoHsSg7KnB0RxoY8mFHXJbZ7Vrb_PopucZSBm2HwZBX6BO6g9C9jllrBpCm-qSm62rW1fo2MBWQO5MyacJYdy6')" }}></div>
               <div className="absolute inset-0 bg-accent/60 mix-blend-multiply transition-opacity duration-300 ease-in-out group-hover:opacity-0"></div>
             </div>
@@ -116,11 +151,17 @@ export default function Landing() {
                 <li>Automated supplier compliance auditing tools</li>
               </ul>
             </div>
-          </div>
+          </motion.div>
 
           {/* Feature 3 */}
-          <div className="flex flex-col md:flex-row items-center gap-10 md:gap-20">
-            <div className="w-full md:w-1/2 relative group rounded-sm overflow-hidden shadow-sm">
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col md:flex-row items-center gap-10 md:gap-20"
+          >
+            <div className="w-full md:w-1/2 relative group rounded-none overflow-hidden ">
               <div className="aspect-[3/2] w-full bg-cover bg-center" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDdmqEIPsD1yI-lRe5noxigSX8oJejNqP4Aq5g623tEuVAgefv9NnLMhP3SSP_pl2X6sNfy6lKEvB1Xl_aroaWVgqyqLu92wbK47NonbN6TmpO9TpV4nqtO3yykzISjKLwg-93iwvM4Ayq4BsA-yDxdz13pRL_v03g3OJPdx4VN2CxPCI7rNXgwq4QQRnC_LYmxp6YeDYUFnwpIM4qpdwwf2TdFfj3NZvINx5sNvqVzw6j_P0Wkdo7n1gae6j4Jm_6rE-ooC8nxCQ3O')" }}></div>
               <div className="absolute inset-0 bg-accent/60 mix-blend-multiply transition-opacity duration-300 ease-in-out group-hover:opacity-0"></div>
             </div>
@@ -133,13 +174,19 @@ export default function Landing() {
                 <li>Continuous alignment with evolving regulatory standards</li>
               </ul>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Case Studies */}
-      <section id="cases" className="py-20 md:py-32 bg-background-light px-4 md:px-10 lg:px-20 overflow-hidden relative z-10 border-t border-muted/20">
-        <div className="max-w-[1440px] w-full mx-auto flex flex-col">
+      <section id="cases" className="py-20 md:py-32 bg-background-light px-4 md:px-10 lg:px-20 overflow-hidden relative z-10 border-t border-muted">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="max-w-[1440px] w-full mx-auto flex flex-col"
+        >
 
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
@@ -163,14 +210,14 @@ export default function Landing() {
           {/* Testimonial Track */}
           <div className="flex overflow-x-auto no-scrollbar snap-x snap-mandatory md:snap-none pb-8 -mx-4 px-4 md:mx-0 md:px-0 gap-6 md:gap-8 cursor-grab active:cursor-grabbing">
             {/* Card 1 */}
-            <div className="flex-none w-[85vw] md:w-[500px] lg:w-[600px] bg-white border border-muted/30 p-8 md:p-12 flex flex-col justify-between snap-center min-h-[400px]">
+            <div className="flex-none w-[85vw] md:w-[500px] lg:w-[600px] bg-white border border-muted p-8 md:p-12 flex flex-col justify-between snap-center min-h-[400px]">
               <div>
                 <span className="text-primary text-4xl mb-6 opacity-50 block font-serif">&quot;</span>
                 <p className="font-heading italic text-2xl md:text-3xl text-text-main leading-snug mb-8">
                   &quot;This technology has fundamentally transformed our approach to planetary scale analytics. The precision is unmatched in the industry.&quot;
                 </p>
               </div>
-              <div className="flex items-center justify-between border-t border-muted/30 pt-6 mt-auto">
+              <div className="flex items-center justify-between border-t border-muted pt-6 mt-auto">
                 <div>
                   <p className="font-display font-medium text-text-main text-lg">Jane Doe</p>
                   <p className="font-display text-muted text-sm">Chief Climate Officer</p>
@@ -182,14 +229,14 @@ export default function Landing() {
             </div>
 
             {/* Card 2 */}
-            <div className="flex-none w-[85vw] md:w-[500px] lg:w-[600px] bg-white border border-muted/30 p-8 md:p-12 flex flex-col justify-between snap-center min-h-[400px]">
+            <div className="flex-none w-[85vw] md:w-[500px] lg:w-[600px] bg-white border border-muted p-8 md:p-12 flex flex-col justify-between snap-center min-h-[400px]">
               <div>
                 <span className="text-primary text-4xl mb-6 opacity-50 block font-serif">&quot;</span>
                 <p className="font-heading italic text-2xl md:text-3xl text-text-main leading-snug mb-8">
                   &quot;A reliable, established partner in our ESG journey. Terra Pravah delivers precision data that our investors trust unconditionally.&quot;
                 </p>
               </div>
-              <div className="flex items-center justify-between border-t border-muted/30 pt-6 mt-auto">
+              <div className="flex items-center justify-between border-t border-muted pt-6 mt-auto">
                 <div>
                   <p className="font-display font-medium text-text-main text-lg">John Smith</p>
                   <p className="font-display text-muted text-sm">VP of ESG Investment</p>
@@ -201,14 +248,14 @@ export default function Landing() {
             </div>
 
             {/* Card 3 */}
-            <div className="flex-none w-[85vw] md:w-[500px] lg:w-[600px] bg-white border border-muted/30 p-8 md:p-12 flex flex-col justify-between snap-center min-h-[400px]">
+            <div className="flex-none w-[85vw] md:w-[500px] lg:w-[600px] bg-white border border-muted p-8 md:p-12 flex flex-col justify-between snap-center min-h-[400px]">
               <div>
                 <span className="text-primary text-4xl mb-6 opacity-50 block font-serif">&quot;</span>
                 <p className="font-heading italic text-2xl md:text-3xl text-text-main leading-snug mb-8">
                   &quot;The insights we've gained have been invaluable for our sustainability managers. It's not just data; it's a clear roadmap.&quot;
                 </p>
               </div>
-              <div className="flex items-center justify-between border-t border-muted/30 pt-6 mt-auto">
+              <div className="flex items-center justify-between border-t border-muted pt-6 mt-auto">
                 <div>
                   <p className="font-display font-medium text-text-main text-lg">Alice Johnson</p>
                   <p className="font-display text-muted text-sm">Director of Sustainability</p>
@@ -222,7 +269,7 @@ export default function Landing() {
             {/* Spacer for right padding on scroll */}
             <div className="hidden md:block flex-none w-[10vw]"></div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
     </div>

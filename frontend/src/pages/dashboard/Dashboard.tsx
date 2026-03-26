@@ -118,28 +118,24 @@ export default function Dashboard() {
     {
       name: 'Total Projects',
       value: stats.totalProjects,
-      change: stats.projectsChange,
       icon: FolderIcon,
       color: 'bg-primary/10 text-primary',
     },
     {
       name: 'Active Analyses',
       value: stats.activeAnalyses,
-      change: stats.analysesChange,
       icon: ChartBarIcon,
       color: 'bg-primary/10 text-primary',
     },
     {
       name: 'Reports Generated',
       value: stats.reportsGenerated,
-      change: 8,
       icon: DocumentTextIcon,
       color: 'bg-primary/10 text-primary',
     },
     {
       name: 'Storage Used',
       value: stats.storageUsed,
-      change: null,
       icon: ClockIcon,
       color: 'bg-primary/10 text-primary',
     },
@@ -166,7 +162,7 @@ export default function Dashboard() {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-text-main font-heading">
-            Welcome back, {user?.firstName || 'Engineer'}! 👋
+            Welcome back, {user?.firstName || 'Engineer'}!
           </h1>
           <p className="text-muted mt-1">
             Here's what's happening with your planetary scale projects.
@@ -190,24 +186,10 @@ export default function Dashboard() {
           >
             <div className="flex items-start justify-between">
               <div
-                className={`w-12 h-12 rounded-sm flex items-center justify-center ${stat.color}`}
+                className={`w-12 h-12 rounded-none flex items-center justify-center ${stat.color}`}
               >
                 <stat.icon className="w-6 h-6" />
               </div>
-              {stat.change !== null && (
-                <span
-                  className={`flex items-center text-sm font-medium ${
-                    stat.change >= 0 ? 'text-green-600' : 'text-rose-600'
-                  }`}
-                >
-                  {stat.change >= 0 ? (
-                    <ArrowTrendingUpIcon className="w-4 h-4 mr-1" />
-                  ) : (
-                    <ArrowTrendingDownIcon className="w-4 h-4 mr-1" />
-                  )}
-                  {Math.abs(stat.change)}%
-                </span>
-              )}
             </div>
             <div className="mt-4">
               <h3 className="text-3xl font-bold font-heading">{stat.value}</h3>
@@ -230,8 +212,8 @@ export default function Dashboard() {
           {isLoading ? (
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="flex items-center gap-4 p-4 rounded-sm bg-background-light">
-                  <div className="w-12 h-12 skeleton rounded-sm" />
+                <div key={i} className="flex items-center gap-4 p-4 rounded-none bg-background-light">
+                  <div className="w-12 h-12 skeleton rounded-none" />
                   <div className="flex-1">
                     <div className="h-4 w-32 skeleton rounded mb-2" />
                     <div className="h-3 w-24 skeleton rounded" />
@@ -245,9 +227,9 @@ export default function Dashboard() {
                 <Link
                   key={project.id}
                   to={`/dashboard/projects/${project.id}`}
-                  className="flex items-center gap-4 p-4 rounded-sm bg-background-light hover:bg-muted/10 transition-colors border border-transparent hover:border-muted/20"
+                  className="flex items-center gap-4 p-4 rounded-none bg-background-light hover:bg-muted/10 transition-colors border border-transparent hover:border-muted"
                 >
-                  <div className="w-12 h-12 rounded-sm bg-primary/10 flex items-center justify-center text-primary font-bold">
+                  <div className="w-12 h-12 rounded-none bg-primary/10 flex items-center justify-center text-primary font-bold">
                     {project.name.charAt(0)}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -304,9 +286,9 @@ export default function Dashboard() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link
             to="/dashboard/projects/new"
-            className="flex items-center gap-3 p-4 rounded-sm bg-background-light hover:bg-muted/10 transition-colors"
+            className="flex items-center gap-3 p-4 rounded-none bg-background-light hover:bg-muted/10 transition-colors"
           >
-            <div className="w-10 h-10 rounded-sm bg-primary/10 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-none bg-primary/10 flex items-center justify-center">
               <PlusIcon className="w-5 h-5 text-primary" />
             </div>
             <div>
@@ -316,9 +298,9 @@ export default function Dashboard() {
           </Link>
           <Link
             to="/dashboard/analysis"
-            className="flex items-center gap-3 p-4 rounded-sm bg-background-light hover:bg-muted/10 transition-colors"
+            className="flex items-center gap-3 p-4 rounded-none bg-background-light hover:bg-muted/10 transition-colors"
           >
-            <div className="w-10 h-10 rounded-sm bg-primary/10 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-none bg-primary/10 flex items-center justify-center">
               <ChartBarIcon className="w-5 h-5 text-primary" />
             </div>
             <div>
@@ -328,9 +310,9 @@ export default function Dashboard() {
           </Link>
           <Link
             to="/dashboard/reports"
-            className="flex items-center gap-3 p-4 rounded-sm bg-background-light hover:bg-muted/10 transition-colors"
+            className="flex items-center gap-3 p-4 rounded-none bg-background-light hover:bg-muted/10 transition-colors"
           >
-            <div className="w-10 h-10 rounded-sm bg-primary/10 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-none bg-primary/10 flex items-center justify-center">
               <DocumentTextIcon className="w-5 h-5 text-primary" />
             </div>
             <div>
@@ -340,9 +322,9 @@ export default function Dashboard() {
           </Link>
           <Link
             to="/dashboard/teams"
-            className="flex items-center gap-3 p-4 rounded-sm bg-background-light hover:bg-muted/10 transition-colors"
+            className="flex items-center gap-3 p-4 rounded-none bg-background-light hover:bg-muted/10 transition-colors"
           >
-            <div className="w-10 h-10 rounded-sm bg-primary/10 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-none bg-primary/10 flex items-center justify-center">
               <FolderIcon className="w-5 h-5 text-primary" />
             </div>
             <div>

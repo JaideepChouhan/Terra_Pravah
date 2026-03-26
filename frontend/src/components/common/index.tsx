@@ -32,14 +32,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     disabled,
     ...props 
   }, ref) => {
-    const baseStyles = 'inline-flex items-center justify-center gap-2 font-medium rounded-xl transition-all duration-300 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed'
+    const baseStyles = 'inline-flex items-center justify-center gap-2 font-medium rounded-none transition-all duration-300 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed'
     
     const variants = {
-      primary: 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/40 hover:-translate-y-0.5 active:translate-y-0',
+      primary: 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white  shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/40 hover:-translate-y-0.5 active:translate-y-0',
       secondary: 'bg-slate-800/80 text-slate-200 border border-slate-700/50 hover:bg-slate-700/80 hover:border-slate-600/50 backdrop-blur-sm',
       outline: 'bg-transparent border-2 border-indigo-500/50 text-indigo-400 hover:bg-indigo-500/10 hover:border-indigo-400',
       ghost: 'bg-transparent text-slate-400 hover:bg-slate-800/50 hover:text-white',
-      danger: 'bg-red-600/90 text-white hover:bg-red-600 shadow-lg shadow-red-500/20'
+      danger: 'bg-red-600/90 text-white hover:bg-red-600  shadow-red-500/20'
     }
     
     const sizes = {
@@ -98,7 +98,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             className={`
-              w-full px-4 py-3.5 bg-slate-900/50 border rounded-xl text-white 
+              w-full px-4 py-3.5 bg-slate-900/50 border rounded-none text-white 
               placeholder-slate-500 transition-all duration-300
               focus:bg-slate-900/80 focus:ring-0
               ${leftIcon ? 'pl-12' : ''}
@@ -247,7 +247,7 @@ export function Alert({
 
   return (
     <div className={`
-      p-4 rounded-xl border ${config.bg} ${className}
+      p-4 rounded-none border ${config.bg} ${className}
     `}>
       <div className="flex gap-3">
         <div className="shrink-0">{config.icon}</div>
@@ -369,7 +369,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
                   <h3 className="text-lg font-semibold text-white">{title}</h3>
                   <button
                     onClick={onClose}
-                    className="p-2 hover:bg-slate-800 rounded-lg transition-colors"
+                    className="p-2 hover:bg-slate-800 rounded-none transition-colors"
                   >
                     <X className="w-4 h-4 text-slate-400" />
                   </button>
@@ -400,8 +400,8 @@ export function StatCard({ title, value, change, icon, gradient }: StatCardProps
   return (
     <Card hover className="p-6">
       <div className="flex items-start justify-between">
-        <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${gradient} p-0.5`}>
-          <div className="w-full h-full bg-slate-900 rounded-xl flex items-center justify-center">
+        <div className={`w-12 h-12 rounded-none bg-gradient-to-r ${gradient} p-0.5`}>
+          <div className="w-full h-full bg-slate-900 rounded-none flex items-center justify-center">
             {icon}
           </div>
         </div>

@@ -14,7 +14,7 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-[#F7F3EB] border-b border-muted/30">
+    <header className="fixed top-0 w-full z-50 bg-[#F7F3EB] border-b border-muted">
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-3">
@@ -48,9 +48,14 @@ export default function Navbar() {
               Dashboard
             </Link>
           ) : (
-            <Link to="/register" className="btn-primary flex items-center gap-2 group">
-              <span>Request Access</span>
-            </Link>
+            <>
+              <Link to="/login" className="nav-link text-sm font-medium text-text-main hover:text-primary transition-colors">
+                Sign In
+              </Link>
+              <Link to="/register" className="btn-primary flex items-center gap-2 group">
+                <span>Request Access</span>
+              </Link>
+            </>
           )}
         </div>
 
@@ -70,7 +75,7 @@ export default function Navbar() {
 
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#F7F3EB] border-t border-muted/30 py-4 absolute w-full top-20 shadow-lg">
+        <div className="md:hidden bg-[#F7F3EB] border-t border-muted py-4 absolute w-full top-20 ">
           <div className="flex flex-col gap-4 px-6">
             {navigation.map((item) => (
               <a
@@ -82,7 +87,7 @@ export default function Navbar() {
                 {item.name}
               </a>
             ))}
-            <div className="flex flex-col gap-2 pt-4 border-t border-muted/30">
+            <div className="flex flex-col gap-2 pt-4 border-t border-muted">
               {isAuthenticated ? (
                 <Link
                   to="/dashboard"
@@ -92,13 +97,22 @@ export default function Navbar() {
                   Dashboard
                 </Link>
               ) : (
-                <Link
-                  to="/register"
-                  className="btn-primary w-full text-center"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Request Access
-                </Link>
+                <>
+                  <Link
+                    to="/login"
+                    className="btn-secondary w-full text-center"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="btn-primary w-full text-center"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Request Access
+                  </Link>
+                </>
               )}
             </div>
           </div>

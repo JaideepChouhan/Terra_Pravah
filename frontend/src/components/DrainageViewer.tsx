@@ -24,9 +24,10 @@ export default function DrainageViewer({
 
   // Determine the endpoint based on mode
   const getVisualizationUrl = () => {
-    const baseUrl = import.meta.env.VITE_API_URL || ''
     const token = localStorage.getItem('token')
-    
+    if (token === 'demo-token-123') return ''
+
+    const baseUrl = import.meta.env.VITE_API_URL || ''
     switch (mode) {
       case 'dtm':
         return `${baseUrl}/api/analysis/projects/${projectId}/raw-dtm?token=${token}`
@@ -36,6 +37,30 @@ export default function DrainageViewer({
     }
   }
 
+  const getSrcDoc = () => {
+    if (localStorage.getItem('token') === 'demo-token-123') {
+        const title = mode === 'dtm' ? 'Mock DTM Viewer' : 'Mock Drainage Viewer'
+        const color = mode === 'dtm' ? '#4a90e2' : '#2ecc71'
+        return `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { margin: 0; background: #fafafa; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; color: #3b4252;}
+    .model { width: 120px; height: 120px; background: ${color}; animation: spin 4s infinite linear; border-radius: 15px; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div style="text-align:center;">
+    <div class="model" style="margin: 0 auto 30px;"></div>
+    <h2>${title}</h2>
+    <p>Simulated 3D visualization instance for demo mode.</p>
+  </div>
+</body>
+</html>`
+    }
+    return undefined;
   useEffect(() => {
     setLoading(true)
     setError(null)
@@ -79,46 +104,51 @@ export default function DrainageViewer({
   const refresh = () => {
     if (iframeRef.current) {
       setLoading(true)
-      iframeRef.current.src = getVisualizationUrl()
+      const token = localStorage.getItem('token')
+      if (token === 'demo-token-123') {
+        iframeRef.current.srcDoc = getSrcDoc() || ''
+      } else {
+        iframeRef.current.src = getVisualizationUrl()
+      }
     }
   }
 
   return (
     <div 
       ref={containerRef}
-      className={`relative bg-dark-900 rounded-xl overflow-hidden border border-dark-700 ${className}`}
+      className={`relative bg-background-light rounded-none overflow-hidden border border-navy/10 ${className}`}
     >
       {/* Toolbar */}
       <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
         <button
           onClick={refresh}
-          className="p-2 bg-dark-800/90 hover:bg-dark-700 rounded-lg backdrop-blur-sm transition-colors"
+          className="p-2 bg-white/90 hover:bg-neutral-100 rounded-none backdrop-blur-sm transition-colors"
           title="Refresh"
         >
-          <RefreshCw className="w-4 h-4 text-dark-300" />
+          <RefreshCw className="w-4 h-4 text-navy-muted" />
         </button>
         <button
           onClick={toggleFullscreen}
-          className="p-2 bg-dark-800/90 hover:bg-dark-700 rounded-lg backdrop-blur-sm transition-colors"
+          className="p-2 bg-white/90 hover:bg-neutral-100 rounded-none backdrop-blur-sm transition-colors"
           title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
         >
-          <Maximize2 className="w-4 h-4 text-dark-300" />
+          <Maximize2 className="w-4 h-4 text-navy-muted" />
         </button>
       </div>
 
       {/* Mode indicator */}
       <div className="absolute top-4 left-4 z-20">
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-dark-800/90 rounded-lg backdrop-blur-sm">
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-white/90 rounded-none backdrop-blur-sm">
           {mode === 'dtm' && (
             <>
               <Mountain className="w-4 h-4 text-blue-400" />
-              <span className="text-sm text-dark-200">Digital Terrain Model</span>
+              <span className="text-sm text-navy-muted">Digital Terrain Model</span>
             </>
           )}
           {mode === 'drainage' && (
             <>
               <Layers className="w-4 h-4 text-green-400" />
-              <span className="text-sm text-dark-200">Drainage Network</span>
+              <span className="text-sm text-navy-muted">Drainage Network</span>
             </>
           )}
         </div>
@@ -126,23 +156,23 @@ export default function DrainageViewer({
 
       {/* Loading overlay */}
       {loading && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-dark-900/80 backdrop-blur-sm">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-background-light/80 backdrop-blur-sm">
           <div className="text-center">
             <div className="w-12 h-12 border-4 border-primary-500/30 border-t-primary-500 rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-dark-300">Loading visualization...</p>
+            <p className="text-navy-muted">Loading visualization...</p>
           </div>
         </div>
       )}
 
       {/* Error overlay */}
       {error && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-dark-900/80 backdrop-blur-sm">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-background-light/80 backdrop-blur-sm">
           <div className="text-center max-w-md px-6">
             <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-3xl">⚠️</span>
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">Visualization Error</h3>
-            <p className="text-dark-400 mb-4">{error}</p>
+            <h3 className="text-lg font-semibold text-navy mb-2">Visualization Error</h3>
+            <p className="text-navy/60 mb-4">{error}</p>
             <button 
               onClick={refresh}
               className="btn-primary"
@@ -157,6 +187,7 @@ export default function DrainageViewer({
       <iframe
         ref={iframeRef}
         src={getVisualizationUrl()}
+        srcDoc={getSrcDoc()}
         className="w-full h-full min-h-[500px] border-0"
         onLoad={handleIframeLoad}
         onError={handleIframeError}
@@ -175,13 +206,13 @@ interface VisualizationControlsProps {
 
 export function VisualizationControls({ mode, onModeChange }: VisualizationControlsProps) {
   return (
-    <div className="flex items-center gap-2 p-1 bg-dark-800 rounded-lg">
+    <div className="flex items-center gap-2 p-1 bg-white rounded-none">
       <button
         onClick={() => onModeChange('drainage')}
-        className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+        className={`px-4 py-2 rounded-none text-sm font-medium transition-all ${
           mode === 'drainage' 
-            ? 'bg-primary-600 text-white shadow-lg' 
-            : 'text-dark-300 hover:text-white hover:bg-dark-700'
+            ? 'bg-primary-600 text-navy ' 
+            : 'text-navy-muted hover:text-navy hover:bg-neutral-100'
         }`}
       >
         <span className="flex items-center gap-2">
@@ -191,10 +222,10 @@ export function VisualizationControls({ mode, onModeChange }: VisualizationContr
       </button>
       <button
         onClick={() => onModeChange('dtm')}
-        className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+        className={`px-4 py-2 rounded-none text-sm font-medium transition-all ${
           mode === 'dtm' 
-            ? 'bg-primary-600 text-white shadow-lg' 
-            : 'text-dark-300 hover:text-white hover:bg-dark-700'
+            ? 'bg-primary-600 text-navy ' 
+            : 'text-navy-muted hover:text-navy hover:bg-neutral-100'
         }`}
       >
         <span className="flex items-center gap-2">

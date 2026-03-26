@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../store/authStore'
+import { motion } from 'framer-motion'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 
 export default function Login() {
   const navigate = useNavigate()
-  const { login, isLoading, error, clearError } = useAuthStore()
+  const { login, demoLogin, isLoading, error, clearError } = useAuthStore()
   const [formError, setFormError] = useState<string | null>(null)
   
   const [formData, setFormData] = useState({
@@ -27,7 +28,12 @@ export default function Login() {
   }
 
   return (
-    <main className="w-full max-w-[400px] mx-auto px-6 py-16 md:py-24 flex flex-col items-center">
+    <motion.main 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="w-full max-w-[400px] mx-auto px-6 py-16 md:py-24 flex flex-col items-center"
+    >
       {/* Header */}
       <header className="w-full text-center mb-12">
         <h1 className="text-navy text-[48px] font-black leading-tight tracking-tightest mb-4 font-heading">
@@ -92,12 +98,26 @@ export default function Login() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-navy text-background-light py-4 px-6 rounded-sm flex justify-center items-center gap-2 hover:bg-navy-muted transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy focus:ring-offset-primary disabled:opacity-50"
+            className="w-full bg-navy text-background-light py-4 px-6 rounded-none flex justify-center items-center gap-2 hover:bg-navy-muted transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy focus:ring-offset-primary disabled:opacity-50"
           >
             <span className="text-base font-medium tracking-[0.05em] uppercase">
               {isLoading ? 'Signing in...' : 'Sign In'}
             </span>
             <ArrowRightIcon className="w-5 h-5" />
+          </button>
+          
+          <button
+            type="button"
+            onClick={() => {
+              demoLogin()
+              navigate('/dashboard')
+            }}
+            disabled={isLoading}
+            className="w-full bg-transparent border border-navy text-navy py-4 px-6 rounded-none flex justify-center items-center gap-2 hover:bg-navy/5 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy focus:ring-offset-primary disabled:opacity-50"
+          >
+            <span className="text-base font-medium tracking-[0.05em] uppercase">
+              Demo Login
+            </span>
           </button>
         </div>
       </form>
@@ -111,6 +131,6 @@ export default function Login() {
           </Link>
         </p>
       </div>
-    </main>
+    </motion.main>
   )
 }

@@ -142,23 +142,23 @@ export default function Reports() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white flex items-center gap-3">
+        <h1 className="text-2xl font-bold text-navy flex items-center gap-3">
           <FileText className="w-7 h-7 text-primary-500" />
           Reports
         </h1>
-        <p className="text-dark-400 mt-2">
+        <p className="text-navy/60 mt-2">
           Generate professional reports from your completed drainage analysis projects
         </p>
       </div>
 
       {/* Project Selection */}
       <div className="glass-card p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">1. Select Project</h2>
+        <h2 className="text-lg font-semibold text-navy mb-4">1. Select Project</h2>
         
         {completedProjects.length === 0 ? (
           <div className="text-center py-8">
             <Clock className="w-12 h-12 text-dark-500 mx-auto mb-3" />
-            <p className="text-dark-400">No completed projects available</p>
+            <p className="text-navy/60">No completed projects available</p>
             <p className="text-dark-500 text-sm mt-1">
               Complete a drainage analysis to generate reports
             </p>
@@ -172,18 +172,18 @@ export default function Reports() {
               <button
                 key={project.id}
                 onClick={() => setSelectedProject(project.id)}
-                className={`p-4 rounded-lg border text-left transition-all ${
+                className={`p-4 rounded-none border text-left transition-all ${
                   selectedProject === project.id
                     ? 'border-primary-500 bg-primary-500/10'
-                    : 'border-dark-700 hover:border-dark-600 bg-dark-800/50'
+                    : 'border-navy/10 hover:border-navy/20 bg-white/50'
                 }`}
               >
                 <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="font-medium text-white">{project.name}</h3>
+                    <h3 className="font-medium text-navy">{project.name}</h3>
                     <div className="flex items-center gap-2 mt-1">
                       <CheckCircle className="w-3 h-3 text-primary-500" />
-                      <span className="text-xs text-dark-400">Completed</span>
+                      <span className="text-xs text-navy/60">Completed</span>
                     </div>
                   </div>
                   {selectedProject === project.id && (
@@ -191,7 +191,7 @@ export default function Reports() {
                   )}
                 </div>
                 {(project.total_channels || project.total_length_km) && (
-                  <div className="flex items-center gap-3 mt-3 text-xs text-dark-400">
+                  <div className="flex items-center gap-3 mt-3 text-xs text-navy/60">
                     <span className="flex items-center gap-1">
                       <Droplets className="w-3 h-3" />
                       {project.total_channels} channels
@@ -208,7 +208,7 @@ export default function Reports() {
       {/* Template Selection */}
       {selectedProject && (
         <div className="glass-card p-6">
-          <h2 className="text-lg font-semibold text-white mb-4">2. Select Report Template</h2>
+          <h2 className="text-lg font-semibold text-navy mb-4">2. Select Report Template</h2>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {reportTemplates.map((template) => {
@@ -217,23 +217,23 @@ export default function Reports() {
                 <button
                   key={template.id}
                   onClick={() => setSelectedTemplate(template.id)}
-                  className={`p-4 rounded-lg border text-left transition-all ${
+                  className={`p-4 rounded-none border text-left transition-all ${
                     selectedTemplate === template.id
                       ? 'border-primary-500 bg-primary-500/10'
-                      : 'border-dark-700 hover:border-dark-600 bg-dark-800/50'
+                      : 'border-navy/10 hover:border-navy/20 bg-white/50'
                   }`}
                 >
                   <div className="flex items-start gap-3">
-                    <div className={`p-2 rounded-lg ${
-                      selectedTemplate === template.id ? 'bg-primary-500/20' : 'bg-dark-700'
+                    <div className={`p-2 rounded-none ${
+                      selectedTemplate === template.id ? 'bg-primary-500/20' : 'bg-neutral-100'
                     }`}>
                       <Icon className={`w-5 h-5 ${
-                        selectedTemplate === template.id ? 'text-primary-400' : 'text-dark-400'
+                        selectedTemplate === template.id ? 'text-primary-400' : 'text-navy/60'
                       }`} />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-medium text-white">{template.name}</h3>
-                      <p className="text-xs text-dark-400 mt-1">{template.description}</p>
+                      <h3 className="font-medium text-navy">{template.name}</h3>
+                      <p className="text-xs text-navy/60 mt-1">{template.description}</p>
                     </div>
                   </div>
                 </button>
@@ -246,7 +246,7 @@ export default function Reports() {
       {/* Generate Button */}
       {selectedProject && selectedTemplate && (
         <div className="glass-card p-6">
-          <h2 className="text-lg font-semibold text-white mb-4">3. Generate Report</h2>
+          <h2 className="text-lg font-semibold text-navy mb-4">3. Generate Report</h2>
           
           <div className="flex items-center gap-4 flex-wrap">
             <button
@@ -280,11 +280,11 @@ export default function Reports() {
           </div>
           
           {generatedReport && (
-            <div className="mt-4 p-4 bg-primary-500/10 border border-primary-500/20 rounded-lg">
+            <div className="mt-4 p-4 bg-primary-500/10 border border-primary-500/20 rounded-none">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-5 h-5 text-primary-500" />
-                  <span className="text-white">Report generated successfully!</span>
+                  <span className="text-navy">Report generated successfully!</span>
                 </div>
                 <a
                   href={generatedReport}
@@ -304,7 +304,7 @@ export default function Reports() {
       {/* Recent Reports */}
       <div className="glass-card p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white">Recent Reports</h2>
+          <h2 className="text-lg font-semibold text-navy">Recent Reports</h2>
           <Link 
             to="/dashboard/projects" 
             className="text-sm text-primary-400 hover:text-primary-300 flex items-center gap-1"
@@ -314,7 +314,7 @@ export default function Reports() {
           </Link>
         </div>
         
-        <div className="text-center py-8 text-dark-400">
+        <div className="text-center py-8 text-navy/60">
           <FileText className="w-12 h-12 text-dark-600 mx-auto mb-3" />
           <p>Generated reports will appear here</p>
         </div>

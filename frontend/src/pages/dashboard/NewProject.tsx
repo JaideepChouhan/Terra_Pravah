@@ -223,13 +223,13 @@ export default function NewProject() {
       <div className="flex items-center gap-4 mb-8">
         <Link 
           to="/dashboard/projects" 
-          className="p-2 hover:bg-dark-800 rounded-lg transition-colors"
+          className="p-2 hover:bg-white rounded-none transition-colors"
         >
-          <ArrowLeft className="w-5 h-5 text-dark-400" />
+          <ArrowLeft className="w-5 h-5 text-navy/60" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-white">Create New Project</h1>
-          <p className="text-dark-400">Upload your LiDAR data and configure analysis settings</p>
+          <h1 className="text-2xl font-bold text-navy">Create New Project</h1>
+          <p className="text-navy/60">Upload your LiDAR data and configure analysis settings</p>
         </div>
       </div>
 
@@ -245,10 +245,10 @@ export default function NewProject() {
               <div className="flex flex-col items-center">
                 <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
                   isActive 
-                    ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/30' 
+                    ? 'bg-primary-600 text-navy  shadow-primary-500/30' 
                     : isCompleted
-                      ? 'bg-green-500 text-white'
-                      : 'bg-dark-800 text-dark-400'
+                      ? 'bg-green-500 text-navy'
+                      : 'bg-white text-navy/60'
                 }`}>
                   {isCompleted ? (
                     <CheckCircle className="w-6 h-6" />
@@ -256,7 +256,7 @@ export default function NewProject() {
                     <Icon className="w-5 h-5" />
                   )}
                 </div>
-                <span className={`mt-2 text-sm ${isActive ? 'text-white font-medium' : 'text-dark-400'}`}>
+                <span className={`mt-2 text-sm ${isActive ? 'text-navy font-medium' : 'text-navy/60'}`}>
                   {step.label}
                 </span>
               </div>
@@ -264,7 +264,7 @@ export default function NewProject() {
                 <div className={`w-20 h-0.5 mx-2 ${
                   stepOrder.indexOf(step.id) < currentIndex 
                     ? 'bg-green-500' 
-                    : 'bg-dark-700'
+                    : 'bg-neutral-100'
                 }`} />
               )}
             </div>
@@ -274,7 +274,7 @@ export default function NewProject() {
 
       {/* Error display */}
       {error && (
-        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-start gap-3">
+        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-none flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
           <div>
             <p className="text-red-400">{error}</p>
@@ -286,19 +286,19 @@ export default function NewProject() {
       )}
 
       {/* Step Content */}
-      <div className="bg-dark-800 rounded-xl border border-dark-700 p-8">
+      <div className="bg-white rounded-none border border-navy/10 p-8">
         
         {/* Step 1: Project Details */}
         {currentStep === 'details' && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-xl font-semibold text-white mb-2">Project Details</h2>
-              <p className="text-dark-400">Enter basic information about your drainage project</p>
+              <h2 className="text-xl font-semibold text-navy mb-2">Project Details</h2>
+              <p className="text-navy/60">Enter basic information about your drainage project</p>
             </div>
             
             <div className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-dark-200 mb-2">
+                <label className="block text-sm font-medium text-navy-muted mb-2">
                   Project Name <span className="text-red-400">*</span>
                 </label>
                 <input
@@ -311,7 +311,7 @@ export default function NewProject() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-dark-200 mb-2">
+                <label className="block text-sm font-medium text-navy-muted mb-2">
                   Description
                 </label>
                 <textarea
@@ -324,7 +324,7 @@ export default function NewProject() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-dark-200 mb-2">
+                <label className="block text-sm font-medium text-navy-muted mb-2">
                   Location Name
                 </label>
                 <input
@@ -358,8 +358,8 @@ export default function NewProject() {
         {currentStep === 'upload' && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-xl font-semibold text-white mb-2">Upload Terrain File</h2>
-              <p className="text-dark-400">Upload GeoTIFF directly, or upload LAS/LAZ to generate DTM automatically</p>
+              <h2 className="text-xl font-semibold text-navy mb-2">Upload Terrain File</h2>
+              <p className="text-navy/60">Upload GeoTIFF directly, or upload LAS/LAZ to generate DTM automatically</p>
             </div>
             
             {/* File drop zone */}
@@ -369,12 +369,12 @@ export default function NewProject() {
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
               className={`
-                relative border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all
+                relative border-2 border-dashed rounded-none p-12 text-center cursor-pointer transition-all
                 ${isDragging 
                   ? 'border-primary-500 bg-primary-500/10' 
                   : selectedFile
                     ? 'border-green-500 bg-green-500/5'
-                    : 'border-dark-600 hover:border-dark-500 hover:bg-dark-700/50'
+                    : 'border-navy/20 hover:border-dark-500 hover:bg-neutral-100/50'
                 }
               `}
             >
@@ -392,8 +392,8 @@ export default function NewProject() {
                     <Layers className="w-8 h-8 text-green-400" />
                   </div>
                   <div>
-                    <p className="text-white font-medium">{fileInfo?.name}</p>
-                    <p className="text-dark-400 text-sm">{formatFileSize(fileInfo?.size || 0)}</p>
+                    <p className="text-navy font-medium">{fileInfo?.name}</p>
+                    <p className="text-navy/60 text-sm">{formatFileSize(fileInfo?.size || 0)}</p>
                   </div>
                   <button
                     onClick={(e) => {
@@ -401,21 +401,21 @@ export default function NewProject() {
                       setSelectedFile(null)
                       setFileInfo(null)
                     }}
-                    className="text-sm text-dark-400 hover:text-white underline"
+                    className="text-sm text-navy/60 hover:text-navy underline"
                   >
                     Choose a different file
                   </button>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="w-16 h-16 bg-dark-700 rounded-full flex items-center justify-center mx-auto">
-                    <FileUp className="w-8 h-8 text-dark-400" />
+                  <div className="w-16 h-16 bg-neutral-100 rounded-full flex items-center justify-center mx-auto">
+                    <FileUp className="w-8 h-8 text-navy/60" />
                   </div>
                   <div>
-                    <p className="text-white font-medium">
+                    <p className="text-navy font-medium">
                       {isDragging ? 'Drop your file here' : 'Drag and drop your DTM file here'}
                     </p>
-                    <p className="text-dark-400 text-sm mt-1">
+                    <p className="text-navy/60 text-sm mt-1">
                       or click to browse • GeoTIFF (.tif, .tiff) / LAS / LAZ • Max 500MB
                     </p>
                   </div>
@@ -423,9 +423,9 @@ export default function NewProject() {
               )}
             </div>
             
-            <div className="bg-dark-700/50 rounded-lg p-4">
-              <h4 className="text-sm font-medium text-dark-200 mb-2">Supported Data Formats</h4>
-              <ul className="text-sm text-dark-400 space-y-1">
+            <div className="bg-neutral-100/50 rounded-none p-4">
+              <h4 className="text-sm font-medium text-navy-muted mb-2">Supported Data Formats</h4>
+              <ul className="text-sm text-navy/60 space-y-1">
                 <li>• GeoTIFF (.tif, .tiff) - Upload ready DTM directly</li>
                 <li>• LAS/LAZ (.las, .laz) - Auto-generate DTM in Terra Pravah</li>
                 <li>• Coordinate systems: Any projected CRS (UTM recommended)</li>
@@ -460,16 +460,16 @@ export default function NewProject() {
         {currentStep === 'configure' && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-xl font-semibold text-white mb-2">Analysis Configuration</h2>
-              <p className="text-dark-400">Configure parameters for drainage network analysis</p>
+              <h2 className="text-xl font-semibold text-navy mb-2">Analysis Configuration</h2>
+              <p className="text-navy/60">Configure parameters for drainage network analysis</p>
             </div>
 
             {isLidarFile(selectedFile) && (
-              <div className="bg-primary-500/10 border border-primary-500/20 rounded-lg p-4">
+              <div className="bg-primary-500/10 border border-primary-500/20 rounded-none p-4">
                 <h4 className="text-sm font-medium text-primary-300 mb-3">LAS/LAZ to DTM Generation</h4>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-dark-200 mb-2">
+                    <label className="block text-sm font-medium text-navy-muted mb-2">
                       DTM Resolution (m)
                     </label>
                     <input
@@ -482,7 +482,7 @@ export default function NewProject() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-dark-200 mb-2">
+                    <label className="block text-sm font-medium text-navy-muted mb-2">
                       EPSG (optional)
                     </label>
                     <input
@@ -494,7 +494,7 @@ export default function NewProject() {
                     />
                   </div>
                 </div>
-                <p className="text-xs text-dark-400 mt-3">
+                <p className="text-xs text-navy/60 mt-3">
                   Terra Pravah will upload your LAS/LAZ file, generate DTM, apply hydrological conditioning, and use that DTM for analysis.
                 </p>
               </div>
@@ -502,7 +502,7 @@ export default function NewProject() {
             
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-dark-200 mb-2">
+                <label className="block text-sm font-medium text-navy-muted mb-2">
                   Flow Routing Algorithm
                 </label>
                 <select
@@ -513,13 +513,13 @@ export default function NewProject() {
                   <option value="d8">D8 - Fast & Recommended</option>
                   <option value="dinf">D-Infinity (D∞) - More accurate, slower</option>
                 </select>
-                <p className="text-xs text-dark-400 mt-1">
+                <p className="text-xs text-navy/60 mt-1">
                   D8 is faster for large terrains. D∞ provides more accurate flow distribution.
                 </p>
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-dark-200 mb-2">
+                <label className="block text-sm font-medium text-navy-muted mb-2">
                   Design Storm Return Period (years)
                 </label>
                 <select
@@ -537,7 +537,7 @@ export default function NewProject() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-dark-200 mb-2">
+                <label className="block text-sm font-medium text-navy-muted mb-2">
                   Runoff Coefficient (C)
                 </label>
                 <select
@@ -552,43 +552,43 @@ export default function NewProject() {
                   <option value={0.70}>0.70 - Commercial/Industrial</option>
                   <option value={0.95}>0.95 - Impervious Surfaces</option>
                 </select>
-                <p className="text-xs text-dark-400 mt-1">
+                <p className="text-xs text-navy/60 mt-1">
                   Fraction of rainfall that becomes runoff
                 </p>
               </div>
             </div>
             
             {/* Summary */}
-            <div className="bg-dark-700/50 rounded-lg p-4">
-              <h4 className="text-sm font-medium text-dark-200 mb-3">Project Summary</h4>
+            <div className="bg-neutral-100/50 rounded-none p-4">
+              <h4 className="text-sm font-medium text-navy-muted mb-3">Project Summary</h4>
               <div className="grid md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-dark-400">Project:</span>
-                  <span className="text-white ml-2">{name}</span>
+                  <span className="text-navy/60">Project:</span>
+                  <span className="text-navy ml-2">{name}</span>
                 </div>
                 <div>
-                  <span className="text-dark-400">File:</span>
-                  <span className="text-white ml-2">{fileInfo?.name}</span>
+                  <span className="text-navy/60">File:</span>
+                  <span className="text-navy ml-2">{fileInfo?.name}</span>
                 </div>
                 {isLidarFile(selectedFile) && (
                   <>
                     <div>
-                      <span className="text-dark-400">DTM Resolution:</span>
-                      <span className="text-white ml-2">{dtmResolution} m</span>
+                      <span className="text-navy/60">DTM Resolution:</span>
+                      <span className="text-navy ml-2">{dtmResolution} m</span>
                     </div>
                     <div>
-                      <span className="text-dark-400">EPSG:</span>
-                      <span className="text-white ml-2">{epsgCode.trim() || 'Auto-detect'}</span>
+                      <span className="text-navy/60">EPSG:</span>
+                      <span className="text-navy ml-2">{epsgCode.trim() || 'Auto-detect'}</span>
                     </div>
                   </>
                 )}
                 <div>
-                  <span className="text-dark-400">Algorithm:</span>
-                  <span className="text-white ml-2">{flowAlgorithm === 'd8' ? 'D8 (Fast)' : 'D-Infinity (Accurate)'}</span>
+                  <span className="text-navy/60">Algorithm:</span>
+                  <span className="text-navy ml-2">{flowAlgorithm === 'd8' ? 'D8 (Fast)' : 'D-Infinity (Accurate)'}</span>
                 </div>
                 <div>
-                  <span className="text-dark-400">Design Storm:</span>
-                  <span className="text-white ml-2">{designStormYears} years</span>
+                  <span className="text-navy/60">Design Storm:</span>
+                  <span className="text-navy ml-2">{designStormYears} years</span>
                 </div>
               </div>
             </div>
@@ -627,13 +627,13 @@ export default function NewProject() {
             {/* Upload progress */}
             {isUploading && (
               <div className="mt-4">
-                <div className="w-full bg-dark-700 rounded-full h-2 overflow-hidden">
+                <div className="w-full bg-neutral-100 rounded-full h-2 overflow-hidden">
                   <div 
                     className="h-full bg-gradient-to-r from-primary-500 to-violet-500 transition-all duration-300"
                     style={{ width: `${uploadProgress}%` }}
                   />
                 </div>
-                <p className="text-sm text-dark-400 mt-2 text-center">
+                <p className="text-sm text-navy/60 mt-2 text-center">
                   Uploading {fileInfo?.name}...
                 </p>
               </div>
@@ -648,8 +648,8 @@ export default function NewProject() {
               <CheckCircle className="w-10 h-10 text-green-400" />
             </div>
             
-            <h2 className="text-2xl font-bold text-white mb-2">Project Created Successfully!</h2>
-            <p className="text-dark-400 mb-8 max-w-md mx-auto">
+            <h2 className="text-2xl font-bold text-navy mb-2">Project Created Successfully!</h2>
+            <p className="text-navy/60 mb-8 max-w-md mx-auto">
               {isLidarFile(selectedFile)
                 ? 'Your LAS/LAZ file was uploaded and DTM has been generated. You can now run drainage analysis.'
                 : 'Your DTM file has been uploaded. You can now run drainage analysis to visualize the network.'}

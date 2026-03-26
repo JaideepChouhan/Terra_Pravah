@@ -71,11 +71,11 @@ export default function Settings() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white flex items-center gap-3">
+        <h1 className="text-2xl font-bold text-navy flex items-center gap-3">
           <SettingsIcon className="w-7 h-7 text-primary-500" />
           Settings
         </h1>
-        <p className="text-dark-400 mt-2">
+        <p className="text-navy/60 mt-2">
           Manage your account settings and preferences
         </p>
       </div>
@@ -88,10 +88,10 @@ export default function Settings() {
               <button
                 key={id}
                 onClick={() => setActiveTab(id as any)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-none text-left transition-colors ${
                   activeTab === id
                     ? 'bg-primary-500/20 text-primary-400'
-                    : 'text-dark-300 hover:bg-dark-700/50 hover:text-white'
+                    : 'text-navy-muted hover:bg-neutral-100/50 hover:text-navy'
                 }`}
               >
                 <Icon className="w-5 h-5" />
@@ -107,11 +107,11 @@ export default function Settings() {
             {/* Profile Tab */}
             {activeTab === 'profile' && (
               <div className="space-y-6">
-                <h2 className="text-lg font-semibold text-white">Profile Information</h2>
+                <h2 className="text-lg font-semibold text-navy">Profile Information</h2>
                 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-dark-200 mb-2">
+                    <label className="block text-sm font-medium text-navy-muted mb-2">
                       <User className="w-4 h-4 inline mr-2" />
                       Full Name
                     </label>
@@ -124,7 +124,7 @@ export default function Settings() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-dark-200 mb-2">
+                    <label className="block text-sm font-medium text-navy-muted mb-2">
                       <Mail className="w-4 h-4 inline mr-2" />
                       Email Address
                     </label>
@@ -139,7 +139,7 @@ export default function Settings() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-dark-200 mb-2">
+                    <label className="block text-sm font-medium text-navy-muted mb-2">
                       <Building2 className="w-4 h-4 inline mr-2" />
                       Company/Organization
                     </label>
@@ -153,7 +153,7 @@ export default function Settings() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-dark-200 mb-2">
+                    <label className="block text-sm font-medium text-navy-muted mb-2">
                       Role
                     </label>
                     <select
@@ -175,11 +175,11 @@ export default function Settings() {
             {/* Preferences Tab */}
             {activeTab === 'preferences' && (
               <div className="space-y-6">
-                <h2 className="text-lg font-semibold text-white">Analysis Preferences</h2>
+                <h2 className="text-lg font-semibold text-navy">Analysis Preferences</h2>
                 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-dark-200 mb-2">
+                    <label className="block text-sm font-medium text-navy-muted mb-2">
                       Default Flow Algorithm
                     </label>
                     <select
@@ -193,7 +193,7 @@ export default function Settings() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-dark-200 mb-2">
+                    <label className="block text-sm font-medium text-navy-muted mb-2">
                       Default Design Storm (years)
                     </label>
                     <select
@@ -211,7 +211,7 @@ export default function Settings() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-dark-200 mb-2">
+                    <label className="block text-sm font-medium text-navy-muted mb-2">
                       Default Runoff Coefficient
                     </label>
                     <input
@@ -226,7 +226,7 @@ export default function Settings() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-dark-200 mb-2">
+                    <label className="block text-sm font-medium text-navy-muted mb-2">
                       <Globe className="w-4 h-4 inline mr-2" />
                       Units System
                     </label>
@@ -246,13 +246,13 @@ export default function Settings() {
             {/* Notifications Tab */}
             {activeTab === 'notifications' && (
               <div className="space-y-6">
-                <h2 className="text-lg font-semibold text-white">Notification Settings</h2>
+                <h2 className="text-lg font-semibold text-navy">Notification Settings</h2>
                 
                 <div className="space-y-4">
-                  <label className="flex items-center justify-between p-4 bg-dark-800/50 rounded-lg cursor-pointer">
+                  <label className="flex items-center justify-between p-4 bg-white/50 rounded-none cursor-pointer">
                     <div>
-                      <p className="text-white font-medium">Email Notifications</p>
-                      <p className="text-sm text-dark-400">Receive updates about analysis completion</p>
+                      <p className="text-navy font-medium">Email Notifications</p>
+                      <p className="text-sm text-navy/60">Receive updates about analysis completion</p>
                     </div>
                     <input
                       type="checkbox"
@@ -262,18 +262,18 @@ export default function Settings() {
                     />
                   </label>
                   
-                  <label className="flex items-center justify-between p-4 bg-dark-800/50 rounded-lg cursor-pointer">
+                  <label className="flex items-center justify-between p-4 bg-white/50 rounded-none cursor-pointer">
                     <div>
-                      <p className="text-white font-medium">Project Updates</p>
-                      <p className="text-sm text-dark-400">Get notified when collaborators make changes</p>
+                      <p className="text-navy font-medium">Project Updates</p>
+                      <p className="text-sm text-navy/60">Get notified when collaborators make changes</p>
                     </div>
                     <input type="checkbox" defaultChecked className="w-5 h-5 text-primary-500 rounded" />
                   </label>
                   
-                  <label className="flex items-center justify-between p-4 bg-dark-800/50 rounded-lg cursor-pointer">
+                  <label className="flex items-center justify-between p-4 bg-white/50 rounded-none cursor-pointer">
                     <div>
-                      <p className="text-white font-medium">Weekly Summary</p>
-                      <p className="text-sm text-dark-400">Receive weekly digest of project activity</p>
+                      <p className="text-navy font-medium">Weekly Summary</p>
+                      <p className="text-sm text-navy/60">Receive weekly digest of project activity</p>
                     </div>
                     <input type="checkbox" className="w-5 h-5 text-primary-500 rounded" />
                   </label>
@@ -284,11 +284,11 @@ export default function Settings() {
             {/* Security Tab */}
             {activeTab === 'security' && (
               <div className="space-y-6">
-                <h2 className="text-lg font-semibold text-white">Security Settings</h2>
+                <h2 className="text-lg font-semibold text-navy">Security Settings</h2>
                 
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-dark-200 mb-2">
+                    <label className="block text-sm font-medium text-navy-muted mb-2">
                       <Key className="w-4 h-4 inline mr-2" />
                       Current Password
                     </label>
@@ -296,14 +296,14 @@ export default function Settings() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-dark-200 mb-2">
+                    <label className="block text-sm font-medium text-navy-muted mb-2">
                       New Password
                     </label>
                     <input type="password" className="input w-full max-w-md" placeholder="Enter new password" />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-dark-200 mb-2">
+                    <label className="block text-sm font-medium text-navy-muted mb-2">
                       Confirm New Password
                     </label>
                     <input type="password" className="input w-full max-w-md" placeholder="Confirm new password" />
@@ -312,17 +312,17 @@ export default function Settings() {
                   <button className="btn-secondary">Update Password</button>
                 </div>
                 
-                <hr className="border-dark-700" />
+                <hr className="border-navy/10" />
                 
                 <div>
-                  <h3 className="text-white font-medium mb-2">Active Sessions</h3>
-                  <p className="text-sm text-dark-400 mb-4">Manage your active login sessions</p>
+                  <h3 className="text-navy font-medium mb-2">Active Sessions</h3>
+                  <p className="text-sm text-navy/60 mb-4">Manage your active login sessions</p>
                   
-                  <div className="p-4 bg-dark-800/50 rounded-lg">
+                  <div className="p-4 bg-white/50 rounded-none">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-white">Current Session</p>
-                        <p className="text-xs text-dark-400">Linux • Chrome • Last active now</p>
+                        <p className="text-navy">Current Session</p>
+                        <p className="text-xs text-navy/60">Linux • Chrome • Last active now</p>
                       </div>
                       <span className="text-xs text-primary-400 bg-primary-500/20 px-2 py-1 rounded">Active</span>
                     </div>
@@ -332,7 +332,7 @@ export default function Settings() {
             )}
 
             {/* Save Button */}
-            <div className="mt-8 pt-6 border-t border-dark-700 flex items-center justify-between">
+            <div className="mt-8 pt-6 border-t border-navy/10 flex items-center justify-between">
               <div>
                 {saved && (
                   <span className="text-primary-400 flex items-center gap-2">

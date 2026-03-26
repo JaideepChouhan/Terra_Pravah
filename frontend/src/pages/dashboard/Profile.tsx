@@ -181,18 +181,18 @@ export default function Profile() {
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white flex items-center gap-3">
+        <h1 className="text-2xl font-bold text-navy flex items-center gap-3">
           <User className="w-7 h-7 text-primary-500" />
           Profile Settings
         </h1>
-        <p className="text-dark-400 mt-1">
+        <p className="text-navy/60 mt-1">
           Manage your account settings and preferences
         </p>
       </div>
 
       {/* Alerts */}
       {error && (
-        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 flex items-start gap-3">
+        <div className="bg-red-500/10 border border-red-500/20 rounded-none p-4 flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-red-400 shrink-0" />
           <p className="text-red-400">{error}</p>
           <button onClick={() => setError(null)} className="ml-auto text-red-400 hover:text-red-300">
@@ -202,14 +202,14 @@ export default function Profile() {
       )}
 
       {success && (
-        <div className="bg-primary-500/10 border border-primary-500/20 rounded-lg p-4 flex items-center gap-3">
+        <div className="bg-primary-500/10 border border-primary-500/20 rounded-none p-4 flex items-center gap-3">
           <Check className="w-5 h-5 text-primary-400" />
           <p className="text-primary-400">{success}</p>
         </div>
       )}
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-dark-800 p-1 rounded-lg w-fit">
+      <div className="flex gap-1 bg-white p-1 rounded-none w-fit">
         {[
           { id: 'profile', label: 'Profile', icon: User },
           { id: 'security', label: 'Security', icon: Shield },
@@ -218,10 +218,10 @@ export default function Profile() {
           <button
             key={id}
             onClick={() => setActiveTab(id as any)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-none transition-all ${
               activeTab === id
-                ? 'bg-primary-500 text-white'
-                : 'text-dark-400 hover:text-white hover:bg-dark-700'
+                ? 'bg-primary-500 text-navy'
+                : 'text-navy/60 hover:text-navy hover:bg-neutral-100'
             }`}
           >
             <Icon className="w-4 h-4" />
@@ -234,7 +234,7 @@ export default function Profile() {
       {activeTab === 'profile' && (
         <div className="glass-card p-6 space-y-6">
           {/* Avatar Section */}
-          <div className="flex items-center gap-6 pb-6 border-b border-dark-700">
+          <div className="flex items-center gap-6 pb-6 border-b border-navy/10">
             <div className="relative">
               <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary-500 to-violet-500 flex items-center justify-center">
                 {profile?.avatar_url ? (
@@ -244,115 +244,115 @@ export default function Profile() {
                     className="w-24 h-24 rounded-full object-cover"
                   />
                 ) : (
-                  <span className="text-3xl font-bold text-white">
+                  <span className="text-3xl font-bold text-navy">
                     {(firstName?.[0] || profile?.email?.[0] || 'U').toUpperCase()}
                   </span>
                 )}
               </div>
-              <button className="absolute bottom-0 right-0 p-2 bg-dark-700 rounded-full border border-dark-600 hover:bg-dark-600 transition-colors">
-                <Camera className="w-4 h-4 text-white" />
+              <button className="absolute bottom-0 right-0 p-2 bg-neutral-100 rounded-full border border-navy/20 hover:bg-neutral-200 transition-colors">
+                <Camera className="w-4 h-4 text-navy" />
               </button>
             </div>
             <div>
-              <h3 className="text-xl font-semibold text-white">
+              <h3 className="text-xl font-semibold text-navy">
                 {firstName && lastName ? `${firstName} ${lastName}` : profile?.email}
               </h3>
-              <p className="text-dark-400">{profile?.email}</p>
+              <p className="text-navy/60">{profile?.email}</p>
             </div>
           </div>
 
           {/* Profile Form */}
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-dark-300 mb-2">
+              <label className="block text-sm font-medium text-navy-muted mb-2">
                 First Name
               </label>
               <div className="relative">
-                <User className="w-4 h-4 text-dark-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <User className="w-4 h-4 text-navy/60 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   placeholder="John"
-                  className="w-full pl-10 pr-4 py-2 bg-dark-700 border border-dark-600 rounded-lg text-white placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+                  className="w-full pl-10 pr-4 py-2 bg-neutral-100 border border-navy/20 rounded-none text-navy placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-dark-300 mb-2">
+              <label className="block text-sm font-medium text-navy-muted mb-2">
                 Last Name
               </label>
               <div className="relative">
-                <User className="w-4 h-4 text-dark-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <User className="w-4 h-4 text-navy/60 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   placeholder="Doe"
-                  className="w-full pl-10 pr-4 py-2 bg-dark-700 border border-dark-600 rounded-lg text-white placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+                  className="w-full pl-10 pr-4 py-2 bg-neutral-100 border border-navy/20 rounded-none text-navy placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-dark-300 mb-2">
+              <label className="block text-sm font-medium text-navy-muted mb-2">
                 Company
               </label>
               <div className="relative">
-                <Building2 className="w-4 h-4 text-dark-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Building2 className="w-4 h-4 text-navy/60 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
                   placeholder="Acme Inc."
-                  className="w-full pl-10 pr-4 py-2 bg-dark-700 border border-dark-600 rounded-lg text-white placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+                  className="w-full pl-10 pr-4 py-2 bg-neutral-100 border border-navy/20 rounded-none text-navy placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-dark-300 mb-2">
+              <label className="block text-sm font-medium text-navy-muted mb-2">
                 Job Title
               </label>
               <div className="relative">
-                <Briefcase className="w-4 h-4 text-dark-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Briefcase className="w-4 h-4 text-navy/60 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   value={jobTitle}
                   onChange={(e) => setJobTitle(e.target.value)}
                   placeholder="Civil Engineer"
-                  className="w-full pl-10 pr-4 py-2 bg-dark-700 border border-dark-600 rounded-lg text-white placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+                  className="w-full pl-10 pr-4 py-2 bg-neutral-100 border border-navy/20 rounded-none text-navy placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-dark-300 mb-2">
+              <label className="block text-sm font-medium text-navy-muted mb-2">
                 Phone
               </label>
               <div className="relative">
-                <Phone className="w-4 h-4 text-dark-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Phone className="w-4 h-4 text-navy/60 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+91 98765 43210"
-                  className="w-full pl-10 pr-4 py-2 bg-dark-700 border border-dark-600 rounded-lg text-white placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+                  className="w-full pl-10 pr-4 py-2 bg-neutral-100 border border-navy/20 rounded-none text-navy placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-dark-300 mb-2">
+              <label className="block text-sm font-medium text-navy-muted mb-2">
                 Timezone
               </label>
               <div className="relative">
-                <Globe className="w-4 h-4 text-dark-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Globe className="w-4 h-4 text-navy/60 absolute left-3 top-1/2 -translate-y-1/2" />
                 <select
                   value={timezone}
                   onChange={(e) => setTimezone(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-dark-700 border border-dark-600 rounded-lg text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+                  className="w-full pl-10 pr-4 py-2 bg-neutral-100 border border-navy/20 rounded-none text-navy focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                 >
                   <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
                   <option value="UTC">UTC</option>
@@ -364,7 +364,7 @@ export default function Profile() {
             </div>
           </div>
 
-          <div className="flex justify-end pt-4 border-t border-dark-700">
+          <div className="flex justify-end pt-4 border-t border-navy/10">
             <button
               onClick={updateProfile}
               disabled={saving}
@@ -386,56 +386,56 @@ export default function Profile() {
         <div className="space-y-6">
           {/* Change Password */}
           <div className="glass-card p-6">
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-navy mb-4 flex items-center gap-2">
               <Lock className="w-5 h-5 text-primary-400" />
               Change Password
             </h3>
 
             <div className="space-y-4 max-w-md">
               <div>
-                <label className="block text-sm font-medium text-dark-300 mb-2">
+                <label className="block text-sm font-medium text-navy-muted mb-2">
                   Current Password
                 </label>
                 <div className="relative">
-                  <Key className="w-4 h-4 text-dark-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Key className="w-4 h-4 text-navy/60 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="password"
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-4 py-2 bg-dark-700 border border-dark-600 rounded-lg text-white placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+                    className="w-full pl-10 pr-4 py-2 bg-neutral-100 border border-navy/20 rounded-none text-navy placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-dark-300 mb-2">
+                <label className="block text-sm font-medium text-navy-muted mb-2">
                   New Password
                 </label>
                 <div className="relative">
-                  <Lock className="w-4 h-4 text-dark-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Lock className="w-4 h-4 text-navy/60 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-4 py-2 bg-dark-700 border border-dark-600 rounded-lg text-white placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+                    className="w-full pl-10 pr-4 py-2 bg-neutral-100 border border-navy/20 rounded-none text-navy placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-dark-300 mb-2">
+                <label className="block text-sm font-medium text-navy-muted mb-2">
                   Confirm New Password
                 </label>
                 <div className="relative">
-                  <Lock className="w-4 h-4 text-dark-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Lock className="w-4 h-4 text-navy/60 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-4 py-2 bg-dark-700 border border-dark-600 rounded-lg text-white placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+                    className="w-full pl-10 pr-4 py-2 bg-neutral-100 border border-navy/20 rounded-none text-navy placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                   />
                 </div>
               </div>
@@ -461,8 +461,8 @@ export default function Profile() {
               <div className="flex items-start gap-3">
                 <Shield className="w-5 h-5 text-primary-400 mt-0.5" />
                 <div>
-                  <h3 className="text-lg font-semibold text-white">Two-Factor Authentication</h3>
-                  <p className="text-dark-400 text-sm mt-1">
+                  <h3 className="text-lg font-semibold text-navy">Two-Factor Authentication</h3>
+                  <p className="text-navy/60 text-sm mt-1">
                     Add an extra layer of security to your account
                   </p>
                 </div>
@@ -480,7 +480,7 @@ export default function Profile() {
         <div className="space-y-6">
           {/* Notifications */}
           <div className="glass-card p-6">
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-navy mb-4 flex items-center gap-2">
               <Bell className="w-5 h-5 text-primary-400" />
               Notification Settings
             </h3>
@@ -493,7 +493,7 @@ export default function Profile() {
                 { key: 'push_enabled', label: 'Enable push notifications' }
               ].map(({ key, label }) => (
                 <div key={key} className="flex items-center justify-between py-2">
-                  <span className="text-dark-300">{label}</span>
+                  <span className="text-navy-muted">{label}</span>
                   <button
                     onClick={() => updatePreferences({
                       notifications: {
@@ -504,7 +504,7 @@ export default function Profile() {
                     className={`w-12 h-6 rounded-full transition-colors relative ${
                       preferences.notifications[key as keyof typeof preferences.notifications]
                         ? 'bg-primary-500'
-                        : 'bg-dark-600'
+                        : 'bg-neutral-200'
                     }`}
                   >
                     <span
@@ -522,14 +522,14 @@ export default function Profile() {
 
           {/* Display Settings */}
           <div className="glass-card p-6">
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-navy mb-4 flex items-center gap-2">
               <Palette className="w-5 h-5 text-primary-400" />
               Display Settings
             </h3>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-dark-300 mb-2">
+                <label className="block text-sm font-medium text-navy-muted mb-2">
                   Units
                 </label>
                 <div className="flex gap-2">
@@ -537,10 +537,10 @@ export default function Profile() {
                     <button
                       key={unit}
                       onClick={() => updatePreferences({ units: unit })}
-                      className={`px-4 py-2 rounded-lg border capitalize transition-all ${
+                      className={`px-4 py-2 rounded-none border capitalize transition-all ${
                         preferences.units === unit
                           ? 'border-primary-500 bg-primary-500/10 text-primary-400'
-                          : 'border-dark-600 bg-dark-700 text-dark-300 hover:border-dark-500'
+                          : 'border-navy/20 bg-neutral-100 text-navy-muted hover:border-dark-500'
                       }`}
                     >
                       {unit}

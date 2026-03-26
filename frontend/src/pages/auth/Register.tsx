@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../store/authStore'
+import { motion } from 'framer-motion'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 
 export default function Register() {
@@ -41,7 +42,12 @@ export default function Register() {
   }
 
   return (
-    <main className="w-full max-w-[400px] mx-auto px-6 py-16 md:py-24 flex flex-col items-center">
+    <motion.main 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="w-full max-w-[400px] mx-auto px-6 py-16 md:py-24 flex flex-col items-center"
+    >
       {/* Header */}
       <header className="w-full text-center mb-12">
         <h1 className="text-navy text-[48px] font-black leading-tight tracking-tightest mb-4 font-heading">
@@ -165,7 +171,7 @@ export default function Register() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-navy text-background-light py-4 px-6 rounded-sm flex justify-center items-center gap-2 hover:bg-navy-muted transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy focus:ring-offset-primary disabled:opacity-50"
+            className="w-full bg-navy text-background-light py-4 px-6 rounded-none flex justify-center items-center gap-2 hover:bg-navy-muted transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy focus:ring-offset-primary disabled:opacity-50"
           >
             <span className="text-base font-medium tracking-[0.05em] uppercase">
               {isLoading ? 'Submitting...' : 'Request Access'}
@@ -187,6 +193,6 @@ export default function Register() {
           </Link>
         </p>
       </div>
-    </main>
+    </motion.main>
   )
 }

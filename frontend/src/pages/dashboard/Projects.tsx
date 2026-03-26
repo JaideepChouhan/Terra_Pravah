@@ -77,7 +77,7 @@ export default function Projects() {
       case 'failed':
         return <AlertCircle className="w-4 h-4 text-red-400" />
       default:
-        return <Clock className="w-4 h-4 text-dark-400" />
+        return <Clock className="w-4 h-4 text-navy/60" />
     }
   }
 
@@ -119,8 +119,8 @@ export default function Projects() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-white">Projects</h1>
-          <p className="text-dark-400">Manage your drainage analysis projects</p>
+          <h1 className="text-2xl font-bold text-navy">Projects</h1>
+          <p className="text-navy/60">Manage your drainage analysis projects</p>
         </div>
         <Link to="/dashboard/projects/new" className="btn-primary flex items-center gap-2">
           <Plus className="w-5 h-5" />
@@ -131,7 +131,7 @@ export default function Projects() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-dark-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-navy/60" />
           <input
             type="text"
             placeholder="Search projects..."
@@ -156,7 +156,7 @@ export default function Projects() {
 
       {/* Error */}
       {error && (
-        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-3">
+        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-none flex items-center gap-3">
           <AlertCircle className="w-5 h-5 text-red-400" />
           <p className="text-red-400">{error}</p>
         </div>
@@ -171,14 +171,14 @@ export default function Projects() {
 
       {/* Empty State */}
       {!loading && filteredProjects.length === 0 && (
-        <div className="bg-dark-800 border border-dark-700 rounded-xl p-12 text-center">
-          <div className="w-16 h-16 bg-dark-700 rounded-full flex items-center justify-center mx-auto mb-4">
-            <FolderOpen className="w-8 h-8 text-dark-400" />
+        <div className="bg-white border border-navy/10 rounded-none p-12 text-center">
+          <div className="w-16 h-16 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <FolderOpen className="w-8 h-8 text-navy/60" />
           </div>
-          <h3 className="text-lg font-medium text-white mb-2">
+          <h3 className="text-lg font-medium text-navy mb-2">
             {searchQuery || statusFilter !== 'all' ? 'No projects found' : 'No projects yet'}
           </h3>
-          <p className="text-dark-400 mb-6">
+          <p className="text-navy/60 mb-6">
             {searchQuery || statusFilter !== 'all' 
               ? 'Try adjusting your search or filter' 
               : 'Create your first project to get started with drainage analysis'}
@@ -198,20 +198,20 @@ export default function Projects() {
           {filteredProjects.map(project => (
             <div 
               key={project.id}
-              className="bg-dark-800 border border-dark-700 rounded-xl p-5 hover:border-dark-600 transition-colors group"
+              className="bg-white border border-navy/10 rounded-none p-5 hover:border-navy/20 transition-colors group"
             >
               {/* Header */}
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2">
                   {getStatusIcon(project.status)}
-                  <span className="text-sm text-dark-400">{getStatusLabel(project.status)}</span>
+                  <span className="text-sm text-navy/60">{getStatusLabel(project.status)}</span>
                 </div>
                 <div className="relative">
                   <button 
                     onClick={() => setOpenMenu(openMenu === project.id ? null : project.id)}
-                    className="p-1.5 hover:bg-dark-700 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                    className="p-1.5 hover:bg-neutral-100 rounded-none transition-colors opacity-0 group-hover:opacity-100"
                   >
-                    <MoreVertical className="w-4 h-4 text-dark-400" />
+                    <MoreVertical className="w-4 h-4 text-navy/60" />
                   </button>
                   
                   {openMenu === project.id && (
@@ -220,25 +220,25 @@ export default function Projects() {
                         className="fixed inset-0 z-10" 
                         onClick={() => setOpenMenu(null)}
                       />
-                      <div className="absolute right-0 top-full mt-1 w-40 bg-dark-700 border border-dark-600 rounded-lg shadow-xl z-20 py-1">
+                      <div className="absolute right-0 top-full mt-1 w-40 bg-neutral-100 border border-navy/20 rounded-none shadow-xl z-20 py-1">
                         <Link
                           to={`/dashboard/projects/${project.id}/analysis`}
-                          className="flex items-center gap-2 px-3 py-2 text-sm text-dark-200 hover:bg-dark-600 w-full"
+                          className="flex items-center gap-2 px-3 py-2 text-sm text-navy-muted hover:bg-neutral-200 w-full"
                         >
                           <Map className="w-4 h-4" />
                           View Analysis
                         </Link>
-                        <button className="flex items-center gap-2 px-3 py-2 text-sm text-dark-200 hover:bg-dark-600 w-full">
+                        <button className="flex items-center gap-2 px-3 py-2 text-sm text-navy-muted hover:bg-neutral-200 w-full">
                           <Edit2 className="w-4 h-4" />
                           Edit
                         </button>
-                        <button className="flex items-center gap-2 px-3 py-2 text-sm text-dark-200 hover:bg-dark-600 w-full">
+                        <button className="flex items-center gap-2 px-3 py-2 text-sm text-navy-muted hover:bg-neutral-200 w-full">
                           <Share2 className="w-4 h-4" />
                           Share
                         </button>
                         <button 
                           onClick={() => handleDelete(project.id)}
-                          className="flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:bg-dark-600 w-full"
+                          className="flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:bg-neutral-200 w-full"
                           disabled={deletingId === project.id}
                         >
                           {deletingId === project.id ? (
@@ -256,11 +256,11 @@ export default function Projects() {
 
               {/* Content */}
               <Link to={`/dashboard/projects/${project.id}/analysis`}>
-                <h3 className="text-lg font-semibold text-white mb-1 hover:text-primary-400 transition-colors">
+                <h3 className="text-lg font-semibold text-navy mb-1 hover:text-primary-400 transition-colors">
                   {project.name}
                 </h3>
               </Link>
-              <p className="text-sm text-dark-400 line-clamp-2 mb-4">
+              <p className="text-sm text-navy/60 line-clamp-2 mb-4">
                 {project.description || 'No description'}
               </p>
 
@@ -272,7 +272,7 @@ export default function Projects() {
 
               {/* DTM Indicator */}
               {project.dtm_file_path && (
-                <div className="mt-3 pt-3 border-t border-dark-700">
+                <div className="mt-3 pt-3 border-t border-navy/10">
                   <span className="inline-flex items-center gap-1.5 text-xs text-green-400 bg-green-500/10 px-2 py-1 rounded">
                     <CheckCircle2 className="w-3 h-3" />
                     DTM Uploaded

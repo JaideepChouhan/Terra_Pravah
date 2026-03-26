@@ -146,7 +146,7 @@ export default function Teams() {
       case 'owner': return <Crown className="w-4 h-4 text-amber-400" />
       case 'admin': return <Shield className="w-4 h-4 text-primary-400" />
       case 'member': return <Users className="w-4 h-4 text-blue-400" />
-      default: return <Eye className="w-4 h-4 text-dark-400" />
+      default: return <Eye className="w-4 h-4 text-navy/60" />
     }
   }
 
@@ -167,11 +167,11 @@ export default function Teams() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
+          <h1 className="text-2xl font-bold text-navy flex items-center gap-3">
             <Users className="w-7 h-7 text-primary-500" />
             Teams
           </h1>
-          <p className="text-dark-400 mt-1">
+          <p className="text-navy/60 mt-1">
             Collaborate with your team on drainage projects
           </p>
         </div>
@@ -186,7 +186,7 @@ export default function Teams() {
 
       {/* Error Alert */}
       {error && (
-        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 flex items-start gap-3">
+        <div className="bg-red-500/10 border border-red-500/20 rounded-none p-4 flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-red-400 shrink-0" />
           <div className="flex-1">
             <p className="text-red-400">{error}</p>
@@ -202,13 +202,13 @@ export default function Teams() {
         <div className="lg:col-span-1 space-y-4">
           {/* Search */}
           <div className="relative">
-            <Search className="w-4 h-4 text-dark-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-navy/60 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search teams..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-dark-800 border border-dark-700 rounded-lg text-white placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+              className="w-full pl-10 pr-4 py-2 bg-white border border-navy/10 rounded-none text-navy placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
             />
           </div>
 
@@ -217,7 +217,7 @@ export default function Teams() {
             {filteredTeams.length === 0 ? (
               <div className="glass-card p-8 text-center">
                 <Users className="w-12 h-12 text-dark-500 mx-auto mb-3" />
-                <p className="text-dark-400">No teams yet</p>
+                <p className="text-navy/60">No teams yet</p>
                 <p className="text-dark-500 text-sm mt-1">
                   Create a team to start collaborating
                 </p>
@@ -227,19 +227,19 @@ export default function Teams() {
                 <button
                   key={team.id}
                   onClick={() => handleSelectTeam(team)}
-                  className={`w-full p-4 rounded-lg border text-left transition-all ${
+                  className={`w-full p-4 rounded-none border text-left transition-all ${
                     selectedTeam?.id === team.id
                       ? 'border-primary-500 bg-primary-500/10'
-                      : 'border-dark-700 bg-dark-800/50 hover:border-dark-600'
+                      : 'border-navy/10 bg-white/50 hover:border-navy/20'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary-500 to-violet-500 flex items-center justify-center text-white font-bold">
+                    <div className="w-10 h-10 rounded-none bg-gradient-to-br from-primary-500 to-violet-500 flex items-center justify-center text-navy font-bold">
                       {team.name.charAt(0).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-white truncate">{team.name}</h3>
-                      <p className="text-sm text-dark-400">
+                      <h3 className="font-medium text-navy truncate">{team.name}</h3>
+                      <p className="text-sm text-navy/60">
                         {team.member_count || 1} member{(team.member_count || 1) !== 1 ? 's' : ''}
                       </p>
                     </div>
@@ -258,12 +258,12 @@ export default function Teams() {
               {/* Team Header */}
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary-500 to-violet-500 flex items-center justify-center text-white text-2xl font-bold">
+                  <div className="w-16 h-16 rounded-none bg-gradient-to-br from-primary-500 to-violet-500 flex items-center justify-center text-navy text-2xl font-bold">
                     {selectedTeam.name.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-white">{selectedTeam.name}</h2>
-                    <p className="text-dark-400">{selectedTeam.description || 'No description'}</p>
+                    <h2 className="text-xl font-bold text-navy">{selectedTeam.name}</h2>
+                    <p className="text-navy/60">{selectedTeam.description || 'No description'}</p>
                   </div>
                 </div>
                 <button
@@ -277,7 +277,7 @@ export default function Teams() {
 
               {/* Members List */}
               <div>
-                <h3 className="text-lg font-semibold text-white mb-4">
+                <h3 className="text-lg font-semibold text-navy mb-4">
                   Team Members ({members.length})
                 </h3>
                 
@@ -290,10 +290,10 @@ export default function Teams() {
                     {members.map((member) => (
                       <div
                         key={member.user.id}
-                        className="flex items-center justify-between p-3 bg-dark-700/50 rounded-lg"
+                        className="flex items-center justify-between p-3 bg-neutral-100/50 rounded-none"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-dark-600 flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-full bg-neutral-200 flex items-center justify-center">
                             {member.user.avatar_url ? (
                               <img 
                                 src={member.user.avatar_url} 
@@ -301,27 +301,27 @@ export default function Teams() {
                                 className="w-10 h-10 rounded-full object-cover"
                               />
                             ) : (
-                              <span className="text-white font-medium">
+                              <span className="text-navy font-medium">
                                 {(member.user.first_name?.[0] || member.user.email[0]).toUpperCase()}
                               </span>
                             )}
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <span className="text-white font-medium">
+                              <span className="text-navy font-medium">
                                 {member.user.first_name && member.user.last_name
                                   ? `${member.user.first_name} ${member.user.last_name}`
                                   : member.user.email}
                               </span>
                               {getRoleIcon(member.role)}
                             </div>
-                            <span className="text-sm text-dark-400">{member.user.email}</span>
+                            <span className="text-sm text-navy/60">{member.user.email}</span>
                           </div>
                         </div>
                         {member.role !== 'owner' && (
                           <button
                             onClick={() => removeMember(member.user.id)}
-                            className="p-2 text-dark-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                            className="p-2 text-navy/60 hover:text-red-400 hover:bg-red-500/10 rounded-none transition-colors"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -335,8 +335,8 @@ export default function Teams() {
           ) : (
             <div className="glass-card p-12 text-center">
               <Users className="w-16 h-16 text-dark-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-white mb-2">Select a Team</h3>
-              <p className="text-dark-400">
+              <h3 className="text-lg font-semibold text-navy mb-2">Select a Team</h3>
+              <p className="text-navy/60">
                 Choose a team from the list to view members and manage settings
               </p>
             </div>
@@ -347,12 +347,12 @@ export default function Teams() {
       {/* Create Team Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-dark-800 rounded-xl p-6 max-w-md w-full border border-dark-700">
+          <div className="bg-white rounded-none p-6 max-w-md w-full border border-navy/10">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-white">Create Team</h3>
+              <h3 className="text-lg font-semibold text-navy">Create Team</h3>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="p-1 text-dark-400 hover:text-white"
+                className="p-1 text-navy/60 hover:text-navy"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -360,7 +360,7 @@ export default function Teams() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-dark-300 mb-1">
+                <label className="block text-sm font-medium text-navy-muted mb-1">
                   Team Name *
                 </label>
                 <input
@@ -368,12 +368,12 @@ export default function Teams() {
                   value={newTeamName}
                   onChange={(e) => setNewTeamName(e.target.value)}
                   placeholder="e.g., Engineering Team"
-                  className="w-full px-4 py-2 bg-dark-700 border border-dark-600 rounded-lg text-white placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+                  className="w-full px-4 py-2 bg-neutral-100 border border-navy/20 rounded-none text-navy placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-dark-300 mb-1">
+                <label className="block text-sm font-medium text-navy-muted mb-1">
                   Description
                 </label>
                 <textarea
@@ -381,7 +381,7 @@ export default function Teams() {
                   onChange={(e) => setNewTeamDescription(e.target.value)}
                   placeholder="What does this team work on?"
                   rows={3}
-                  className="w-full px-4 py-2 bg-dark-700 border border-dark-600 rounded-lg text-white placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 resize-none"
+                  className="w-full px-4 py-2 bg-neutral-100 border border-navy/20 rounded-none text-navy placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 resize-none"
                 />
               </div>
             </div>
@@ -413,12 +413,12 @@ export default function Teams() {
       {/* Invite Member Modal */}
       {showInviteModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-dark-800 rounded-xl p-6 max-w-md w-full border border-dark-700">
+          <div className="bg-white rounded-none p-6 max-w-md w-full border border-navy/10">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-white">Invite Member</h3>
+              <h3 className="text-lg font-semibold text-navy">Invite Member</h3>
               <button
                 onClick={() => setShowInviteModal(false)}
-                className="p-1 text-dark-400 hover:text-white"
+                className="p-1 text-navy/60 hover:text-navy"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -426,23 +426,23 @@ export default function Teams() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-dark-300 mb-1">
+                <label className="block text-sm font-medium text-navy-muted mb-1">
                   Email Address *
                 </label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 text-dark-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Mail className="w-4 h-4 text-navy/60 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="email"
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
                     placeholder="colleague@example.com"
-                    className="w-full pl-10 pr-4 py-2 bg-dark-700 border border-dark-600 rounded-lg text-white placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+                    className="w-full pl-10 pr-4 py-2 bg-neutral-100 border border-navy/20 rounded-none text-navy placeholder-dark-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-dark-300 mb-1">
+                <label className="block text-sm font-medium text-navy-muted mb-1">
                   Role
                 </label>
                 <div className="grid grid-cols-3 gap-2">
@@ -450,10 +450,10 @@ export default function Teams() {
                     <button
                       key={role}
                       onClick={() => setInviteRole(role)}
-                      className={`p-2 rounded-lg border text-center capitalize transition-all ${
+                      className={`p-2 rounded-none border text-center capitalize transition-all ${
                         inviteRole === role
                           ? 'border-primary-500 bg-primary-500/10 text-primary-400'
-                          : 'border-dark-600 bg-dark-700 text-dark-300 hover:border-dark-500'
+                          : 'border-navy/20 bg-neutral-100 text-navy-muted hover:border-dark-500'
                       }`}
                     >
                       {role}

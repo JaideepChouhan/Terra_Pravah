@@ -258,7 +258,7 @@ export default function ProjectDetail() {
     return (
       <div className="text-center py-20">
         <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-white mb-2">Project Not Found</h3>
+        <h3 className="text-lg font-medium text-navy mb-2">Project Not Found</h3>
         <p className="text-slate-400 mb-6">{error || 'The project you are looking for does not exist.'}</p>
         <Link to="/dashboard/projects" className="btn-primary">
           Back to Projects
@@ -274,13 +274,13 @@ export default function ProjectDetail() {
         <div className="flex items-start gap-4">
           <Link 
             to="/dashboard/projects" 
-            className="p-2 hover:bg-slate-800 rounded-lg transition-colors mt-1"
+            className="p-2 hover:bg-slate-800 rounded-none transition-colors mt-1"
           >
             <ArrowLeft className="w-5 h-5 text-slate-400" />
           </Link>
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-2xl font-bold text-white">{project.name}</h1>
+              <h1 className="text-2xl font-bold text-navy">{project.name}</h1>
               {getStatusBadge(project.status)}
             </div>
             {project.description && (
@@ -347,7 +347,7 @@ export default function ProjectDetail() {
 
       {/* Error Display */}
       {error && (
-        <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-3">
+        <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-none flex items-center gap-3">
           <AlertCircle className="w-5 h-5 text-red-400 shrink-0" />
           <p className="text-red-400">{error}</p>
         </div>
@@ -361,7 +361,7 @@ export default function ProjectDetail() {
               <Activity className="w-5 h-5 text-primary-400 animate-pulse" />
             </div>
             <div>
-              <h3 className="font-medium text-white">Analysis in Progress</h3>
+              <h3 className="font-medium text-navy">Analysis in Progress</h3>
               <p className="text-sm text-slate-400">Processing drainage network...</p>
             </div>
           </div>
@@ -384,10 +384,10 @@ export default function ProjectDetail() {
             <div className="flex items-center gap-2 p-4 border-b border-slate-800/50">
               <button
                 onClick={() => setViewMode('dtm')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-none text-sm font-medium transition-colors ${
                   viewMode === 'dtm' 
-                    ? 'bg-slate-800 text-white' 
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-slate-800 text-navy' 
+                    : 'text-slate-400 hover:text-navy'
                 }`}
               >
                 <Mountain className="w-4 h-4 inline mr-2" />
@@ -396,10 +396,10 @@ export default function ProjectDetail() {
               <button
                 onClick={() => setViewMode('drainage')}
                 disabled={project.status !== 'completed'}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-none text-sm font-medium transition-colors ${
                   viewMode === 'drainage' 
-                    ? 'bg-slate-800 text-white' 
-                    : 'text-slate-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed'
+                    ? 'bg-slate-800 text-navy' 
+                    : 'text-slate-400 hover:text-navy disabled:opacity-50 disabled:cursor-not-allowed'
                 }`}
               >
                 <Droplets className="w-4 h-4 inline mr-2" />
@@ -429,24 +429,24 @@ export default function ProjectDetail() {
         <div className="space-y-6">
           {/* Project Config */}
           <div className="card">
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-navy mb-4 flex items-center gap-2">
               <Settings className="w-5 h-5 text-slate-400" />
               Configuration
             </h3>
             <dl className="space-y-3 text-sm">
               <div className="flex justify-between">
                 <dt className="text-slate-400">Flow Algorithm</dt>
-                <dd className="text-white font-medium">
+                <dd className="text-navy font-medium">
                   {project.flow_algorithm === 'dinf' ? 'D-Infinity' : 'D8'}
                 </dd>
               </div>
               <div className="flex justify-between">
                 <dt className="text-slate-400">Design Storm</dt>
-                <dd className="text-white font-medium">{project.design_storm_years || 10} years</dd>
+                <dd className="text-navy font-medium">{project.design_storm_years || 10} years</dd>
               </div>
               <div className="flex justify-between">
                 <dt className="text-slate-400">Runoff Coefficient</dt>
-                <dd className="text-white font-medium">{project.runoff_coefficient || 0.5}</dd>
+                <dd className="text-navy font-medium">{project.runoff_coefficient || 0.5}</dd>
               </div>
             </dl>
           </div>
@@ -454,22 +454,22 @@ export default function ProjectDetail() {
           {/* Terrain Info */}
           {report?.terrain && (
             <div className="card">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-navy mb-4 flex items-center gap-2">
                 <Mountain className="w-5 h-5 text-slate-400" />
                 Terrain Info
               </h3>
               <dl className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <dt className="text-slate-400">Dimensions</dt>
-                  <dd className="text-white font-medium">{report.terrain.dimensions}</dd>
+                  <dd className="text-navy font-medium">{report.terrain.dimensions}</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-slate-400">Resolution</dt>
-                  <dd className="text-white font-medium">{report.terrain.resolution_m?.toFixed(2)} m</dd>
+                  <dd className="text-navy font-medium">{report.terrain.resolution_m?.toFixed(2)} m</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-slate-400">Elevation Range</dt>
-                  <dd className="text-white font-medium">
+                  <dd className="text-navy font-medium">
                     {report.terrain.elevation_min?.toFixed(1)} - {report.terrain.elevation_max?.toFixed(1)} m
                   </dd>
                 </div>
@@ -480,7 +480,7 @@ export default function ProjectDetail() {
           {/* Network Summary */}
           {project.status === 'completed' && (
             <div className="card">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-navy mb-4 flex items-center gap-2">
                 <Droplets className="w-5 h-5 text-cyan-400" />
                 Network Summary
               </h3>
@@ -493,7 +493,7 @@ export default function ProjectDetail() {
                   <div className="flex-1">
                     <div className="flex justify-between text-sm">
                       <span className="text-slate-300">Primary</span>
-                      <span className="text-white font-medium">
+                      <span className="text-navy font-medium">
                         {project.primary_count || 0} channels
                       </span>
                     </div>
@@ -509,7 +509,7 @@ export default function ProjectDetail() {
                   <div className="flex-1">
                     <div className="flex justify-between text-sm">
                       <span className="text-slate-300">Secondary</span>
-                      <span className="text-white font-medium">
+                      <span className="text-navy font-medium">
                         {project.secondary_count || 0} channels
                       </span>
                     </div>
@@ -525,7 +525,7 @@ export default function ProjectDetail() {
                   <div className="flex-1">
                     <div className="flex justify-between text-sm">
                       <span className="text-slate-300">Tertiary</span>
-                      <span className="text-white font-medium">
+                      <span className="text-navy font-medium">
                         {project.tertiary_count || 0} channels
                       </span>
                     </div>
@@ -538,13 +538,13 @@ export default function ProjectDetail() {
                 <div className="pt-3 border-t border-slate-800">
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-400">Total Length</span>
-                    <span className="text-white font-semibold">
+                    <span className="text-navy font-semibold">
                       {project.total_length_km?.toFixed(2) || 0} km
                     </span>
                   </div>
                   <div className="flex justify-between text-sm mt-2">
                     <span className="text-slate-400">Total Outlets</span>
-                    <span className="text-white font-semibold">
+                    <span className="text-navy font-semibold">
                       {project.total_outlets || 0}
                     </span>
                   </div>
@@ -563,7 +563,7 @@ export default function ProjectDetail() {
 
           {/* Quick Actions */}
           <div className="card">
-            <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
+            <h3 className="text-lg font-semibold text-navy mb-4">Quick Actions</h3>
             <div className="space-y-2">
               {project.status === 'completed' && (
                 <>
@@ -595,7 +595,7 @@ export default function ProjectDetail() {
                 <Trash2 className="w-6 h-6 text-red-400" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white">Delete Project</h3>
+                <h3 className="text-lg font-semibold text-navy">Delete Project</h3>
                 <p className="text-sm text-slate-400">This action cannot be undone</p>
               </div>
             </div>
@@ -612,7 +612,7 @@ export default function ProjectDetail() {
               </button>
               <button 
                 onClick={handleDelete}
-                className="btn flex-1 bg-red-600 hover:bg-red-700 text-white"
+                className="btn flex-1 bg-red-600 hover:bg-red-700 text-navy"
               >
                 Delete Project
               </button>
