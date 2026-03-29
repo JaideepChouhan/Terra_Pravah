@@ -70,6 +70,66 @@ This system automates the complete drainage network design workflow, from terrai
 - 🛣️ Road drainage design
 - 🌍 Watershed analysis and management
 
+Here's how to run the **Terra_Pravah** project:
+
+## **Prerequisites**
+- Python 3.12 (already installed on your system)
+- Node.js & npm (for the frontend)
+
+---
+
+## **Quick Start (2 Terminal Windows)**
+
+### **Terminal 1 - Backend (Flask)**
+```powershell
+cd d:\GIT\Terra_Pravah
+python run.py --dev --port 5000
+```
+✅ Backend runs on **http://localhost:5000**
+
+---
+
+### **Terminal 2 - Frontend (React + Vite)**
+```powershell
+cd d:\GIT\Terra_Pravah\frontend
+npm install   # Only needed first time
+npm run dev
+```
+✅ Frontend runs on **http://localhost:3001**
+
+---
+
+## **Access the Application**
+Open your browser and go to:
+```
+http://localhost:3001
+```
+
+---
+
+## **What Happens**
+1. **Frontend** (port 3001) automatically proxies API calls to **Backend** (port 5000)
+2. The backend uses a SQLite database at `database/terrapravah.db`
+3. Create a new account on the register page, or log in if you already have one
+
+---
+
+## **First Time Setup Only**
+If it's your first time, you may need to:
+```powershell
+cd d:\GIT\Terra_Pravah\frontend
+npm install
+```
+
+---
+
+## **Stop the Servers**
+- Press `Ctrl+C` in each terminal to stop
+
+---
+
+**That's it!** You now have a fully working drainage design platform with real backend connectivity. 
+
 ---
 
 ## ✨ Key Features
