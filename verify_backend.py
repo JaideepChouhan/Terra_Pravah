@@ -5,9 +5,34 @@ Quick check to ensure the backend can start without import errors.
 """
 
 import sys
+import os
 from pathlib import Path
 
+def ensure_project_python():
+    """Ensure we are running with the project's virtual environment python"""
+    project_dir = Path(__file__).parent.absolute()
+    
+    # Simple check: are we in ANY virtual environment?
+    in_venv = sys.prefix != sys.base_prefix
+    
+    # If not in a venv, try to find one and restart
+    if not in_venv:
+        venv_python_linux = project_dir / '.venv' / 'bin' / 'python'
+        venv_python_win = project_dir / '.venv' / 'Scripts' / 'python.exe'
+        
+        python_exe = None
+        if venv_python_win.exists():
+            python_exe = str(venv_python_win)
+        elif venv_python_linux.exists():
+            python_exe = str(venv_python_linux)
+            
+        if python_exe:
+            print(f"🔄 Restarting using virtual environment: {python_exe}")
+            os.execv(python_exe, [python_exe] + sys.argv)
+
 def main():
+    ensure_project_python()
+    
     print("=" * 60)
     print("Terra Pravah - Backend Startup Verification")
     print("=" * 60)

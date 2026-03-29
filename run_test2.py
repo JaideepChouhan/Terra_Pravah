@@ -1,7 +1,25 @@
 import requests
+from pathlib import Path
 
 BASE_URL = 'http://localhost:5000/api'
-DATA_FILE = r'D:\GIT\Terra_Pravah\point_cloud_data\67169_5NKR_CHAKHIRASINGH.las'
+
+PROJECT_ROOT = Path(__file__).resolve().parent
+SEARCH_DIRS = [
+    PROJECT_ROOT / 'point_cloud_data',
+    PROJECT_ROOT / 'Kitchener_lidar',
+    PROJECT_ROOT / 'uploads',
+]
+sample_files = []
+for directory in SEARCH_DIRS:
+    if directory.exists():
+        sample_files.extend(sorted(directory.rglob('*.las')))
+        sample_files.extend(sorted(directory.rglob('*.laz')))
+if not sample_files:
+    raise FileNotFoundError(
+        "No LAS/LAZ files found in point_cloud_data/, Kitchener_lidar/, or uploads/. "
+        "Add one and rerun run_test2.py"
+    )
+DATA_FILE = sample_files[0]
 
 s = requests.Session()
 email = 'test5@example.com'

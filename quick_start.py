@@ -6,8 +6,31 @@ This script helps you quickly start the application and verify it's working.
 
 import sys
 import subprocess
+import os
 from pathlib import Path
 import time
+
+def get_project_python():
+    """Get the path to the virtual environment Python if it exists"""
+    project_dir = Path(__file__).parent.absolute()
+    
+    # Check if we are already in a virtual environment
+    in_venv = sys.prefix != sys.base_prefix
+    
+    # Only force .venv if we're not inside ANY virtual environment 
+    # and the .venv directory exists
+    if not in_venv:
+        venv_python_linux = project_dir / '.venv' / 'bin' / 'python'
+        venv_python_win = project_dir / '.venv' / 'Scripts' / 'python.exe'
+        
+        if venv_python_win.exists():
+            return str(venv_python_win)
+        elif venv_python_linux.exists():
+            return str(venv_python_linux)
+            
+    return sys.executable
+
+PYTHON_CMD = get_project_python()
 
 def print_section(title):
     print("\n" + "="*70)
@@ -36,7 +59,7 @@ def main():
     
     # Step 1: Verify backend can start
     print_section("Step 1: Verifying Backend Modules")
-    if not run_command("python verify_backend.py", "Backend verification"):
+    if not run_command(f'"{PYTHON_CMD}" verify_backend.py', "Backend verification"):
         print("\n❌ Backend verification failed!")
         print("Please fix the errors above before continuing.\n")
         return False
@@ -76,7 +99,7 @@ def main():
     
     if not db_file.exists():
         print("Database not found. Initializing...")
-        if not run_command("python run.py --init-db", "Database initialization"):
+        if not run_command(f'"{PYTHON_CMD}" run.py --init-db', "Database initialization"):
             print("❌ Database initialization failed!")
             return False
         print("✅ Database initialized\n")
@@ -106,7 +129,7 @@ def main():
     print("✅ All checks passed! You can now start the application.\n")
     
     print("To start the development server:")
-    print("  python run.py --dev\n")
+    print(f"  {PYTHON_CMD} run.py --dev\n")
     
     print("The server will be available at:")
     print("  http://localhost:5000\n")
@@ -124,7 +147,8 @@ def main():
     print("  7. Verify project is created successfully\n")
     
     print("Documentation:")
-    print("  - Session files: C:\\Users\\shail\\.copilot\\session-state\\26dc7a85-c6c7-4760-9278-72734f2abf7a\\files\\")
+    print("  - README.md - Setup and usage guide")
+    print("  - USER_GUIDE.md - Product usage guide")
     print("  - MANUAL_TEST_GUIDE.md - Complete testing guide")
     print("  - PROJECT_FIX_SUMMARY.md - What was fixed")
     print("  - DEBUG_LOG.md - Debugging information\n")
@@ -137,9 +161,9 @@ def main():
     if response.lower() == 'y':
         print("\nStarting server...")
         print("Press Ctrl+C to stop the server\n")
-        subprocess.run("python run.py --dev", shell=True)
+        subprocess.run(f'"{PYTHON_CMD}" run.py --dev', shell=True)
     else:
-        print("\nTo start later, run: python run.py --dev\n")
+        print(f"\nTo start later, run: {PYTHON_CMD} run.py --dev\n")
     
     return True
 
