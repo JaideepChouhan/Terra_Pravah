@@ -1,0 +1,233 @@
+# Twilight Navy & Peach
+
+## Product Overview
+
+**The Pitch:** Terra Pravah's redesigned landing page establishes a mature, grounded brand identity for environmental technology. It translates complex climate solutions into accessible, premium offerings through a warm, trustworthy aesthetic, replacing the former aggressive neon styling.
+
+**For:** Enterprise climate officers, ESG investors, and sustainability managers seeking established, reliable technology partners.
+
+**Device:** desktop
+
+**Design Direction:** Sophisticated mix of muted navy blue with soft peach and warm cream tones. Creates a highly readable, premium, and established interface that feels organic yet highly engineered.
+
+**Inspired by:** Stripe Climate, Watershed
+
+---
+
+## Screens
+
+- **Home (Hero):** Value proposition, primary CTA, and organic abstract visualization
+- **Our Mission:** Brand story, core philosophy, and impact metrics
+- **Solutions Hub:** Grid of platform features with interactive peach accents
+- **Case Studies:** Success stories featuring high-contrast navy imagery
+- **Contact & Waitlist:** Minimalist form on a soft peach background
+
+---
+
+## Key Flows
+
+**Joining the Waitlist:** User requests access to the platform
+
+1. User is on **Home (Hero)** -> sees floating waitlist button
+2. User clicks **"Request Access"** -> smoothly scrolls to **Contact & Waitlist** screen
+3. User fills minimalist form -> form fades into a success message with a peach checkmark
+
+---
+
+<details>
+<summary>Design System</summary>
+
+## Color Palette
+
+- **Primary:** `#E8A388` - Buttons, links, active states, key data highlights
+- **Background:** `#F7F3EB` - Warm cream page background
+- **Surface:** `#212C43` - Muted navy cards, floating header, secondary sections
+- **Text:** `#121826` - Deepest navy for primary body text on cream
+- **Muted:** `#829AB1` - Secondary text, subtle borders, inactive icons
+- **Accent:** `#C3D2D5` - Soft slate blue for tertiary backgrounds and tags
+
+## Typography
+
+Choose fonts that are **distinctive and characterful**, bringing editorial elegance.
+
+- **Headings:** Fraunces, 400 (italicized accents), 32-72px
+- **Body:** DM Sans, 400, 18px
+- **Small text:** DM Sans, 400, 14px
+- **Buttons:** DM Sans, 500, 16px, 1px letter spacing
+
+**Style notes:** Sharp corners (`0px` or `2px` radius max) for a serious, editorial feel. Drop shadows are completely avoided; depth is achieved through stark color contrast (Navy next to Peach) and fine 1px borders (`#829AB1`). Generous padding creates a museum-like whitespace layout.
+
+## Design Tokens
+
+```css
+:root {
+  --color-primary: #E8A388;
+  --color-background: #F7F3EB;
+  --color-surface: #212C43;
+  --color-text: #121826;
+  --color-text-inverse: #F7F3EB;
+  --color-muted: #829AB1;
+  --color-accent: #C3D2D5;
+  --font-heading: 'Fraunces', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --radius-sm: 2px;
+  --radius-none: 0px;
+  --spacing-sm: 16px;
+  --spacing-md: 32px;
+  --spacing-lg: 64px;
+  --spacing-xl: 120px;
+}
+```
+
+</details>
+
+---
+
+<details>
+<summary>Screen Specifications</summary>
+
+### Home (Hero)
+
+**Purpose:** Introduce Terra Pravah's core value proposition immediately with editorial authority.
+
+**Layout:** Split 60/40 layout. Left: oversized typography. Right: muted, abstract topological map illustration.
+
+**Key Elements:**
+- **Navigation Bar:** Fixed, `#F7F3EB` background, 1px bottom border (`#829AB1`), logo in `Fraunces` left, links right.
+- **Hero Headline:** `72px` `Fraunces`, `#121826`. Copy: "Precision in Planetary Scale."
+- **Primary CTA:** Solid `#E8A388` rectangle, `0px` radius, `#121826` text. Copy: "Request Access".
+
+**States:**
+- **Loading:** Topological map draws in via SVG path animation over 1.5s.
+
+**Components:**
+- **Nav Link:** `16px`, `DM Sans`, `#121826`. Hover state: 1px bottom border in `#E8A388`.
+
+**Interactions:**
+- **Hover CTA:** Background shifts to `#D69176`, cursor changes to crosshair.
+
+**Responsive:**
+- **Desktop:** Split layout, `120px` top/bottom padding.
+- **Tablet:** Stacks vertically, typography scales to `48px`.
+- **Mobile:** Nav collapses to hamburger menu, illustration hidden.
+
+### Our Mission
+
+**Purpose:** Ground the technology in real-world environmental impact.
+
+**Layout:** Full-width `#212C43` background section. Text centered, constrained to `800px` max-width.
+
+**Key Elements:**
+- **Section Label:** `14px`, uppercase, `#E8A388`, letter-spacing `2px`. Copy: "THE PHILOSOPHY".
+- **Mission Statement:** `48px`, `Fraunces`, `#F7F3EB`, italicized keywords.
+- **Data Callouts:** Three-column grid below text, large `#E8A388` numbers (`56px`), `#829AB1` descriptors.
+
+**States:**
+- **Empty:** N/A (static content).
+
+**Components:**
+- **Data Stat:** `33%` width, left-aligned, 1px left border in `#829AB1`, `16px` left padding.
+
+**Interactions:**
+- **Scroll:** Numbers count up from zero when scrolled into view.
+
+**Responsive:**
+- **Desktop:** 3-column stats.
+- **Tablet:** Stats stack 2-1.
+- **Mobile:** Stats stack vertically, 100% width.
+
+### Solutions Hub
+
+**Purpose:** Detail specific platform capabilities.
+
+**Layout:** Alternating left/right feature blocks. `#F7F3EB` background.
+
+**Key Elements:**
+- **Feature Image:** `600x400px` placeholder for dashboard UI mockups, overlaid with `#C3D2D5` tint.
+- **Feature Title:** `32px`, `Fraunces`, `#121826`.
+- **Feature List:** Custom bullet points using `#E8A388` em-dashes (`—`).
+
+**States:**
+- **Loading:** Images lazy-load with a `#C3D2D5` placeholder.
+
+**Components:**
+- **Feature Card:** Minimalist wrapper, `80px` gap between text and image.
+
+**Interactions:**
+- **Hover Image:** Tint fades out to reveal full color UI mockup over `0.3s` ease.
+
+**Responsive:**
+- **Desktop:** Alternating zigzag layout.
+- **Tablet:** All images top, text bottom.
+- **Mobile:** Padding reduced to `32px`.
+
+### Case Studies
+
+**Purpose:** Prove efficacy via partner testimonials.
+
+**Layout:** Horizontal scrolling track of large cards.
+
+**Key Elements:**
+- **Header:** "Tested by Pioneers", left-aligned.
+- **Track Controls:** Two square buttons (`48x48px`), `#212C43` outline, `#121826` arrows.
+- **Quote Card:** `#FFFFFF` background (slight pop from cream), `1px` `#829AB1` border, `32px` padding.
+
+**States:**
+- **Empty:** "Case studies currently under embargo." message.
+
+**Components:**
+- **Quote Text:** `24px`, `Fraunces`, italic.
+- **Logo Placeholder:** Grayscale partner logo, bottom left.
+
+**Interactions:**
+- **Click Arrow:** Track translates `X` smoothly by `400px`.
+
+**Responsive:**
+- **Desktop:** Horizontal scroll overflow.
+- **Tablet:** CSS snap-scroll.
+- **Mobile:** Single column vertical stack.
+
+### Contact & Waitlist
+
+**Purpose:** Conversion point.
+
+**Layout:** Centered form on a solid `#E8A388` (Peach) background to create a dramatic, warm finale.
+
+**Key Elements:**
+- **Header:** `48px`, `Fraunces`, `#121826`. Copy: "Join the Vanguard."
+- **Input Fields:** Transparent background, `0px` radius, `1px` `#121826` bottom border only. No side/top borders.
+- **Submit Button:** `#121826` background, `#F7F3EB` text, `100%` width.
+
+**States:**
+- **Error:** Bottom border turns stark red, small `12px` red text appears below input.
+- **Loading:** Button text changes to "Submitting...", background pulses.
+
+**Components:**
+- **Input Group:** `48px` height, floating label in `#212C43`.
+
+**Interactions:**
+- **Focus Input:** Bottom border thickness increases to `2px`.
+
+**Responsive:**
+- **Desktop:** `400px` form width.
+- **Tablet:** `100%` width with `64px` margins.
+- **Mobile:** Full width, `16px` margins.
+
+</details>
+
+---
+
+<details>
+<summary>Build Guide</summary>
+
+**Stack:** HTML + Tailwind CSS v3
+
+**Build Order:**
+1. **Design System Configuration:** Add `Fraunces` and `DM Sans` to Tailwind config. Set exact hex codes in `tailwind.config.js` under custom colors (`navy-900`, `peach-500`, `cream-100`).
+2. **Global Styles:** Strip default radii and shadows. Apply `bg-cream-100` to body.
+3. **Home (Hero):** Establish the primary typography scale and the sharp, border-driven UI aesthetic.
+4. **Our Mission:** Build the inverted dark section (`#212C43`) to test contrast and secondary typography.
+5. **Contact & Waitlist:** Build the peach-background form to finalize input styles and interaction states.
+6. **Solutions Hub & Case Studies:** Flesh out middle content grids and horizontal scroll logic.
+
+</details>

@@ -2,12 +2,13 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../store/authStore'
 import { motion } from 'framer-motion'
-import { ArrowRightIcon } from '@heroicons/react/24/outline'
+import { ArrowRightIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
 
 export default function Login() {
   const navigate = useNavigate()
   const { login, demoLogin, isLoading, error, clearError } = useAuthStore()
   const [formError, setFormError] = useState<string | null>(null)
+  const [showPassword, setShowPassword] = useState(false)
   
   const [formData, setFormData] = useState({
     email: '',
@@ -54,43 +55,55 @@ export default function Login() {
         )}
 
         {/* Input Group: Work Email */}
-        <div className="relative w-full h-12 flex items-end">
+        <div className="relative w-full pt-5">
           <input
             type="email"
             id="email"
             name="email"
-            placeholder="Work Email"
+            placeholder=" "
             required
-            className="minimal-input peer w-full h-8 text-navy text-lg placeholder-transparent focus:ring-0"
+            className="minimal-input peer w-full h-10 text-navy text-lg focus:ring-0"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           />
           <label
             htmlFor="email"
-            className="floating-label absolute left-0 bottom-2 text-navy-muted text-lg cursor-text peer-focus:-translate-y-7 peer-focus:text-sm peer-focus:text-navy peer-not-placeholder-shown:-translate-y-7 peer-not-placeholder-shown:text-sm peer-not-placeholder-shown:text-navy"
+            className="floating-label absolute left-0 top-5 text-navy-muted text-lg peer-focus:-translate-y-6 peer-focus:text-xs peer-focus:text-navy peer-[:not(:placeholder-shown)]:-translate-y-6 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-navy"
           >
             Work Email
           </label>
         </div>
 
         {/* Input Group: Password */}
-        <div className="relative w-full h-12 flex items-end">
+        <div className="relative w-full pt-5">
           <input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             id="password"
             name="password"
-            placeholder="Password"
+            placeholder=" "
             required
-            className="minimal-input peer w-full h-8 text-navy text-lg placeholder-transparent focus:ring-0"
+            className="minimal-input peer w-full h-10 text-navy text-lg focus:ring-0 pr-10"
             value={formData.password}
             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           />
           <label
             htmlFor="password"
-            className="floating-label absolute left-0 bottom-2 text-navy-muted text-lg cursor-text peer-focus:-translate-y-7 peer-focus:text-sm peer-focus:text-navy peer-not-placeholder-shown:-translate-y-7 peer-not-placeholder-shown:text-sm peer-not-placeholder-shown:text-navy"
+            className="floating-label absolute left-0 top-5 text-navy-muted text-lg peer-focus:-translate-y-6 peer-focus:text-xs peer-focus:text-navy peer-[:not(:placeholder-shown)]:-translate-y-6 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-navy"
           >
             Password
           </label>
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-0 top-5 h-10 px-2 text-navy-muted hover:text-navy transition-colors"
+            tabIndex={-1}
+          >
+            {showPassword ? (
+              <EyeSlashIcon className="w-5 h-5" />
+            ) : (
+              <EyeIcon className="w-5 h-5" />
+            )}
+          </button>
         </div>
 
         {/* Submit Button */}

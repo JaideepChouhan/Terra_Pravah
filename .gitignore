@@ -291,3 +291,6 @@ storybook-static/
 # Prompt files (development notes)
 prompt.txt
 prompts/
+
+# Stitch design files
+stitch_twilight_navy_peach_prd/

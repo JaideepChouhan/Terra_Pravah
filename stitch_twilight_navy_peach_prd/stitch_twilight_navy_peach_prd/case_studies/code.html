@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Terra Pravah - Case Studies</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&amp;family=DM+Sans:ital,wght@0,400..1000;1,400..1000&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#E8A388",
+                        "background-light": "#F7F3EB",
+                        "background-dark": "#211611",
+                        "surface": "#212C43",
+                        "text-main": "#121826",
+                        "text-inverse": "#F7F3EB",
+                        "muted": "#829AB1",
+                        "accent": "#C3D2D5",
+                    },
+                    fontFamily: {
+                        "display": ["'DM Sans'", "sans-serif"],
+                        "heading": ["'Fraunces'", "serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px",
+                        "lg": "2px",
+                        "xl": "2px",
+                        "full": "0px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        
+        .snap-x {
+            scroll-snap-type: x mandatory;
+        }
+        .snap-center {
+            scroll-snap-align: center;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main antialiased selection:bg-primary selection:text-text-main">
+<main class="min-h-screen flex flex-col justify-center py-20 px-4 md:px-10 lg:px-20 overflow-hidden">
+<div class="max-w-[1440px] w-full mx-auto">
+<!-- Section Header & Controls -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+<div class="max-w-2xl">
+<h2 class="font-heading text-4xl md:text-5xl lg:text-6xl text-text-main tracking-tight leading-none mb-4">Tested by Pioneers</h2>
+<p class="text-muted text-lg md:text-xl font-display max-w-lg">
+                        See how enterprise leaders are using our platform to drive planetary-scale analytics.
+                    </p>
+</div>
+<!-- Track Controls (Desktop/Tablet) -->
+<div class="hidden md:flex gap-4">
+<button aria-label="Previous case study" class="w-12 h-12 flex items-center justify-center border border-surface text-surface hover:bg-surface hover:text-text-inverse transition-colors duration-300 group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-light">
+<span class="material-symbols-outlined text-2xl font-light group-hover:-translate-x-1 transition-transform duration-300">arrow_left_alt</span>
+</button>
+<button aria-label="Next case study" class="w-12 h-12 flex items-center justify-center border border-surface text-surface hover:bg-surface hover:text-text-inverse transition-colors duration-300 group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-light">
+<span class="material-symbols-outlined text-2xl font-light group-hover:translate-x-1 transition-transform duration-300">arrow_right_alt</span>
+</button>
+</div>
+</div>
+<!-- Testimonial Track -->
+<!-- 
+                Using a slight negative margin approach or just letting it overflow.
+                For robust CSS-only scroll we use snap-x and horizontal scroll.
+            -->
+<div class="flex overflow-x-auto no-scrollbar snap-x snap-mandatory md:snap-none pb-8 -mx-4 px-4 md:mx-0 md:px-0 gap-6 md:gap-8 cursor-grab active:cursor-grabbing">
+<!-- Card 1 -->
+<div class="flex-none w-[85vw] md:w-[500px] lg:w-[600px] bg-white border border-muted p-8 md:p-12 flex flex-col justify-between snap-center min-h-[400px]">
+<div>
+<span class="material-symbols-outlined text-primary text-4xl mb-6 opacity-50" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+<p class="font-heading italic text-2xl md:text-3xl text-text-main leading-snug mb-8">
+                            "This technology has fundamentally transformed our approach to planetary scale analytics. The precision is unmatched in the industry."
+                        </p>
+</div>
+<div class="flex items-center justify-between border-t border-muted/30 pt-6 mt-auto">
+<div>
+<p class="font-display font-medium text-text-main text-lg">Jane Doe</p>
+<p class="font-display text-muted text-sm">Chief Climate Officer</p>
+</div>
+<div class="h-8 w-24 bg-accent/20 flex items-center justify-center grayscale opacity-70">
+<!-- Placeholder for Logo -->
+<span class="text-xs font-heading font-bold text-surface tracking-widest uppercase">Acme Corp</span>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="flex-none w-[85vw] md:w-[500px] lg:w-[600px] bg-white border border-muted p-8 md:p-12 flex flex-col justify-between snap-center min-h-[400px]">
+<div>
+<span class="material-symbols-outlined text-primary text-4xl mb-6 opacity-50" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+<p class="font-heading italic text-2xl md:text-3xl text-text-main leading-snug mb-8">
+                            "A reliable, established partner in our ESG journey. Terra Pravah delivers precision data that our investors trust unconditionally."
+                        </p>
+</div>
+<div class="flex items-center justify-between border-t border-muted/30 pt-6 mt-auto">
+<div>
+<p class="font-display font-medium text-text-main text-lg">John Smith</p>
+<p class="font-display text-muted text-sm">VP of ESG Investment</p>
+</div>
+<div class="h-8 w-24 bg-accent/20 flex items-center justify-center grayscale opacity-70">
+<!-- Placeholder for Logo -->
+<span class="text-xs font-heading font-bold text-surface tracking-widest uppercase">GlobalFund</span>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="flex-none w-[85vw] md:w-[500px] lg:w-[600px] bg-white border border-muted p-8 md:p-12 flex flex-col justify-between snap-center min-h-[400px]">
+<div>
+<span class="material-symbols-outlined text-primary text-4xl mb-6 opacity-50" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+<p class="font-heading italic text-2xl md:text-3xl text-text-main leading-snug mb-8">
+                            "The insights we've gained have been invaluable for our sustainability managers. It's not just data; it's a clear roadmap."
+                        </p>
+</div>
+<div class="flex items-center justify-between border-t border-muted/30 pt-6 mt-auto">
+<div>
+<p class="font-display font-medium text-text-main text-lg">Alice Johnson</p>
+<p class="font-display text-muted text-sm">Director of Sustainability</p>
+</div>
+<div class="h-8 w-24 bg-accent/20 flex items-center justify-center grayscale opacity-70">
+<!-- Placeholder for Logo -->
+<span class="text-xs font-heading font-bold text-surface tracking-widest uppercase">EcoLogix</span>
+</div>
+</div>
+</div>
+<!-- Spacer for right padding on scroll -->
+<div class="hidden md:block flex-none w-[10vw]"></div>
+</div>
+<!-- Mobile Track Controls (Hidden on Desktop) -->
+<div class="flex md:hidden justify-center gap-4 mt-8">
+<button aria-label="Previous case study" class="w-12 h-12 flex items-center justify-center border border-surface text-surface hover:bg-surface hover:text-text-inverse transition-colors duration-300">
+<span class="material-symbols-outlined text-2xl font-light">arrow_left_alt</span>
+</button>
+<button aria-label="Next case study" class="w-12 h-12 flex items-center justify-center border border-surface text-surface hover:bg-surface hover:text-text-inverse transition-colors duration-300">
+<span class="material-symbols-outlined text-2xl font-light">arrow_right_alt</span>
+</button>
+</div>
+</div>
+</main>
+</body></html>

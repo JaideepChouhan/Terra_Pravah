@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Terra Pravah - Contact &amp; Waitlist</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#e98963",
+            "background-light": "#f8f6f6",
+            "background-dark": "#211611",
+            "navy": "#121826", // deepest navy for text
+            "navy-muted": "#212C43", // secondary surface
+            "accent-slate": "#C3D2D5",
+            "muted-blue": "#829AB1",
+            "error-dark": "#991b1b" // Darker red for contrast on peach
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          letterSpacing: {
+            'tightest': '-.04em',
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    /* Custom styles for the minimalist form inputs to override default form plugin behavior */
+    .minimal-input {
+      background-color: transparent !important;
+      border-top: none !important;
+      border-left: none !important;
+      border-right: none !important;
+      border-bottom: 1px solid #121826 !important;
+      border-radius: 0 !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      box-shadow: none !important;
+      transition: border-bottom-width 0.2s ease, border-color 0.2s ease;
+    }
+    
+    .minimal-input:focus {
+      outline: none !important;
+      border-bottom-width: 2px !important;
+      border-bottom-color: #121826 !important;
+      box-shadow: none !important;
+    }
+
+    .minimal-input.error {
+      border-bottom-color: #991b1b !important;
+    }
+    
+    .minimal-input.error:focus {
+      border-bottom-color: #991b1b !important;
+    }
+
+    /* Floating label baseline styles (Tailwind peer-* handles the animation) */
+    .floating-label {
+      transition: transform 0.2s ease-out, font-size 0.2s ease-out, color 0.2s ease-out;
+      transform-origin: left top;
+    }
+  </style>
+</head>
+<body class="bg-primary min-h-screen flex items-center justify-center font-display antialiased text-navy">
+<!-- Main Container -->
+<main class="w-full max-w-[400px] mx-auto px-6 py-16 md:py-24 flex flex-col items-center">
+<!-- Header -->
+<header class="w-full text-center mb-12">
+<h1 class="text-navy text-[48px] font-black leading-tight tracking-tightest mb-4">
+        Join the Vanguard.
+      </h1>
+<p class="text-navy/80 text-lg">
+        Request access to our precision planetary scale platform.
+      </p>
+</header>
+<!-- Form -->
+<form action="#" class="w-full flex flex-col gap-8" method="POST" onsubmit="event.preventDefault(); document.getElementById('submit-btn').classList.add('animate-pulse'); document.getElementById('submit-text').innerText='Submitting...';">
+<!-- Input Group: Full Name -->
+<div class="relative w-full h-12 flex items-end">
+<input class="minimal-input peer w-full h-8 text-navy text-lg placeholder-transparent focus:ring-0" id="fullname" name="fullname" placeholder="Full Name" required="" type="text"/>
+<label class="floating-label absolute left-0 bottom-2 text-navy-muted text-lg cursor-text peer-focus:-translate-y-7 peer-focus:text-sm peer-focus:text-navy peer-not-placeholder-shown:-translate-y-7 peer-not-placeholder-shown:text-sm peer-not-placeholder-shown:text-navy" for="fullname">
+          Full Name
+        </label>
+</div>
+<!-- Input Group: Work Email (Example of Error State) -->
+<div class="relative w-full h-12 flex items-end mb-2">
+<input class="minimal-input error peer w-full h-8 text-navy text-lg placeholder-transparent focus:ring-0" id="email" name="email" placeholder="Work Email" required="" type="email" value="invalid-email-format"/>
+<label class="floating-label absolute left-0 bottom-2 text-navy-muted text-lg cursor-text peer-focus:-translate-y-7 peer-focus:text-sm peer-focus:text-error-dark peer-not-placeholder-shown:-translate-y-7 peer-not-placeholder-shown:text-sm peer-not-placeholder-shown:text-error-dark" for="email">
+          Work Email
+        </label>
+<!-- Error Message -->
+<p class="absolute -bottom-6 left-0 text-error-dark text-xs font-medium">
+          Please enter a valid work email.
+        </p>
+</div>
+<!-- Input Group: Company -->
+<div class="relative w-full h-12 flex items-end mt-4">
+<input class="minimal-input peer w-full h-8 text-navy text-lg placeholder-transparent focus:ring-0" id="company" name="company" placeholder="Company" required="" type="text"/>
+<label class="floating-label absolute left-0 bottom-2 text-navy-muted text-lg cursor-text peer-focus:-translate-y-7 peer-focus:text-sm peer-focus:text-navy peer-not-placeholder-shown:-translate-y-7 peer-not-placeholder-shown:text-sm peer-not-placeholder-shown:text-navy" for="company">
+          Company
+        </label>
+</div>
+<!-- Submit Button -->
+<div class="mt-8 w-full">
+<button class="w-full bg-navy text-background-light py-4 px-6 rounded flex justify-center items-center gap-2 hover:bg-navy-muted transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy focus:ring-offset-primary" id="submit-btn" type="submit">
+<span class="text-base font-medium tracking-[0.05em] uppercase" id="submit-text">Request Access</span>
+<span class="material-symbols-outlined text-[20px]" data-icon="arrow_forward" style="font-variation-settings: 'FILL' 0;">arrow_forward</span>
+</button>
+</div>
+</form>
+<!-- Footer Note -->
+<div class="mt-8 text-center">
+<p class="text-sm text-navy/60 flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+        Secure application process
+      </p>
+</div>
+</main>
+</body></html>

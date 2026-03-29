@@ -55,7 +55,13 @@
   }
 
   .floating-label {
-    @apply transition-all duration-200 ease-out origin-top-left;
+    @apply transition-all duration-200 ease-out origin-top-left pointer-events-none;
+  }
+
+  /* Fix floating label when input has value - move label up more and make it smaller */
+  .minimal-input:focus + .floating-label,
+  .minimal-input:not(:placeholder-shown) + .floating-label {
+    @apply -translate-y-6 text-xs;
   }
 
   /* Em-dash Lists */

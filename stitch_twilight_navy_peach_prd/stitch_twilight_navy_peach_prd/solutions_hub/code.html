@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Terra Pravah - Solutions Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#e98963",
+          "background-light": "#f8f6f6",
+          "background-dark": "#211611",
+          "surface-light": "#ffffff",
+          "surface-dark": "#2a1c15",
+          "slate-blue": "#C3D2D5",
+        },
+        fontFamily: {
+          "display": ["Inter", "sans-serif"]
+        },
+        borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+      },
+    },
+  }
+</script>
+<style>
+  body {
+    font-family: 'Inter', sans-serif;
+  }
+  .em-dash-list li {
+    position: relative;
+    padding-left: 1.5rem;
+  }
+  .em-dash-list li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: #e98963; /* primary */
+    font-weight: 700;
+  }
+</style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex flex-col antialiased">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col w-full max-w-[1200px] flex-1">
+<!-- Shared TopNavBar Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-slate-200 dark:border-b-slate-700/50 px-4 md:px-10 py-3 mb-10">
+<div class="flex items-center gap-4 text-slate-900 dark:text-slate-100">
+<div class="size-4">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">Terra Pravah</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<div class="hidden md:flex items-center gap-9">
+<a class="text-sm font-medium leading-normal hover:text-primary transition-colors duration-200" href="#">Our Mission</a>
+<a class="text-sm font-medium leading-normal hover:text-primary transition-colors duration-200 border-b border-primary pb-1" href="#">Solutions Hub</a>
+<a class="text-sm font-medium leading-normal hover:text-primary transition-colors duration-200" href="#">Case Studies</a>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded h-10 px-4 bg-primary text-slate-900 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors duration-200">
+<span class="truncate">Request Access</span>
+</button>
+</div>
+</header>
+<!-- Solutions Hub Content -->
+<main class="flex flex-col gap-20 py-10 px-4 md:px-10">
+<div class="flex flex-col items-center text-center max-w-3xl mx-auto mb-10">
+<h1 class="text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em] mb-6">Solutions Hub</h1>
+<p class="text-lg text-slate-600 dark:text-slate-400">Comprehensive capabilities for planetary-scale environmental operations. Explore how our platform integrates with your infrastructure.</p>
+</div>
+<!-- Feature 1: Image Left, Text Right -->
+<div class="flex flex-col md:flex-row items-center gap-10 md:gap-20">
+<div class="w-full md:w-1/2 relative group rounded overflow-hidden shadow-sm">
+<div class="aspect-[3/2] w-full bg-cover bg-center" data-alt="Data dashboard showing global emissions tracking metrics" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAF_VPwP3-a6FNz-OJt4FSsxwQrBS2TjFnIfg8MrwNXYrf73-Cq-xC6qxyyFoBfOw8bnVSo7b4FXs3-BdqkOhNDh4NALsbifgh7s-LbpXkiyVqn3enw458DBnmsrsHprFckl3u9RfU1OxJElnP21wVUngpVXQ55Df1QgmF9mbqeazIzovC890As8tZ4IJvZ1VXTMjaz76WNdnZMY3scfcp1DU-G7wEYNPOFNtKShMjYuBKbiZqNKubfktfgLWnk9VWG8hlOYSACak_5');"></div>
+<div class="absolute inset-0 bg-slate-blue/60 mix-blend-multiply transition-opacity duration-300 ease-in-out group-hover:opacity-0"></div>
+</div>
+<div class="w-full md:w-1/2 flex flex-col gap-6">
+<h2 class="text-[32px] font-bold leading-tight text-slate-900 dark:text-slate-100">Global Emissions Tracking</h2>
+<ul class="em-dash-list flex flex-col gap-4 text-slate-700 dark:text-slate-300 text-lg">
+<li>Real-time monitoring across all planetary scale operations</li>
+<li>Comprehensive coverage for Scope 1, 2, and 3 emissions</li>
+<li>Custom alert thresholds with automated anomaly detection</li>
+<li>Granular data filtering by facility, region, or product line</li>
+</ul>
+</div>
+</div>
+<!-- Feature 2: Text Left, Image Right -->
+<div class="flex flex-col md:flex-row-reverse items-center gap-10 md:gap-20">
+<div class="w-full md:w-1/2 relative group rounded overflow-hidden shadow-sm">
+<div class="aspect-[3/2] w-full bg-cover bg-center" data-alt="Abstract supply chain network visualization on a dark background" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDXpNQSzLCtX9geI8A9VPdNOY4cZ3EehT7AfrPtFcS1toZORJnyb7k0C3zN5EQU5BceLXyMFqchGfl0M8pRWx05T5dk5T6ME4_PDBG1Kc31GvqAa8Fp2UbxhbHSKg3XQ2s5vzeY6ITPWDKwThNuokm-25egqzNDL_m5UjpGocgvgTbk0fg_2pau5NBoHsSg7KnB0RxoY8mFHXJbZ7Vrb_PopucZSBm2HwZBX6BO6g9C9jllrBpCm-qSm62rW1fo2MBWQO5MyacJYdy6');"></div>
+<div class="absolute inset-0 bg-slate-blue/60 mix-blend-multiply transition-opacity duration-300 ease-in-out group-hover:opacity-0"></div>
+</div>
+<div class="w-full md:w-1/2 flex flex-col gap-6">
+<h2 class="text-[32px] font-bold leading-tight text-slate-900 dark:text-slate-100">Supply Chain Analytics</h2>
+<ul class="em-dash-list flex flex-col gap-4 text-slate-700 dark:text-slate-300 text-lg">
+<li>Deep-tier vendor integration and performance scoring</li>
+<li>Predictive risk modeling for environmental disruptions</li>
+<li>Material lifecycle traceability from origin to end-of-life</li>
+<li>Automated supplier compliance auditing tools</li>
+</ul>
+</div>
+</div>
+<!-- Feature 3: Image Left, Text Right -->
+<div class="flex flex-col md:flex-row items-center gap-10 md:gap-20">
+<div class="w-full md:w-1/2 relative group rounded overflow-hidden shadow-sm">
+<div class="aspect-[3/2] w-full bg-cover bg-center" data-alt="Clean minimal interface showing automated ESG compliance reports" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDdmqEIPsD1yI-lRe5noxigSX8oJejNqP4Aq5g623tEuVAgefv9NnLMhP3SSP_pl2X6sNfy6lKEvB1Xl_aroaWVgqyqLu92wbK47NonbN6TmpO9TpV4nqtO3yykzISjKLwg-93iwvM4Ayq4BsA-yDxdz13pRL_v03g3OJPdx4VN2CxPCI7rNXgwq4QQRnC_LYmxp6YeDYUFnwpIM4qpdwwf2TdFfj3NZvINx5sNvqVzw6j_P0Wkdo7n1gae6j4Jm_6rE-ooC8nxCQ3O');"></div>
+<div class="absolute inset-0 bg-slate-blue/60 mix-blend-multiply transition-opacity duration-300 ease-in-out group-hover:opacity-0"></div>
+</div>
+<div class="w-full md:w-1/2 flex flex-col gap-6">
+<h2 class="text-[32px] font-bold leading-tight text-slate-900 dark:text-slate-100">Automated ESG Reporting</h2>
+<ul class="em-dash-list flex flex-col gap-4 text-slate-700 dark:text-slate-300 text-lg">
+<li>One-click generation for global compliance frameworks</li>
+<li>Auditor-ready documentation with full data provenance</li>
+<li>Interactive stakeholder sharing portals</li>
+<li>Continuous alignment with evolving regulatory standards</li>
+</ul>
+</div>
+</div>
+</main>
+</div>
+</div>
+</div>
+</div>
+</body></html>

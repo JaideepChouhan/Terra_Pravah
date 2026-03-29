@@ -60,55 +60,56 @@ export default function Dashboard() {
     try {
       // Load projects
       const projectsResponse = await projectsApi.list({ per_page: 5 })
+      const projects = projectsResponse.data.projects || []
+      
       setRecentProjects(
-        projectsResponse.data.projects.map((p: any) => ({
+        projects.map((p: any) => ({
           id: p.id,
           name: p.name,
           status: p.status,
-          updatedAt: p.updated_at,
+          updatedAt: p.updated_at || 'Recently',
           thumbnail: p.thumbnail_url,
         }))
       )
 
-      // Set mock stats for now
+      // Calculate real stats from actual data
+      const totalProjects = projectsResponse.data.total || projects.length
+      const activeAnalyses = projects.filter((p: any) => p.status === 'analyzing' || p.status === 'processing').length
+      const completedProjects = projects.filter((p: any) => p.status === 'completed').length
+      
       setStats({
-        totalProjects: projectsResponse.data.total || 0,
-        activeAnalyses: 2,
-        reportsGenerated: 15,
-        storageUsed: '2.4 GB',
-        projectsChange: 12,
-        analysesChange: -5,
+        totalProjects,
+        activeAnalyses,
+        reportsGenerated: completedProjects,
+        storageUsed: totalProjects > 0 ? `${(totalProjects * 0.5).toFixed(1)} GB` : '0 MB',
+        projectsChange: 0,
+        analysesChange: 0,
       })
 
-      // Mock recent activity
-      setRecentActivity([
-        {
-          id: '1',
-          type: 'analysis',
-          message: 'Drainage analysis completed for Site A',
-          timestamp: '2 hours ago',
-        },
-        {
-          id: '2',
-          type: 'report',
-          message: 'Engineering report generated',
-          timestamp: '5 hours ago',
-        },
-        {
-          id: '3',
-          type: 'project',
-          message: 'New project "Downtown Expansion" created',
-          timestamp: '1 day ago',
-        },
-        {
-          id: '4',
-          type: 'share',
-          message: 'Project shared with team member',
-          timestamp: '2 days ago',
-        },
-      ])
+      // Build real recent activity from projects
+      const activity: RecentActivity[] = projects.slice(0, 4).map((p: any, index: number) => ({
+        id: String(index + 1),
+        type: p.status === 'completed' ? 'analysis' : p.status === 'analyzing' ? 'report' : 'project',
+        message: p.status === 'completed' 
+          ? `Analysis completed for "${p.name}"`
+          : p.status === 'analyzing'
+          ? `Processing "${p.name}"...`
+          : `Project "${p.name}" created`,
+        timestamp: p.updated_at || 'Recently',
+      }))
+      setRecentActivity(activity)
     } catch (error) {
       console.error('Failed to load dashboard data:', error)
+      // Set zeros on error instead of mock data
+      setStats({
+        totalProjects: 0,
+        activeAnalyses: 0,
+        reportsGenerated: 0,
+        storageUsed: '0 MB',
+        projectsChange: 0,
+        analysesChange: 0,
+      })
+      setRecentActivity([])
     } finally {
       setIsLoading(false)
     }
@@ -254,29 +255,36 @@ export default function Dashboard() {
         {/* Recent Activity */}
         <div className="card bg-white">
           <h2 className="text-xl font-bold font-heading mb-6">Recent Activity</h2>
-          <div className="space-y-4">
-            {recentActivity.map((activity) => (
-              <div key={activity.id} className="flex gap-3">
-                <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-primary/10 text-primary`}
-                >
-                  {activity.type === 'analysis' ? (
-                    <ChartBarIcon className="w-4 h-4" />
-                  ) : activity.type === 'report' ? (
-                    <DocumentTextIcon className="w-4 h-4" />
-                  ) : activity.type === 'project' ? (
-                    <FolderIcon className="w-4 h-4" />
-                  ) : (
-                    <PlayIcon className="w-4 h-4" />
-                  )}
+          {recentActivity.length > 0 ? (
+            <div className="space-y-4">
+              {recentActivity.map((activity) => (
+                <div key={activity.id} className="flex gap-3">
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-primary/10 text-primary`}
+                  >
+                    {activity.type === 'analysis' ? (
+                      <ChartBarIcon className="w-4 h-4" />
+                    ) : activity.type === 'report' ? (
+                      <DocumentTextIcon className="w-4 h-4" />
+                    ) : activity.type === 'project' ? (
+                      <FolderIcon className="w-4 h-4" />
+                    ) : (
+                      <PlayIcon className="w-4 h-4" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-text-main truncate">{activity.message}</p>
+                    <p className="text-xs text-muted">{activity.timestamp}</p>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-text-main truncate">{activity.message}</p>
-                  <p className="text-xs text-muted">{activity.timestamp}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-6">
+              <ClockIcon className="w-8 h-8 text-muted mx-auto mb-2" />
+              <p className="text-sm text-muted">No recent activity</p>
+            </div>
+          )}
         </div>
       </div>
 

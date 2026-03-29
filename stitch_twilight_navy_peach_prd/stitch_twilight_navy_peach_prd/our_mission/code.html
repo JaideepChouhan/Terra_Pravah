@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Terra Pravah - Our Mission</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&amp;family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#E8A388",
+                        background: {
+                            light: "#F7F3EB",
+                            dark: "#F7F3EB" 
+                        },
+                        surface: "#212C43",
+                        text: {
+                            DEFAULT: "#121826",
+                            inverse: "#F7F3EB"
+                        },
+                        muted: "#829AB1",
+                        accent: "#C3D2D5"
+                    },
+                    fontFamily: {
+                        display: ["DM Sans", "sans-serif"],
+                        heading: ["Fraunces", "serif"]
+                    },
+                    borderRadius: {
+                        DEFAULT: "2px",
+                        lg: "2px",
+                        xl: "2px",
+                        full: "2px",
+                        none: "0px"
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light text-text font-display antialiased">
+<div class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<!-- TopAppBar Navigation (Required by Rules: Not a focused task flow, it's a browsing destination) -->
+<div class="relative flex h-auto w-full flex-col bg-background-light">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1 w-full">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-muted/30 px-4 md:px-10 py-3">
+<div class="flex items-center gap-4 text-text">
+<div class="size-4">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-text text-lg font-heading font-normal leading-tight tracking-[-0.015em]">Terra Pravah</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-end gap-8">
+<div class="flex items-center gap-9">
+<a class="text-text text-base hover:border-b hover:border-primary transition-all duration-200" href="#">Mission</a>
+<a class="text-text text-base hover:border-b hover:border-primary transition-all duration-200" href="#">Solutions</a>
+<a class="text-text text-base hover:border-b hover:border-primary transition-all duration-200" href="#">Case Studies</a>
+</div>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center rounded-none h-10 px-6 bg-primary hover:bg-[#D69176] text-text text-base font-medium transition-colors duration-200 tracking-wide">
+<span class="truncate">Request Access</span>
+</button>
+</div>
+<!-- Mobile Menu Icon Placeholder -->
+<div class="md:hidden flex items-center">
+<span class="material-symbols-outlined text-text">menu</span>
+</div>
+</header>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Content: Our Mission -->
+<main class="flex-1 flex flex-col w-full bg-surface">
+<section class="w-full flex justify-center py-20 md:py-32 px-4 md:px-8">
+<div class="max-w-[800px] w-full flex flex-col items-center text-center">
+<h4 class="text-primary text-[14px] font-display uppercase tracking-[2px] mb-8 font-medium">
+                        THE PHILOSOPHY
+                    </h4>
+<h1 class="text-text-inverse font-heading text-[32px] md:text-[48px] leading-[1.2] mb-16 md:mb-24">
+                        Grounding the technology in <i class="italic font-light">real-world</i> environmental impact.
+                    </h1>
+<!-- Stats Grid -->
+<div class="w-full grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-0">
+<!-- Stat 1 -->
+<div class="flex flex-col items-start text-left md:pl-6 md:border-l md:border-muted/50 border-l border-muted/50 pl-6">
+<span class="text-primary text-[48px] md:text-[56px] font-heading leading-none mb-3">10M+</span>
+<span class="text-muted font-display text-base">Metrics Tracked</span>
+</div>
+<!-- Stat 2 -->
+<div class="flex flex-col items-start text-left md:pl-6 md:border-l md:border-muted/50 border-l border-muted/50 pl-6">
+<span class="text-primary text-[48px] md:text-[56px] font-heading leading-none mb-3">50+</span>
+<span class="text-muted font-display text-base">Active Partners</span>
+</div>
+<!-- Stat 3 -->
+<div class="flex flex-col items-start text-left md:pl-6 md:border-l md:border-muted/50 border-l border-muted/50 pl-6">
+<span class="text-primary text-[48px] md:text-[56px] font-heading leading-none mb-3">99.9%</span>
+<span class="text-muted font-display text-base">System Uptime</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Shared Footer Structure from TopNavBar block -->
+<footer class="flex flex-col gap-6 px-5 py-10 text-center bg-background-light @container w-full border-t border-muted/20">
+<div class="flex flex-wrap items-center justify-center gap-6 @[480px]:flex-row @[480px]:justify-around">
+<a class="text-muted text-sm font-normal leading-normal min-w-40 hover:text-text transition-colors" href="#">Privacy Policy</a>
+<a class="text-muted text-sm font-normal leading-normal min-w-40 hover:text-text transition-colors" href="#">Terms of Service</a>
+</div>
+<p class="text-muted text-sm font-normal leading-normal">© 2024 Terra Pravah. All rights reserved.</p>
+</footer>
+</div>
+</body></html>

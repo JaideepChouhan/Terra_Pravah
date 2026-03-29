@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowRightIcon } from '@heroicons/react/24/outline'
+import { ArrowRightIcon, ArrowLeftIcon } from '@heroicons/react/24/outline'
 
 export default function Landing() {
   return (
@@ -199,10 +199,10 @@ export default function Landing() {
             {/* Track Controls (Desktop/Tablet) */}
             <div className="hidden md:flex gap-4">
               <button aria-label="Previous case study" className="w-12 h-12 flex items-center justify-center border border-surface text-surface hover:bg-surface hover:text-text-inverse transition-colors duration-300 group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-light">
-                <span className="material-symbols-outlined text-2xl font-light group-hover:-translate-x-1 transition-transform duration-300">arrow_left_alt</span>
+                <ArrowLeftIcon className="w-6 h-6 group-hover:-translate-x-1 transition-transform duration-300" />
               </button>
               <button aria-label="Next case study" className="w-12 h-12 flex items-center justify-center border border-surface text-surface hover:bg-surface hover:text-text-inverse transition-colors duration-300 group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-light">
-                <span className="material-symbols-outlined text-2xl font-light group-hover:translate-x-1 transition-transform duration-300">arrow_right_alt</span>
+                <ArrowRightIcon className="w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" />
               </button>
             </div>
           </div>
