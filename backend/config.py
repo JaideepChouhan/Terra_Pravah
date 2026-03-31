@@ -135,7 +135,7 @@ class Config:
             'price_monthly': 0,
             'price_yearly': 0,
             'max_projects': 3,
-            'max_file_size_mb': 100,
+            'max_file_size_mb': 1000,
             'max_team_members': 1,
             'features': ['basic_analysis', 'basic_visualization', 'community_support']
         },
@@ -144,7 +144,7 @@ class Config:
             'price_monthly': 99,
             'price_yearly': 990,
             'max_projects': -1,  # Unlimited
-            'max_file_size_mb': 1024,
+            'max_file_size_mb': 5000,
             'max_team_members': 10,
             'features': [
                 'basic_analysis', 'advanced_analysis', 'ai_assistant',
@@ -158,7 +158,7 @@ class Config:
             'price_monthly': None,  # Custom pricing
             'price_yearly': None,
             'max_projects': -1,
-            'max_file_size_mb': 10240,
+            'max_file_size_mb': 50000,
             'max_team_members': -1,
             'features': [
                 'basic_analysis', 'advanced_analysis', 'ai_assistant',

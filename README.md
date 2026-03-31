@@ -27,11 +27,213 @@ A comprehensive automated drainage network design system that leverages **Digita
 
 ---
 
-## 📋 Table of Contents
+## 🤖 AI-Powered DTM Generation with DTMPointNet2
+
+### Overview
+
+Terra Pravah now integrates **DTMPointNet2**, a deep learning model trained on LiDAR point clouds to intelligently classify ground points and generate high-quality Digital Terrain Models (DTMs). This AI-based approach replaces traditional statistical filtering methods with neural network-based classification, allowing for:
+
+- **Accurate Ground Classification**: Distinguishes vegetation, buildings, and noise from true terrain
+- **Reduced Manual Intervention**: Automatically filters non-ground points without parameter tuning
+- **Better Results on Complex Terrain**: Handles vegetation-dense areas and urban environments better than traditional methods
+- **Consistent Quality**: Trained on diverse geographies and terrain types
+
+### Architecture
+
+The AI DTM generation pipeline consists of three key components:
+
+#### 1. **DTMPointNet2 Model** (`ai_ground_classifier.py`)
+A deep learning architecture based on PointNet++ that processes point clouds without manual feature engineering:
+
+```python
+# Model architecture
+DTMPointNet2(
+    input_features=6,        # [dZ_2m, roughness, slope, density, dZ_8m, planarity]
+    hidden_layers=[64, 128],  # Feature extraction layers
+    num_classes=2             # Ground / Non-ground classification
+)
+```
+
+**Features Extracted:**
+- **dZ_2m**: Elevation difference from 2m grid mean
+- **roughness**: Standard deviation of elevation
+- **slope**: Local surface gradient
+- **density**: Point density normalization
+- **dZ_8m**: Elevation difference from 8m grid mean
+- **planarity**: Surface planarity score
+
+All features are z-score normalized to match training statistics.
+
+#### 2. **AI-Powered DTM Builder** (`dtm_builder_ai.py`)
+Orchestrates the complete pipeline:
+
+```
+LAS/LAZ Input
+    ↓
+[AI Ground Classification] → DTMPointNet2 model (best_model.pth)
+    ↓
+[IDW Interpolation] → Creates raster DTM grid
+    ↓
+[Hydrological Conditioning] → Fills sinks, breaches depressions
+    ↓
+[Cloud Optimized GeoTIFF] → COG format with overviews
+    ↓
+Conditioned DTM.cog.tif
+```
+
+#### 3. **Integration with Drainage Analysis**
+Once the AI DTM is generated, it automatically feeds into the drainage network analysis:
+
+```
+AI DTM (with hydro-conditioning)
+    ↓
+[Flow Direction Analysis] → D8 or D-Infinity routing
+    ↓
+[Flow Accumulation] → Upstream contributing area
+    ↓
+[Stream Delineation] → Identify channel network
+    ↓
+[Outlet Identification] → Find drainage outlets
+    ↓
+[Hydraulic Design] → Size pipes and channels
+    ↓
+Final Drainage Network
+```
+
+### Model Files
+
+Pre-trained models are located in `backend/models/dtm_outputs_finetuned/`:
+
+| File | Purpose | Size | Notes |
+|------|---------|------|-------|
+| `best_model.pth` | Best validation accuracy model | ~5 MB | Recommended for general use |
+| `swa_model.pth` | Stochastic Weight Averaging model | ~5 MB | Slightly smoother results |
+| `threshold.json` | Prediction thresholds | < 1 KB | Calibrated on validation set |
+| `threshold_curve.png` | Visualization of threshold selection | | Reference documentation |
+
+### How to Use
+
+#### Automatic Integration (Recommended)
+The AI DTM builder is automatically used when uploading LAS/LAZ files:
+
+```bash
+# Upload LAS file via API
+POST /api/uploads/las
+{
+  "project_id": "project_123",
+  "filename": "survey_data.las"
+}
+
+# Then build DTM with AI
+POST /api/uploads/build-dtm
+{
+  "project_id": "project_123",
+  "filename": "survey_data.las",
+  "resolution": 1.0,         # 1-meter DTM cells
+  "epsg": "EPSG:32644"       # UTM Zone 44N (India)
+}
+```
+
+The system automatically:
+1. Loads the LAS file
+2. Runs AI ground classification
+3. Interpolates DTM via IDW
+4. Applies hydrological conditioning
+5. Converts to Cloud Optimized GeoTIFF
+6. Returns path to ready-to-use DTM
+
+#### Manual Integration (Advanced)
+
+If you need to build a DTM directly in Python:
+
+```python
+from backend.services.dtm_builder_ai import DTMBuilderServiceAI
+
+# Initialize service
+service = DTMBuilderServiceAI(
+    upload_folder="uploads",
+    results_folder="results",
+    model_path="backend/models/dtm_outputs_finetuned/best_model.pth",
+    threshold_json="backend/models/dtm_outputs_finetuned/threshold.json"
+)
+
+# Process LAS file
+result = service.process_las(
+    las_filename="survey.las",
+    resolution=1.0,      # DTM resolution in meters
+    epsg="EPSG:32644"
+)
+
+# Output
+print(result['dtm_path'])  # Path to conditioned DTM
+print(result['metadata'])  # Processing statistics
+```
+
+### Parameters
+
+| Parameter | Type | Default | Range | Description |
+|-----------|------|---------|-------|-------------|
+| `resolution` | float | 1.0 | 0.1-5.0 | DTM cell size (meters) |
+| `epsg` | string | Auto-detect | - | Coordinate reference system |
+| `downsample` | bool | True | - | Thin point cloud before inference |
+| `target_density` | float | 10.0 | 1-50 | Points/m² after downsampling |
+| `chunk_size` | int | 4096 | 1024-16384 | Points per inference batch |
+| `device` | string | Auto-detect | 'cpu'/'cuda' | Processing device |
+| `threshold` | float | Auto | 0.0-1.0 | Ground confidence threshold |
+
+### Performance Characteristics
+
+**Processing Times** (approximate, depends on hardware and file size):
+
+| File Size | Resolution | GPU (CUDA) | CPU | Notes |
+|-----------|-----------|-----------|-----|-------|
+| 10 million points | 1m | 2-3 min | 8-10 min | Typical small survey |
+| 50 million points | 1m | 5-8 min | 20-30 min | Medium survey area |
+| 100 million points | 1m | 10-15 min | 40-60 min | Large survey area |
+
+**Memory Usage:**
+- Point cloud loading: ~10 bytes/point
+- Processing: ~50 bytes/point (temporary)
+- Output DTM: Resolution-dependent (1m = 4 bytes/cell)
+
+### Model Training
+
+The DTMPointNet2 model was trained on diverse geographies including:
+- Urban areas (buildings, infrastructure)
+- Forested terrain (dense vegetation)
+- Agricultural land
+- Mountainous regions
+- Coastal plains
+
+See [DTMPointNet2 Training Details](https://github.com/JaideepChouhan/DTMPointNet2) on GitHub for:
+- Training data details
+- Validation statistics
+- Model architecture diagrams
+- Custom model training guide
+
+### Troubleshooting
+
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| "Very few ground points found" | Threshold too high | Try `threshold=0.35` or lower in config |
+| RuntimeError on model load | Architecture mismatch | Ensure `ai_ground_classifier.py` matches training notebook |
+| Very slow inference | CPU processing | Use GPU or increase `chunk_size` |
+| ImportError for dtm_builder | Missing dependencies | Verify both files are in `backend/services/` |
+| Memory error | File too large | Reduce `target_density` or `chunk_size` |
+
+---
 
 - [Overview](#-overview)
 - [Key Features](#-key-features)
-- [Architecture](#-architecture)
+- [AI-Powered DTM Generation](#-ai-powered-dtm-generation-with-dtmpointnet2)
+  - [Architecture](#architecture)
+  - [Model Files](#model-files)
+  - [How to Use](#how-to-use)
+  - [Parameters](#parameters)
+  - [Performance](#performance-characteristics)
+  - [Troubleshooting](#troubleshooting)
+- [Project Structure](#-project-structure)
+- [System Architecture](#-system-architecture)
 - [Installation](#-installation)
 - [Quick Start](#-quick-start)
 - [User Guide](#-user-guide)
@@ -39,10 +241,8 @@ A comprehensive automated drainage network design system that leverages **Digita
 - [Deployment](#-deployment)
 - [Hydrological Methods](#-hydrological-methods)
 - [Outputs](#-outputs)
-- [Project Structure](#-project-structure)
 - [API Reference](#-api-reference)
 - [Testing](#-running-tests)
-- [Troubleshooting](#-troubleshooting)
 - [Contributing](#-contributing)
 - [References](#-references)
 - [License](#-license)
@@ -165,7 +365,7 @@ npm install
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ System Architecture
 
 ### Backend Services Architecture
 
@@ -173,8 +373,11 @@ npm install
 backend/services/
 ├── dtm_builder.py                # Core LAS/LAZ -> DTM processing pipeline
 ├── dtm_builder_service.py        # API-facing DTM orchestration wrapper
+├── dtm_builder_ai.py             # AI-powered DTM generation with DTMPointNet2
+├── ai_ground_classifier.py       # PointNet2 neural network classifier
 ├── drainage_service.py           # Main drainage analysis (D∞ embedded)
 ├── visualization_service.py      # 3D visualization generation
+├── export_service.py             # Cloud Optimized GeoTIFF & GeoJSON export
 └── email_service.py              # Notification service
 
 drainage_service.py Classes:
@@ -746,38 +949,53 @@ AIR_Terra_Pravah/
 │   ├── docker-compose.yml            # Development stack
 │   ├── docker-compose.prod.yml       # Production overrides
 │   ├── .dockerignore                 # Docker build exclusions
-│   └── .env.example                  # Environment template
+│   └── .env.example                  # Environment template (5GB MAX_FILE_SIZE_MB)
 │
 ├── 🐍 professional_drainage.py       # Professional designer with fluid mechanics
 │
 ├── 📁 backend/
 │   ├── 📄 __init__.py
 │   ├── 📄 app.py                     # Flask application factory
-│   ├── 📄 config.py                  # Application configuration
+│   ├── 📄 config.py                  # Application configuration (file limits)
 │   │
 │   ├── 📁 api/                       # REST API endpoints
 │   │   ├── admin.py                  # Admin operations
-│   │   ├── analysis.py               # Analysis endpoints
+│   │   ├── analysis.py               # Analysis + EXPORT endpoints
+│   │   │   ├── /download-dtm-cog         → Download DTM as Cloud Optimized GeoTIFF
+│   │   │   ├── /download-drainage-geojson → Download drainage as GeoJSON
+│   │   │   └── /export-project            → Export complete package
 │   │   ├── auth.py                   # Authentication (JWT)
 │   │   ├── billing.py                # Subscription management
 │   │   ├── projects.py               # Project CRUD
 │   │   ├── reports.py                # Report generation
 │   │   ├── teams.py                  # Team collaboration
-│   │   ├── uploads.py                # File uploads
+│   │   ├── uploads.py                # File uploads (now supports AI DTM)
 │   │   └── users.py                  # User management
 │   │
 │   ├── 📁 models/
 │   │   └── models.py                 # SQLAlchemy models
 │   │
 │   ├── 📁 services/
-│   │   ├── dtm_builder.py          # LAS/LAZ -> raw DTM + conditioning utilities
-│   │   ├── dtm_builder_service.py  # Service wrapper used by uploads API
+│   │   ├── dtm_builder.py          # Core DTM building utilities
+│   │   ├── dtm_builder_service.py  # Traditional DTM service
+│   │   ├── dtm_builder_ai.py       # ✨ NEW: AI-powered DTM builder
+│   │   ├── ai_ground_classifier.py # ✨ NEW: DTMPointNet2 neural network
 │   │   ├── drainage_service.py       # Core drainage analysis engine
 │   │   ├── visualization_service.py  # 3D Plotly visualization
-│   │   └── email_service.py          # Email notifications
+│   │   ├── export_service.py         # ✨ NEW: COG & GeoJSON export
+│   │   ├── email_service.py          # Email notifications
+│   │   └── test_ai_integration.py    # ✨ NEW: AI integration tests
+│   │
+│   ├── 📁 models/
+│   │   └── dtm_outputs_finetuned/   # ✨ NEW: Pre-trained AI models
+│   │       ├── best_model.pth       # Main DTMPointNet2 model
+│   │       ├── swa_model.pth        # Stochastic Weight Averaging variant
+│   │       └── threshold.json       # Prediction thresholds
 │   │
 │   └── 📁 utils/
-│       └── __init__.py
+│       ├── __init__.py
+│       ├── error_handler.py          # ✨ NEW: Comprehensive error handling
+│       └── file_validator.py         # File validation
 │
 ├── 📁 frontend/                      # React + TypeScript + Vite
 │   ├── 📄 Dockerfile                 # Frontend container
@@ -805,16 +1023,33 @@ AIR_Terra_Pravah/
 │       └── 📁 context/               # React context
 │
 ├── 📁 nginx/                         # Production reverse proxy
-│   └── nginx.conf
+│   └── nginx.conf                    # Updated for 5GB uploads
 │
 ├── 📁 config/
 │   └── default_config.json           # Default configuration
 │
 ├── 📁 database/                      # SQLite database
-├── 📁 uploads/                       # Uploaded terrain files
-├── 📁 results/                       # Analysis results
+├── 📁 uploads/                       # Uploaded terrain files (up to 5GB)
+├── 📁 results/                       # Analysis results & exports
 └── 📁 migrations/                    # Database migrations
 ```
+
+### Key Updates (v2.4)
+
+**New Files:**
+- `backend/services/dtm_builder_ai.py` - AI-powered DTM generation
+- `backend/services/ai_ground_classifier.py` - DTMPointNet2 model implementation
+- `backend/services/export_service.py` - Cloud Optimized GeoTIFF and GeoJSON export
+- `backend/utils/error_handler.py` - Comprehensive error handling framework
+- `backend/models/dtm_outputs_finetuned/` - Pre-trained model files
+
+**Updated Files:**
+- `backend/api/analysis.py` - Added export endpoints
+- `backend/api/uploads.py` - Integrated AI DTM builder
+- `backend/config.py` - Increased file limits (500MB → 5GB)
+- `.env.example` - Updated MAX_FILE_SIZE_MB parameter
+- `nginx/nginx.conf` - Updated upload limits (500M → 5000M)
+- `frontend/src/pages/dashboard/NewProject.tsx` - Updated file size validation
 
 ---
 

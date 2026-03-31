@@ -796,3 +796,239 @@ def download_csv(project_id):
             'Content-Disposition': f'attachment; filename={project.name.replace(" ", "_")}_channels.csv'
         }
     )
+
+
+# ============================================================================
+# EXPORT ENDPOINTS - Cloud Optimized GeoTIFF and GeoJSON Downloads
+# ============================================================================
+
+@analysis_bp.route('/download-dtm-cog/<project_id>', methods=['GET'])
+@jwt_required()
+def download_dtm_cog(project_id):
+    """
+    Download DTM as Cloud Optimized GeoTIFF (COG).
+    
+    COG format advantages:
+    - Cloud-native: optimized for remote access
+    - Compressed: smaller file size (deflate compression)
+    - Multi-resolution: embedded overview pyramids for fast zooming
+    - Tiled: 512x512 blocks for efficient random access
+    
+    Returns:
+        GeoTIFF file with .cog.tif extension
+    """
+    user_id = get_jwt_identity()
+    project = Project.query.get(project_id)
+    
+    if not project:
+        return jsonify({'error': 'Project not found'}), 404
+    
+    if project.owner_id != user_id:
+        return jsonify({'error': 'Access denied'}), 403
+    
+    if not project.dtm_file_path:
+        return jsonify({'error': 'No DTM file available for download'}), 404
+    
+    dtm_path = Path(project.dtm_file_path)
+    
+    if not dtm_path.exists():
+        return jsonify({'error': 'DTM file not found on disk'}), 404
+    
+    try:
+        # Create COG in a temporary location
+        from backend.services.export_service import GeoTIFFExporter
+        import tempfile
+        
+        exporter = GeoTIFFExporter(compression='deflate')
+        
+        # Create temporary output file
+        temp_dir = Path(tempfile.gettempdir()) / 'terrapravah_exports'
+        temp_dir.mkdir(exist_ok=True)
+        
+        cog_filename = f"{project.name.replace(' ', '_')}_dtm.cog.tif"
+        cog_path = temp_dir / cog_filename
+        
+        # Export as COG
+        exporter.write_dtm_cog(
+            str(dtm_path),
+            str(cog_path),
+            compression='deflate',
+            block_size=512,
+            overview_levels=[2, 4, 8, 16, 32]
+        )
+        
+        current_app.logger.info(f"DTM COG exported for project {project_id}")
+        
+        return send_file(
+            str(cog_path),
+            mimetype='image/tiff; application=geotiff',
+            as_attachment=True,
+            download_name=cog_filename
+        )
+        
+    except Exception as e:
+        current_app.logger.error(f"DTM COG export failed: {e}")
+        return jsonify({
+            'error': 'DTM COG export failed',
+            'details': str(e)
+        }), 500
+
+
+@analysis_bp.route('/download-drainage-geojson/<project_id>', methods=['GET'])
+@jwt_required()
+def download_drainage_geojson(project_id):
+    """
+    Download drainage network as GeoJSON.
+    
+    GeoJSON format:
+    - Open standard (RFC 7946)
+    - Compatible with all GIS software (QGIS, ArcGIS, etc.)
+    - LineString geometries for drainage channels
+    - Point geometries for outlets
+    - Rich property data (length, slope, flow, design type, etc.)
+    
+    Returns:
+        GeoJSON file with complete drainage network
+    """
+    user_id = get_jwt_identity()
+    project = Project.query.get(project_id)
+    
+    if not project:
+        return jsonify({'error': 'Project not found'}), 404
+    
+    if project.owner_id != user_id:
+        return jsonify({'error': 'Access denied'}), 403
+    
+    geojson_path = Path(project.geojson_path) if project.geojson_path else None
+    
+    if not geojson_path or not geojson_path.exists():
+        return jsonify({'error': 'Drainage GeoJSON not available. Run analysis first.'}), 404
+    
+    try:
+        filename = f"{project.name.replace(' ', '_')}_drainage.geojson"
+        
+        return send_file(
+            str(geojson_path),
+            mimetype='application/geo+json',
+            as_attachment=True,
+            download_name=filename
+        )
+        
+    except Exception as e:
+        current_app.logger.error(f"GeoJSON download failed: {e}")
+        return jsonify({
+            'error': 'GeoJSON download failed',
+            'details': str(e)
+        }), 500
+
+
+@analysis_bp.route('/export-project/<project_id>', methods=['POST'])
+@jwt_required()
+def export_project(project_id):
+    """
+    Export complete project data as COG + GeoJSON package.
+    
+    Package includes:
+    - DTM as Cloud Optimized GeoTIFF
+    - Drainage network as GeoJSON
+    - Analysis report as JSON
+    - Metadata file
+    
+    Body (JSON):
+    {
+      "include_dtm": true,
+      "include_drainage": true,
+      "include_report": true,
+      "crs": "EPSG:32644" (optional)
+    }
+    
+    Returns:
+        ZIP file with all exports
+    """
+    user_id = get_jwt_identity()
+    project = Project.query.get(project_id)
+    
+    if not project:
+        return jsonify({'error': 'Project not found'}), 404
+    
+    if project.owner_id != user_id:
+        return jsonify({'error': 'Access denied'}), 403
+    
+    data = request.get_json(silent=True) or {}
+    include_dtm = data.get('include_dtm', True)
+    include_drainage = data.get('include_drainage', True)
+    include_report = data.get('include_report', True)
+    crs = data.get('crs', 'EPSG:4326')
+    
+    try:
+        import zipfile
+        import tempfile
+        from backend.services.export_service import GeoTIFFExporter
+        
+        # Create temporary export package
+        temp_dir = Path(tempfile.gettempdir()) / f'terrapravah_export_{project_id}'
+        temp_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Create zip file
+        zip_filename = f"{project.name.replace(' ', '_')}_export.zip"
+        zip_path = temp_dir / zip_filename
+        
+        with zipfile.ZipFile(str(zip_path), 'w', zipfile.ZIP_DEFLATED) as zf:
+            # Add DTM as COG
+            if include_dtm and project.dtm_file_path:
+                dtm_path = Path(project.dtm_file_path)
+                if dtm_path.exists():
+                    exporter = GeoTIFFExporter()
+                    cog_path = temp_dir / "dtm.cog.tif"
+                    exporter.write_dtm_cog(str(dtm_path), str(cog_path))
+                    zf.write(str(cog_path), arcname="dtm.cog.tif")
+            
+            # Add drainage GeoJSON
+            if include_drainage and project.geojson_path:
+                geojson_path = Path(project.geojson_path)
+                if geojson_path.exists():
+                    zf.write(
+                        str(geojson_path),
+                        arcname="drainage_network.geojson"
+                    )
+            
+            # Add report
+            if include_report and project.results_path:
+                results_path = Path(project.results_path)
+                report_path = results_path / 'drainage_report.json'
+                if report_path.exists():
+                    zf.write(str(report_path), arcname="analysis_report.json")
+            
+            # Add metadata
+            metadata = {
+                "project_name": project.name,
+                "project_id": project_id,
+                "created_at": project.created_at.isoformat() if project.created_at else None,
+                "processed_at": project.processed_at.isoformat() if project.processed_at else None,
+                "crs": crs,
+                "bounding_box": project.bounding_box,
+                "export_date": datetime.utcnow().isoformat(),
+                "total_channels": project.total_channels,
+                "total_length_km": project.total_length_km,
+                "total_outlets": project.total_outlets
+            }
+            
+            import json
+            metadata_json = json.dumps(metadata, indent=2)
+            zf.writestr("metadata.json", metadata_json)
+        
+        current_app.logger.info(f"Project export created: {zip_path}")
+        
+        return send_file(
+            str(zip_path),
+            mimetype='application/zip',
+            as_attachment=True,
+            download_name=zip_filename
+        )
+        
+    except Exception as e:
+        current_app.logger.error(f"Project export failed: {e}", exc_info=True)
+        return jsonify({
+            'error': 'Project export failed',
+            'details': str(e)
+        }), 500

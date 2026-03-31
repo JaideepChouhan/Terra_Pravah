@@ -57,11 +57,11 @@ export default function NewProject() {
 
   // File validation - simplified to rely more on backend validation
   const validateFile = (file: File): string | null => {
-    const maxSize = 500 * 1024 * 1024 // 500MB
+    const maxSize = 5000 * 1024 * 1024 // 5000MB = 5GB
     
     // Basic size check
     if (file.size > maxSize) {
-      return 'File too large. Maximum size is 500MB'
+      return 'File too large. Maximum size is 5GB'
     }
     
     // Basic extension check (backend will do comprehensive validation)

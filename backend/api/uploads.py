@@ -17,6 +17,7 @@ import threading
 
 from backend.models.models import db, Project, User
 from backend.services.dtm_builder_service import DTMBuilderService
+from backend.services.dtm_builder_ai import DTMBuilderServiceAI
 from backend.utils.file_validator import FileFormatDetector, validate_uploaded_file
 
 uploads_bp = Blueprint('uploads', __name__)
@@ -288,14 +289,23 @@ def upload_las():
 @jwt_required()
 def build_dtm_from_las():
     """
-    Build a hydrologically conditioned DTM from a LAS/LAZ file.
+    Build a hydrologically conditioned AI-powered DTM from a LAS/LAZ file.
+    Uses the DTMPointNet2 AI model for ground classification.
 
     Body (JSON):
     {
       "project_id": "...",               # required
       "filename": "survey_site.las",     # required
-      "resolution": 1.0,                   # optional
+      "resolution": 1.0,                 # optional (default 1.0)
       "epsg": "EPSG:32644"               # optional
+    }
+    
+    Returns:
+    {
+      "dtm_path": "results/.../file.cog.tif",
+      "validation": {...},
+      "metadata": {...},
+      "ai_classification": {...}
     }
     """
     user_id = get_jwt_identity()
@@ -305,6 +315,7 @@ def build_dtm_from_las():
     filename = data.get('filename')
     epsg = data.get('epsg')
 
+    # Input validation
     if not project_id:
         return jsonify({'error': 'project_id is required'}), 400
     if not filename:
@@ -318,6 +329,7 @@ def build_dtm_from_las():
     if resolution <= 0:
         return jsonify({'error': 'resolution must be greater than 0'}), 400
 
+    # Project validation
     project = Project.query.get(project_id)
     if not project:
         return jsonify({'error': 'Project not found'}), 404
@@ -332,14 +344,23 @@ def build_dtm_from_las():
     project_results_folder.mkdir(parents=True, exist_ok=True)
 
     try:
-        service = DTMBuilderService(
+        # Get absolute paths for AI model
+        base_dir = Path(__file__).parent.parent.parent  # Go up to project root
+        model_path = str(base_dir / 'backend' / 'models' / 'dtm_outputs_finetuned' / 'best_model.pth')
+        threshold_json = str(base_dir / 'backend' / 'models' / 'dtm_outputs_finetuned' / 'threshold.json')
+
+        # Initialize AI-powered DTM builder
+        service = DTMBuilderServiceAI(
             upload_folder=str(current_app.config['UPLOAD_FOLDER']),
             results_folder=str(project_results_folder),
+            model_path=model_path,
+            threshold_json=threshold_json,
         )
 
         project.status = 'processing'
         db.session.commit()
 
+        # Process the LAS file with AI model
         relative_las_path = os.path.join(project_id, safe_name)
         result = service.process_las(
             las_filename=relative_las_path,
@@ -349,8 +370,10 @@ def build_dtm_from_las():
 
         dtm_path = result.get('dtm_path')
         metadata = result.get('metadata', {})
+        ai_stats = result.get('ai_classification', {})
         bounds = metadata.get('bounds')
 
+        # Update project with DTM information
         if dtm_path and os.path.exists(dtm_path):
             project.dtm_file_path = dtm_path
             project.dtm_file_size = os.path.getsize(dtm_path)
@@ -360,16 +383,51 @@ def build_dtm_from_las():
             xmin, xmax, ymin, ymax = bounds
             project.bounding_box = [xmin, ymin, xmax, ymax]
 
+        # Store AI classification stats
+        project.metadata = {
+            'ai_classification': ai_stats,
+            'dtm_metadata': metadata,
+            'created_with': 'DTMPointNet2'
+        }
+
         project.processed_at = datetime.utcnow()
         project.status = 'completed'
         db.session.commit()
 
+        current_app.logger.info(
+            f"DTM build successful for project {project_id}. "
+            f"Ground points: {ai_stats.get('ground_points', 'N/A')}, "
+            f"Threshold: {ai_stats.get('threshold', 'N/A')}"
+        )
+
         return jsonify(result), 200
+
+    except FileNotFoundError as e:
+        current_app.logger.error(f"File not found error: {e}")
+        project.status = 'error'
+        db.session.commit()
+        return jsonify({
+            'error': 'File not found',
+            'details': str(e)
+        }), 404
 
     except Exception as e:
         import traceback
-        current_app.logger.error(f"Error building DTM: {e}\n{traceback.format_exc()}")
-        return jsonify({'error': str(e), 'traceback': traceback.format_exc()}), 500
+        error_msg = f"Error building AI DTM: {e}\n{traceback.format_exc()}"
+        current_app.logger.error(error_msg)
+        
+        project.status = 'error'
+        project.metadata = {
+            'error': str(e),
+            'error_type': type(e).__name__
+        }
+        db.session.commit()
+        
+        return jsonify({
+            'error': str(e),
+            'error_type': type(e).__name__,
+            'details': 'Check server logs for details'
+        }), 500
 
 
 @uploads_bp.route('/preview/<project_id>', methods=['GET'])

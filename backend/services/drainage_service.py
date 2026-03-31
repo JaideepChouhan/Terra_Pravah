@@ -1029,6 +1029,13 @@ class OptimizedDrainageDesigner:
         self.temp_dir = self.output_dir / 'temp'
         self.temp_dir.mkdir(exist_ok=True)
         
+        # Create visualization and results directories early to prevent creation errors later
+        self.vis_dir = self.output_dir / 'visualizations'
+        self.vis_dir.mkdir(exist_ok=True)
+        
+        self.results_subdir = self.output_dir / 'results'
+        self.results_subdir.mkdir(exist_ok=True)
+        
         self.config: Dict[str, Any] = config or {}
         
         # WhiteboxTools
