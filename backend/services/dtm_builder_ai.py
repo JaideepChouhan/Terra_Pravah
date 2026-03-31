@@ -36,7 +36,7 @@ import rasterio
 from rasterio.enums import Resampling
 from rasterio.shutil import copy as rio_copy
 
-from dtm_builder import (
+from .dtm_builder import (
     read_las,
     downsample_points,
     IDWInterpolator,
@@ -44,7 +44,7 @@ from dtm_builder import (
     condition_dtm,
     validate_dtm,
 )
-from ai_ground_classifier import AIGroundClassifier
+from .ai_ground_classifier import AIGroundClassifier
 
 logger = logging.getLogger(__name__)
 
