@@ -23,11 +23,7 @@ def require_admin(f):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
 
-        admin_emails = {
-            email.strip().lower()
-            for email in current_app.config.get('ADMIN_EMAILS', '').split(',')
-            if email.strip()
-        }
+        admin_emails = current_app.config.get('ADMIN_EMAILS', set())
 
         if not user or (admin_emails and user.email.lower() not in admin_emails):
             return jsonify({'error': 'Admin access required'}), 403

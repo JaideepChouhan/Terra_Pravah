@@ -37,6 +37,16 @@ class Config:
     # Redis
     REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
     
+    # Frontend
+    FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
+    
+    # Admin Configuration
+    ADMIN_EMAILS = set(
+        email.strip().lower() 
+        for email in os.getenv('ADMIN_EMAILS', '').split(',')
+        if email.strip()
+    )
+    
     # File Storage
     UPLOAD_FOLDER = BASE_DIR / 'uploads'
     RESULTS_FOLDER = BASE_DIR / 'results'
