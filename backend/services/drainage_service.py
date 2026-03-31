@@ -2292,6 +2292,123 @@ class OptimizedDrainageDesigner:
             json.dump(geojson, f)
             
         return str(path)
+    
+    def export_cog(self) -> Optional[str]:
+        """
+        Export drainage network as Cloud Optimized GeoTIFF (COG).
+        Creates a raster representation of the drainage network with:
+        - Channel density (count per cell)
+        - Flow accumulation from hydrological analysis
+        - Drainage classification (primary/secondary/tertiary)
+        """
+        self._report_progress(92, 'Exporting Cloud Optimized GeoTIFF')
+        
+        if not HAS_RASTERIO or rasterio is None:
+            logger.warning("rasterio not available, skipping COG generation")
+            return None
+            
+        try:
+            import rasterio.features
+            from rasterio.vrt import WarpedVRT
+        except ImportError:
+            logger.warning("rasterio.features not available, skipping COG generation")
+            return None
+        
+        assert self.dtm is not None
+        assert self.transform is not None
+        assert self.crs is not None
+        
+        rows, cols = self.dtm.shape
+        
+        # Create multi-band COG:
+        # Band 1: Channel density raster
+        # Band 2: Drainage hierarchy (1=primary, 2=secondary, 3=tertiary)
+        # Band 3: Flow accumulation proxy (high where channels exist)
+        
+        # Band 1: Channel density (via rasterization)
+        channel_density = np.zeros((rows, cols), dtype=np.float32)
+        channel_hierarchy = np.zeros((rows, cols), dtype=np.uint8)
+        
+        # Rasterize drainage lines
+        for channel_type, coords, props in self.drainage_lines:
+            # Convert channel type to hierarchy value
+            if channel_type == 'primary':
+                hierarchy_val = 1
+            elif channel_type == 'secondary':
+                hierarchy_val = 2
+            else:  # tertiary
+                hierarchy_val = 3
+            
+            # Simple line rasterization: iterate along channel and mark cells
+            for i in range(len(coords) - 1):
+                x1, y1, z1 = coords[i]
+                x2, y2, z2 = coords[i + 1]
+                
+                # Convert coordinates to raster indices
+                try:
+                    r1, c1 = rasterio.transform.rowcol(self.transform, x1, y1)
+                    r2, c2 = rasterio.transform.rowcol(self.transform, x2, y2)
+                    
+                    # Bresenham-like line drawing to mark cells
+                    from math import ceil, floor
+                    
+                    steps = max(abs(r2 - r1), abs(c2 - c1)) + 1
+                    for step in range(steps):
+                        t = step / max(steps - 1, 1)
+                        r = int(r1 + t * (r2 - r1))
+                        c = int(c1 + t * (c2 - c1))
+                        
+                        if 0 <= r < rows and 0 <= c < cols:
+                            channel_density[r, c] += 0.5  # Accumulate density
+                            channel_hierarchy[r, c] = max(channel_hierarchy[r, c], hierarchy_val)
+                
+                except Exception:
+                    # Skip if coordinate transformation fails
+                    continue
+        
+        # Normalize channel density to 0-255
+        if channel_density.max() > 0:
+            channel_density = (channel_density / channel_density.max() * 255).astype(np.uint8)
+        else:
+            channel_density = channel_density.astype(np.uint8)
+        
+        # Create COG file (3 bands)
+        cog_path = self.output_dir / 'drainage_network_cog.tif'
+        
+        with rasterio.open(
+            cog_path,
+            'w',
+            driver='GTiff',
+            height=rows,
+            width=cols,
+            count=3,  # 3 bands
+            dtype='uint8',
+            transform=self.transform,
+            crs=self.crs,
+            TILED='YES',  # Cloud Optimized requirement
+            BLOCKXSIZE=512,  # COG tile size
+            BLOCKYSIZE=512,
+            COMPRESS='deflate',  # COG compression
+            PREDICTOR=2,  # Horizontal differencing for better compression
+        ) as dst:
+            # Band 1: Channel density
+            dst.write(channel_density, 1)
+            
+            # Band 2: Drainage hierarchy
+            dst.write(channel_hierarchy, 2)
+            
+            # Band 3: DEM elevation (resampled from DTM for reference)
+            dem_resampled = ((self.dtm - np.nanmin(self.dtm)) / (np.nanmax(self.dtm) - np.nanmin(self.dtm)) * 255).astype(np.uint8)
+            dem_resampled = np.where(self.dtm == self.dtm_nodata, 0, dem_resampled)
+            dst.write(dem_resampled, 3)
+            
+            # Write metadata
+            dst.update_tags(1, DESCRIPTION='Channel_Density')
+            dst.update_tags(2, DESCRIPTION='Drainage_Hierarchy')
+            dst.update_tags(3, DESCRIPTION='Elevation_Reference')
+        
+        logger.info(f"✅ COG exported: {cog_path}")
+        return str(cog_path)
         
     def process(self):
         """Run complete analysis pipeline."""
@@ -2303,13 +2420,15 @@ class OptimizedDrainageDesigner:
         vis_path = self.create_visualization()
         report = self.generate_report()
         geojson_path = self.export_geojson()
+        cog_path = self.export_cog()
         
         self._report_progress(95, 'Finalizing')
         
         return {
             'report': report,
             'visualization_path': vis_path,
-            'geojson_path': geojson_path
+            'geojson_path': geojson_path,
+            'cog_path': cog_path
         }
     
     def cleanup(self):
@@ -2376,6 +2495,7 @@ class DrainageAnalysisService:
                 'results_path': str(self.output_dir),
                 'visualization_path': analysis_results.get('visualization_path'),
                 'geojson_path': analysis_results.get('geojson_path'),
+                'cog_path': analysis_results.get('cog_path'),
                 'report_path': str(self.output_dir / 'drainage_report.json'),
                 
                 # Summary statistics

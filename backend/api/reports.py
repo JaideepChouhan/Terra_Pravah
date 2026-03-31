@@ -360,3 +360,61 @@ def list_project_reports(project_id):
     return jsonify({
         'reports': reports
     })
+
+
+@reports_bp.route('/projects/<project_id>/download-cog', methods=['GET'])
+@jwt_required()
+def download_cog(project_id):
+    """Download Cloud Optimized GeoTIFF (COG) file for a project."""
+    user_id = get_jwt_identity()
+    project = Project.query.get(project_id)
+    
+    if not project:
+        return jsonify({'error': 'Project not found'}), 404
+    
+    if project.owner_id != user_id:
+        return jsonify({'error': 'Access denied'}), 403
+    
+    if not project.cog_path:
+        return jsonify({'error': 'COG file not available. Please complete analysis first.'}), 404
+    
+    cog_path = Path(project.cog_path)
+    
+    if not cog_path.exists():
+        return jsonify({'error': 'COG file not found on disk'}), 404
+    
+    return send_file(
+        str(cog_path),
+        mimetype='image/tiff',
+        as_attachment=True,
+        download_name=f'{project.name.replace(" ", "_")}_drainage_cog.tif'
+    )
+
+
+@reports_bp.route('/projects/<project_id>/download-geojson', methods=['GET'])
+@jwt_required()  
+def download_geojson(project_id):
+    """Download GeoJSON file for a project."""
+    user_id = get_jwt_identity()
+    project = Project.query.get(project_id)
+    
+    if not project:
+        return jsonify({'error': 'Project not found'}), 404
+    
+    if project.owner_id != user_id:
+        return jsonify({'error': 'Access denied'}), 403
+    
+    if not project.geojson_path:
+        return jsonify({'error': 'GeoJSON file not available. Please complete analysis first.'}), 404
+    
+    geojson_path = Path(project.geojson_path)
+    
+    if not geojson_path.exists():
+        return jsonify({'error': 'GeoJSON file not found on disk'}), 404
+    
+    return send_file(
+        str(geojson_path),
+        mimetype='application/geo+json',
+        as_attachment=True,
+        download_name=f'{project.name.replace(" ", "_")}_drainage_network.geojson'
+    )

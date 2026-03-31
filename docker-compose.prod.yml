@@ -15,6 +15,7 @@ services:
       - FLASK_ENV=production
       - DATABASE_URL=postgresql://${POSTGRES_USER:-terrapravah}:${POSTGRES_PASSWORD:-changeme}@postgres:5432/${POSTGRES_DB:-terrapravah}
       - REDIS_URL=redis://redis:6379/0
+      - MAX_FILE_SIZE_MB=${MAX_FILE_SIZE_MB:-5000}
     depends_on:
       - postgres
       - redis

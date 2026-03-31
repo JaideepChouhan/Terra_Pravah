@@ -206,6 +206,7 @@ class Project(db.Model):
     results_path = db.Column(db.String(500))
     geojson_path = db.Column(db.String(500))
     visualization_path = db.Column(db.String(500))
+    cog_path = db.Column(db.String(500))  # Cloud Optimized GeoTIFF
     
     # Timestamps
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -262,6 +263,8 @@ class Project(db.Model):
                 'dtm_file_size': self.dtm_file_size,
                 'results_path': self.results_path,
                 'geojson_path': self.geojson_path,
+                'cog_path': self.cog_path,
+                'visualization_path': self.visualization_path,
                 'processed_at': self.processed_at.isoformat() if self.processed_at else None
             })
         return data

@@ -170,6 +170,7 @@ def run_analysis_background(app, job_id, project_id):
             project.tertiary_count = result.get('tertiary_count', 0)
             project.results_path = result.get('results_path')
             project.geojson_path = result.get('geojson_path')
+            project.cog_path = result.get('cog_path')
             project.visualization_path = result.get('visualization_path')
             project.processed_at = datetime.utcnow()
             

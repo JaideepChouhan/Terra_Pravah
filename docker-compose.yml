@@ -30,6 +30,7 @@ services:
       - JWT_SECRET_KEY=${JWT_SECRET_KEY:-jwt-secret-key-change-in-production}
       - DATABASE_URL=${DATABASE_URL:-sqlite:///database/terrapravah.db}
       - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      - MAX_FILE_SIZE_MB=${MAX_FILE_SIZE_MB:-5000}
       - WBT_PATH=/opt/WBT
       - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:3000,http://localhost:5173}
     volumes:
