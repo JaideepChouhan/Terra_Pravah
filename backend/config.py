@@ -50,7 +50,9 @@ class Config:
     # File Storage
     UPLOAD_FOLDER = BASE_DIR / 'uploads'
     RESULTS_FOLDER = BASE_DIR / 'results'
-    MAX_CONTENT_LENGTH = int(os.getenv('MAX_FILE_SIZE_MB', 500)) * 1024 * 1024
+    # Changed default from 500MB to 5000MB (5GB) to support large LiDAR files
+    MAX_CONTENT_LENGTH = int(os.getenv('MAX_FILE_SIZE_MB', 5000)) * 1024 * 1024
+    MAX_FILE_SIZE_MB = int(os.getenv('MAX_FILE_SIZE_MB', 5000))
     
     # File format support - now using smart detection instead of hardcoded extensions
     # The file validator will auto-detect format from content

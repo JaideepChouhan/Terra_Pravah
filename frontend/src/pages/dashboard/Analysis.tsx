@@ -524,7 +524,7 @@ export default function Analysis() {
             Reports & Downloads
           </h2>
           
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* JSON Report */}
             <a
               href={`/api/analysis/projects/${projectId}/download/report?token=${localStorage.getItem('token')}`}
@@ -567,6 +567,21 @@ export default function Analysis() {
               <div>
                 <h3 className="font-medium text-navy">Channel Data (CSV)</h3>
                 <p className="text-sm text-navy/60">Spreadsheet-compatible export</p>
+              </div>
+            </a>
+
+            {/* DTM COG */}
+            <a
+              href={`/api/analysis/download-dtm-cog/${projectId}?token=${localStorage.getItem('token')}`}
+              download
+              className="flex items-center gap-4 p-4 bg-neutral-100/50 hover:bg-neutral-100 rounded-none border border-navy/20 transition-all hover:border-orange-500/50 group"
+            >
+              <div className="w-12 h-12 bg-orange-500/20 rounded-none flex items-center justify-center group-hover:scale-110 transition-transform">
+                <MapPin className="w-6 h-6 text-orange-400" />
+              </div>
+              <div>
+                <h3 className="font-medium text-navy">DTM (Cloud Optimized GeoTIFF)</h3>
+                <p className="text-sm text-navy/60">Raster DEM for GIS analysis</p>
               </div>
             </a>
           </div>

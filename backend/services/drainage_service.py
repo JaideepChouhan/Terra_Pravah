@@ -1100,10 +1100,17 @@ class OptimizedDrainageDesigner:
         if self.flow_algorithm not in ['d8', 'dinf', 'mfd']:
             self.flow_algorithm = 'd8'
         
+        # Stream threshold percentiles (configurable for different terrain types)
+        # Defaults: main channels, tributary channels, stream channels
+        self.percentile_main = float(self.config.get('percentile_main', 97))  # Main channels
+        self.percentile_tributary = float(self.config.get('percentile_tributary', 92))  # Tributaries
+        self.percentile_stream = float(self.config.get('percentile_stream', 85))  # Streams
+        
         # Performance limits - tuned for responsiveness
-        self.max_headwaters = 80   # Reduced for faster processing
+        # Higher limits allow detection of more channels while maintaining quality
+        self.max_headwaters = int(self.config.get('max_headwaters', 200))  # Increased from 80 for large catchments
         self.max_trace_steps = 800  # Reduced for faster tracing
-        self.min_spacing = 40       # Increased for fewer channels
+        self.min_spacing = int(self.config.get('min_spacing', 20))  # Decreased from 40 for denser networks
         self.min_channel_length = 25  # Minimum channel length in meters
         
         # Visualization limits
@@ -1280,8 +1287,24 @@ class OptimizedDrainageDesigner:
             }
             
         except Exception as e:
-            # Fallback if WhiteboxTools fails
-            self._report_progress(30, f'WhiteboxTools failed, using fallback: {str(e)[:50]}')
+            # Fallback if WhiteboxTools fails - log and notify user
+            error_msg = f'WhiteboxTools failed ({type(e).__name__}): {str(e)[:100]}'
+            self._report_progress(30, f'{error_msg}. Using fallback scipy-based hydrology with reduced accuracy.')
+            
+            # Store warning in design data for user visibility
+            if 'warnings' not in self.design_data:
+                self.design_data['warnings'] = []
+            self.design_data['warnings'].append({
+                'severity': 'warning',
+                'category': 'hydrology_algorithm',
+                'message': error_msg,
+                'impact': 'Analysis using fallback scipy-based flow routing. Results may have reduced accuracy.',
+                'recommendation': 'Install WhiteboxTools or check /var/log/whitebox.log for details'
+            })
+            
+            import logging
+            logging.warning(f'DrainageAnalysisService: {error_msg}')
+            
             return self._fallback_hydrology()
             
         return self
@@ -1367,14 +1390,14 @@ class OptimizedDrainageDesigner:
         rows, cols = dtm.shape
         dem = self.filled_dtm if self.filled_dtm is not None else dtm
         
-        # Get flow thresholds
+        # Get flow thresholds using configurable percentiles
         valid_acc = flow_accumulation[~nodata_mask]
         if len(valid_acc) == 0:
             return self
             
-        threshold_main = float(np.percentile(valid_acc, 97))
-        threshold_tributary = float(np.percentile(valid_acc, 92))
-        threshold_stream = float(np.percentile(valid_acc, 85))
+        threshold_main = float(np.percentile(valid_acc, self.percentile_main))
+        threshold_tributary = float(np.percentile(valid_acc, self.percentile_tributary))
+        threshold_stream = float(np.percentile(valid_acc, self.percentile_stream))
         
         # Find headwater cells using vectorized operations
         self._report_progress(60, 'Finding headwater cells')
@@ -1431,8 +1454,10 @@ class OptimizedDrainageDesigner:
         rows, cols = dtm.shape
         headwater_cells: List[Tuple[int, int, float]] = []
         
-        # Sample grid to reduce computation
-        step = max(1, min(rows, cols) // 200)
+        # Sample grid to reduce computation - adaptive based on resolution
+        # Use dynamic step: for higher resolution DTMs, use smaller step to capture tributaries
+        base_step = int(self.config.get('headwater_sampling_step', 2))  # Default 2 pixels for comprehensive detection
+        step = max(1, base_step)
         
         for r in range(2, rows - 2, step):
             for c in range(2, cols - 2, step):

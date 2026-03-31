@@ -265,6 +265,41 @@ class Project(db.Model):
                 'processed_at': self.processed_at.isoformat() if self.processed_at else None
             })
         return data
+    
+    def get_dtm_file_path(self):
+        """Get the absolute DTM file path, handling both absolute and relative paths."""
+        from pathlib import Path
+        from backend.config import Config
+        if self.dtm_file_path:
+            path = Path(self.dtm_file_path)
+            # If already absolute, return as-is
+            if path.is_absolute():
+                return path
+            # Otherwise make it relative to UPLOAD_FOLDER
+            return Path(Config.UPLOAD_FOLDER) / path
+        return None
+    
+    def get_results_path(self):
+        """Get the absolute results path, handling both absolute and relative paths."""
+        from pathlib import Path
+        from backend.config import Config
+        if self.results_path:
+            path = Path(self.results_path)
+            if path.is_absolute():
+                return path
+            return Path(Config.RESULTS_FOLDER) / path
+        return None
+    
+    def get_geojson_path(self):
+        """Get the absolute geojson path, handling both absolute and relative paths."""
+        from pathlib import Path
+        from backend.config import Config
+        if self.geojson_path:
+            path = Path(self.geojson_path)
+            if path.is_absolute():
+                return path
+            return Path(Config.RESULTS_FOLDER) / path
+        return None
 
 
 class ProjectVersion(db.Model):
