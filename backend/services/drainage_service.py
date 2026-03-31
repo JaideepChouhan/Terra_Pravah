@@ -1300,6 +1300,9 @@ class OptimizedDrainageDesigner:
             streams[np.isnan(flow_acc)] = 0
             
             profile.update(dtype=rasterio.int16, nodata=-1)
+            # If BLOCKXSIZE is set, TILED must be YES
+            if 'blockxsize' in profile or 'blocksize' in profile:
+                profile['tiled'] = True
             with rasterio.open(streams_path, 'w', **profile) as dst:
                 dst.write(streams, 1)
                 

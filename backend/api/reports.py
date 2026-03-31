@@ -114,7 +114,7 @@ def generate_report(project_id):
         return jsonify({
             'message': 'Report generated successfully',
             'report_path': str(report_path),
-            'download_url': f'/api/v1/reports/download/{project_id}/{Path(report_path).name}'
+            'download_url': f'/api/reports/download/{project_id}/{Path(report_path).name}'
         })
         
     except Exception as e:
@@ -351,7 +351,7 @@ def list_project_reports(project_id):
                 'filename': f.name,
                 'size_bytes': f.stat().st_size,
                 'created_at': datetime.fromtimestamp(f.stat().st_ctime).isoformat(),
-                'download_url': f'/api/v1/reports/download/{project_id}/{f.name}'
+                'download_url': f'/api/reports/download/{project_id}/{f.name}'
             })
     
     # Sort by creation date, newest first

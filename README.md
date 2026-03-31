@@ -10,12 +10,20 @@ A comprehensive automated drainage network design system that leverages **Digita
 
 > 📖 **New to Terra Pravah?** Check out the [User Guide](USER_GUIDE.md) for step-by-step instructions.
 
-**Latest Release (v2.3 - Production Ready):**
+**Latest Release (v2.3.1 - Production Verified):**
 - **Complete Web Application** - Full-stack React + Flask application
 - **Docker Deployment** - One-command production deployment
 - **Team Collaboration** - Create teams, invite members, share projects
 - **Professional Reports** - Multiple report templates with PDF/HTML export
 - **Billing Integration** - Subscription plans with INR pricing
+- **Production Bug Fixes** - Fixed drainage visualization errors, API routing issues, and geospatial warnings
+
+**v2.3 - Production Ready:**
+- Improved drainage visualization with proper JSON handling
+- Fixed GDAL/rasterio warnings for COG generation (BLOCKXSIZE + TILED compatibility)
+- Corrected API endpoint routing for report generation
+- Enhanced frontend error handling for undefined project references
+- Comprehensive testing suite for production validation
 
 **v2.2 - Regional Hydrology & Safety Enhancements:** 
 - **Regional IDF Curves for India** - Climate-specific rainfall intensity (Rajasthan, Mumbai, Delhi, etc.)
@@ -1390,6 +1398,30 @@ make lint           # Run linters
 ---
 
 ## ❗ Troubleshooting
+
+### v2.3.1 Production Fixes
+
+The following issues have been fixed in the latest version:
+
+1. **Drainage Visualization JSON Error** ✅
+   - **Issue**: "Failed to generate drainage visualization: name 'json' is not defined"
+   - **Fix**: Added missing `import json` to `backend/api/analysis.py`
+   - **Status**: Resolved - GeoJSON parsing now works correctly
+
+2. **GDAL BLOCKXSIZE Warning** ✅
+   - **Issue**: "CPLE_IllegalArg in streams.tif: BLOCKXSIZE can only be used with TILED=YES"
+   - **Fix**: Added `profile['tiled'] = True` in `_extract_streams_with_threshold()` method
+   - **Status**: Resolved - Cloud Optimized GeoTIFF generation is now compliant
+
+3. **API Endpoint 405 Error** ✅
+   - **Issue**: "POST /api/v1/reports/projects/{id}/generate HTTP/1.1" 405 Method Not Allowed
+   - **Fix**: Corrected frontend API URLs from `/api/v1/reports/` to `/api/reports/`
+   - **Status**: Resolved - Report generation endpoints now accessible
+
+4. **Undefined Project ID in Frontend** ✅
+   - **Issue**: Requests to `/api/analysis/projects/undefined/visualization` returning 404
+   - **Fix**: Removed fallback `/analysis` route, now requires proper project context
+   - **Status**: Resolved - Frontend routing now prevents invalid project access
 
 ### Common Issues
 

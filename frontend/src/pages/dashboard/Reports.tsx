@@ -105,7 +105,7 @@ export default function Reports() {
     
     setGenerating(true)
     try {
-      const response = await fetch(`/api/v1/reports/projects/${selectedProject}/generate`, {
+      const response = await fetch(`/api/reports/projects/${selectedProject}/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

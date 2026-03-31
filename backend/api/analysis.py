@@ -11,6 +11,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, decode_token, ver
 from pathlib import Path
 import threading
 import uuid
+import json
 
 from backend.models.models import db, Project, AnalysisJob, User
 from backend.services.drainage_service import DrainageAnalysisService

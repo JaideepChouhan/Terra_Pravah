@@ -110,7 +110,6 @@ export default function App() {
         <Route path="projects/new" element={<NewProject />} />
         <Route path="projects/:id" element={<ProjectDetail />} />
         <Route path="projects/:projectId/analysis" element={<Analysis />} />
-        <Route path="analysis" element={<Analysis />} />
         <Route path="reports" element={<Reports />} />
         <Route path="teams" element={<Teams />} />
         <Route path="settings" element={<Settings />} />
