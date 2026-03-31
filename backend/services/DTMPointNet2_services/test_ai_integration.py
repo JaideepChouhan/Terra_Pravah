@@ -35,14 +35,14 @@ logger = logging.getLogger(__name__)
 #  Configuration — edit these paths before running
 # ─────────────────────────────────────────────────────────────
 
-MODEL_PATH     = "models/best_model.pth"    # ← update this
-SWA_PATH       = "models/swa_model.pth"     # ← update this (optional)
-THRESHOLD_JSON = "models/threshold.json"    # ← update this (optional)
+MODEL_PATH     = "/home/jaideepchouhan/pythonProjects/AIR_Terra_Pravah/backend/models/dtm_outputs_finetuned/best_model.pth"    # ← update this
+SWA_PATH       = "/home/jaideepchouhan/pythonProjects/AIR_Terra_Pravah/backend/models/dtm_outputs_finetuned/swa_model.pth"     # ← update this (optional)
+THRESHOLD_JSON = "/home/jaideepchouhan/pythonProjects/AIR_Terra_Pravah/backend/models/dtm_outputs_finetuned/threshold.json"    # ← update this (optional)
 
 # A real .las file for end-to-end test (Step 5).
 # Leave as "" to skip Steps 5–6.
-TEST_LAS_PATH  = ""  # e.g. "uploads/my_village.las"
-OUTPUT_TIF     = "test_output/test_dtm_ai.tif"
+TEST_LAS_PATH  = "/home/jaideepchouhan/Documents/AIR Docs/GSI 2026/Data/Zip files/Rajasthan_Point_Cloud/64334_2H (REFLIGHT)_POINT CLOUD.LAS"  # e.g. "uploads/my_village.las"
+OUTPUT_TIF     = "/home/jaideepchouhan/pythonProjects/AIR_Terra_Pravah/test_results/test_dtm_ai.tif"
 
 
 # ─────────────────────────────────────────────────────────────
