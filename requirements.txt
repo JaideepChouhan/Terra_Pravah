@@ -31,7 +31,7 @@ shapely>=1.8.0
 fiona>=1.8.0
 pyproj>=3.2.0
 rasterio>=1.2.0
-GDAL>=3.4.0
+GDAL==3.6.2
 
 # ==================== Hackathon Pipeline (MoPR PS2) ====================
 pdal>=3.0.0                 # SMRF ground classification (USGS-grade)
