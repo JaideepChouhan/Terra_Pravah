@@ -109,6 +109,7 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+.playwright-mcp/
 
 # JetBrains IDEs (PyCharm, WebStorm, etc.)
 .idea/
