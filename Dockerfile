@@ -29,6 +29,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     # Other dependencies
     curl \
     wget \
+    unzip \
     git \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
@@ -45,11 +46,14 @@ RUN groupadd -r terrapravah && useradd -r -g terrapravah terrapravah
 WORKDIR /app
 
 # Install WhiteboxTools
-RUN wget -q https://www.whiteboxgeo.com/WBT_Linux/WhiteboxTools_linux_amd64.zip \
-    && unzip -q WhiteboxTools_linux_amd64.zip -d /opt/ \
-    && rm WhiteboxTools_linux_amd64.zip \
-    && chmod +x /opt/WBT/whitebox_tools \
-    && ln -s /opt/WBT/whitebox_tools /usr/local/bin/whitebox_tools
+RUN set -eux; \
+    wget -q https://www.whiteboxgeo.com/WBT_Linux/WhiteboxTools_linux_amd64.zip -O /tmp/WhiteboxTools_linux_amd64.zip; \
+    unzip -q /tmp/WhiteboxTools_linux_amd64.zip -d /opt/; \
+    rm -f /tmp/WhiteboxTools_linux_amd64.zip; \
+    WBT_BIN="$(find /opt -type f -name whitebox_tools | head -n 1)"; \
+    test -n "$WBT_BIN"; \
+    chmod +x "$WBT_BIN"; \
+    ln -sf "$WBT_BIN" /usr/local/bin/whitebox_tools
 
 # Set WhiteboxTools path
 ENV WBT_PATH=/opt/WBT
@@ -77,18 +81,6 @@ USER terrapravah
 
 # Expose port (Railway uses PORT env var)
 EXPOSE 5000
-
-# Production Start Command
-# Using gunicorn with gevent for WebSocket support
-CMD ["gunicorn", \
-     "-w", "4", \
-     "-b", "0.0.0.0:5000", \
-     "-k", "geventwebsockethandler", \
-     "--timeout", "120", \
-     "--access-logfile", "-", \
-     "--error-logfile", "-", \
-     "--log-level", "info", \
-     "backend.app:app"]
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
