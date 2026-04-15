@@ -1,11 +1,9 @@
 import axios from 'axios'
 
-const PROD_API_FALLBACK = 'https://terrapravah-production.up.railway.app'
 const DEMO_ENABLED = import.meta.env.VITE_ENABLE_DEMO === 'true'
 
 const api = axios.create({
-  baseURL:
-    import.meta.env.VITE_API_URL || (import.meta.env.PROD ? PROD_API_FALLBACK : ''),
+  baseURL: import.meta.env.PROD ? '' : (import.meta.env.VITE_API_URL || ''),
   headers: {
     'Content-Type': 'application/json',
   },

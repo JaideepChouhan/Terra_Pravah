@@ -27,8 +27,7 @@ export default function DrainageViewer({
     localStorage.getItem('token') === 'demo-token-123'
 
   const getApiBaseUrl = () =>
-    import.meta.env.VITE_API_URL ||
-    (import.meta.env.PROD ? 'https://terrapravah-production.up.railway.app' : '')
+    import.meta.env.PROD ? '' : (import.meta.env.VITE_API_URL || '')
 
   // Determine the endpoint based on mode
   const getVisualizationUrl = () => {

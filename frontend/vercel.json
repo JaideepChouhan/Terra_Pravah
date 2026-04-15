@@ -2,5 +2,11 @@
   "framework": "vite",
   "installCommand": "npm install --legacy-peer-deps",
   "buildCommand": "npm run build",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://terrapravah-production.up.railway.app/api/:path*"
+    }
+  ]
 }
