@@ -9,11 +9,6 @@
       "destination": "/index.html"
     }
   ],
-  "env": {
-    "VITE_API_URL": "@vite_api_url",
-    "VITE_APP_NAME": "Terra Pravah",
-    "VITE_APP_VERSION": "2.0.0"
-  },
   "regions": ["iad1"],
   "functions": {
     "frontend/**": {
