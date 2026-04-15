@@ -44,7 +44,6 @@ from .dtm_builder import (
     condition_dtm,
     validate_dtm,
 )
-from .ai_ground_classifier import AIGroundClassifier
 
 logger = logging.getLogger(__name__)
 
@@ -271,18 +270,32 @@ def build_dtm_ai(
     # ── Step 3: AI Ground Classification ─────────────────────────────────────
     if not pre_filtered:
         _progress(25, "Loading AI ground classifier …")
-        clf = AIGroundClassifier(
-            model_path=model_path,
-            threshold_json=threshold_json,
-            chunk_size=chunk_size,
-            device=device,
-        )
-        _progress(30, "Running AI ground classification …")
-        ground_points, ai_stats = clf.extract_with_stats(points)
-        logger.info(
-            f"  AI stats: {ai_stats['ground_points']:,} ground "
-            f"({ai_stats['ground_pct']}%) threshold={ai_stats['threshold']}"
-        )
+        try:
+            from .ai_ground_classifier import AIGroundClassifier
+
+            clf = AIGroundClassifier(
+                model_path=model_path,
+                threshold_json=threshold_json,
+                chunk_size=chunk_size,
+                device=device,
+            )
+            _progress(30, "Running AI ground classification …")
+            ground_points, ai_stats = clf.extract_with_stats(points)
+            logger.info(
+                f"  AI stats: {ai_stats['ground_points']:,} ground "
+                f"({ai_stats['ground_pct']}%) threshold={ai_stats['threshold']}"
+            )
+        except Exception as exc:
+            logger.warning(
+                "AI classifier unavailable (%s). Falling back to unfiltered points.",
+                exc,
+            )
+            ground_points = points
+            ai_stats = {
+                "warning": "AI classifier unavailable; used unfiltered points",
+                "error": str(exc),
+            }
+            _progress(30, "AI classifier unavailable; using unfiltered points.")
     else:
         ground_points = points
         ai_stats = {"note": "Used pre-classified ground points from LAS"}
