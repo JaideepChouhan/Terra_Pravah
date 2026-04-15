@@ -34,7 +34,8 @@ rasterio>=1.2.0
 GDAL==3.6.2
 
 # ==================== Hackathon Pipeline (MoPR PS2) ====================
-pdal>=3.0.0                 # SMRF ground classification (USGS-grade)
+# pdal is optional in production image; backend degrades gracefully when unavailable
+# Install manually in environments where native PDAL toolchain is available.
 pykrige>=1.7.0              # Ordinary Kriging interpolation + uncertainty
 scikit-learn>=1.0.0         # Cross-validation accuracy metrics (KFold)
 anthropic>=0.18.0           # Claude API — adaptive params + report generation
