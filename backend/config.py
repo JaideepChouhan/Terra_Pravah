@@ -182,10 +182,55 @@ class DevelopmentConfig(Config):
 
 
 class ProductionConfig(Config):
-    """Production configuration."""
+    """Production configuration for Railway/Vercel deployment."""
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = os.getenv(
+        'DATABASE_URL',
+        os.getenv('POSTGRES_URL')  # Railway uses POSTGRES_URL
+    )
+    
+    # Security
     JWT_COOKIE_SECURE = True
+    JWT_COOKIE_HTTPONLY = True
+    JWT_COOKIE_SAMESITE = 'Lax'
+    
+    # CORS Configuration - restrict to frontend domain
+    CORS_ORIGINS = [
+        url.strip() 
+        for url in os.getenv('CORS_ORIGINS', '').split(',') 
+        if url.strip()
+    ]
+    
+    # Session Configuration
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    
+    # File Storage - use /tmp for Railway ephemeral filesystem
+    UPLOAD_FOLDER = '/tmp/uploads'
+    RESULTS_FOLDER = '/tmp/results'
+    
+    # Mail Configuration
+    MAIL_USE_TLS = True
+    MAIL_USE_SSL = False
+    
+    # Rate Limiting
+    RATELIMIT_DEFAULT = "200/hour"
+    
+    # Redis Configuration - use connection pooling
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'pool_pre_ping': True,
+        'pool_recycle': 60,
+        'pool_size': 10,
+        'max_overflow': 20,
+    }
+    
+    # Logging
+    LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
+    
+    # SocketIO Configuration for production
+    SOCKETIO_MESSAGE_QUEUE = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+    SOCKETIO_CORS_ALLOWED_ORIGINS = CORS_ORIGINS
 
 
 class TestingConfig(Config):

@@ -5,13 +5,17 @@
   "description": "Terra Pravah - AI-Powered Drainage Design Platform Frontend",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,scss,json}\"",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "deploy:vercel": "vercel --prod",
+    "deploy:preview": "vercel",
+    "build:prod": "npm run lint && npm run build",
+    "build:analyze": "vite build --mode analyze"
   },
   "dependencies": {
     "@emotion/react": "^11.11.0",
