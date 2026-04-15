@@ -2,6 +2,8 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import api from '../services/api'
 
+const DEMO_ENABLED = import.meta.env.VITE_ENABLE_DEMO === 'true'
+
 interface User {
   id: string
   email: string
@@ -153,6 +155,17 @@ export const useAuthStore = create<AuthState>()(
         }
 
         if (token === 'demo-token-123') {
+          if (!DEMO_ENABLED) {
+            localStorage.removeItem('token')
+            set({
+              user: null,
+              token: null,
+              isAuthenticated: false,
+              isLoading: false,
+            })
+            return
+          }
+
           set({
             user: {
               id: 'demo-user',
@@ -209,6 +222,14 @@ export const useAuthStore = create<AuthState>()(
       },
       
       demoLogin: () => {
+        if (!DEMO_ENABLED) {
+          set({
+            error: 'Demo mode is disabled in this environment.',
+            isLoading: false,
+          })
+          return
+        }
+
         const token = 'demo-token-123';
         localStorage.setItem('token', token);
         // api.defaults.headers.common['Authorization'] = Bearer \ // Ignoring for demo

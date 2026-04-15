@@ -1,7 +1,11 @@
 import axios from 'axios'
 
+const PROD_API_FALLBACK = 'https://terrapravah-production.up.railway.app'
+const DEMO_ENABLED = import.meta.env.VITE_ENABLE_DEMO === 'true'
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '',
+  baseURL:
+    import.meta.env.VITE_API_URL || (import.meta.env.PROD ? PROD_API_FALLBACK : ''),
   headers: {
     'Content-Type': 'application/json',
   },
@@ -35,7 +39,11 @@ api.interceptors.response.use(
         // Try to refresh the token
         const refreshToken = localStorage.getItem('refresh_token')
         if (refreshToken) {
-          const response = await axios.post('/api/auth/refresh', {
+          const refreshUrl = api.defaults.baseURL
+            ? `${api.defaults.baseURL}/api/auth/refresh`
+            : '/api/auth/refresh'
+
+          const response = await axios.post(refreshUrl, {
             refresh_token: refreshToken,
           })
           
@@ -62,7 +70,7 @@ api.interceptors.response.use(
 export default api
 
 // API methods
-const isDemo = () => localStorage.getItem("token") === "demo-token-123";
+const isDemo = () => DEMO_ENABLED && localStorage.getItem("token") === "demo-token-123";
 
 const demoDelay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 

@@ -7,6 +7,7 @@ import { ArrowRightIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outli
 export default function Login() {
   const navigate = useNavigate()
   const { login, demoLogin, isLoading, error, clearError } = useAuthStore()
+  const demoEnabled = import.meta.env.VITE_ENABLE_DEMO === 'true'
   const [formError, setFormError] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
   
@@ -119,19 +120,21 @@ export default function Login() {
             <ArrowRightIcon className="w-5 h-5" />
           </button>
           
-          <button
-            type="button"
-            onClick={() => {
-              demoLogin()
-              navigate('/dashboard')
-            }}
-            disabled={isLoading}
-            className="w-full bg-transparent border border-navy text-navy py-4 px-6 rounded-none flex justify-center items-center gap-2 hover:bg-navy/5 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy focus:ring-offset-primary disabled:opacity-50"
-          >
-            <span className="text-base font-medium tracking-[0.05em] uppercase">
-              Demo Login
-            </span>
-          </button>
+          {demoEnabled && (
+            <button
+              type="button"
+              onClick={() => {
+                demoLogin()
+                navigate('/dashboard')
+              }}
+              disabled={isLoading}
+              className="w-full bg-transparent border border-navy text-navy py-4 px-6 rounded-none flex justify-center items-center gap-2 hover:bg-navy/5 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy focus:ring-offset-primary disabled:opacity-50"
+            >
+              <span className="text-base font-medium tracking-[0.05em] uppercase">
+                Demo Login
+              </span>
+            </button>
+          )}
         </div>
       </form>
 

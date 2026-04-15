@@ -22,12 +22,20 @@ export default function DrainageViewer({
   const containerRef = useRef<HTMLDivElement>(null)
   const iframeRef = useRef<HTMLIFrameElement>(null)
 
+  const isDemoMode = () =>
+    import.meta.env.VITE_ENABLE_DEMO === 'true' &&
+    localStorage.getItem('token') === 'demo-token-123'
+
+  const getApiBaseUrl = () =>
+    import.meta.env.VITE_API_URL ||
+    (import.meta.env.PROD ? 'https://terrapravah-production.up.railway.app' : '')
+
   // Determine the endpoint based on mode
   const getVisualizationUrl = () => {
     const token = localStorage.getItem('token')
-    if (token === 'demo-token-123') return ''
+    if (isDemoMode()) return ''
 
-    const baseUrl = import.meta.env.VITE_API_URL || ''
+    const baseUrl = getApiBaseUrl()
     switch (mode) {
       case 'dtm':
         return `${baseUrl}/api/analysis/projects/${projectId}/raw-dtm?token=${token}`
@@ -38,7 +46,7 @@ export default function DrainageViewer({
   }
 
   const getSrcDoc = () => {
-    if (localStorage.getItem('token') === 'demo-token-123') {
+    if (isDemoMode()) {
         const title = mode === 'dtm' ? 'Mock DTM Viewer' : 'Mock Drainage Viewer'
         const color = mode === 'dtm' ? '#4a90e2' : '#2ecc71'
         return `
@@ -106,8 +114,7 @@ export default function DrainageViewer({
   const refresh = () => {
     if (iframeRef.current) {
       setLoading(true)
-      const token = localStorage.getItem('token')
-      if (token === 'demo-token-123') {
+      if (isDemoMode()) {
         iframeRef.current.srcdoc = getSrcDoc() || ''
       } else {
         iframeRef.current.src = getVisualizationUrl()
