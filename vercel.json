@@ -1,7 +1,7 @@
 {
-  "buildCommand": "npm --prefix ./frontend run build",
+  "buildCommand": "cd frontend && npm run build",
   "outputDirectory": "frontend/dist",
-  "installCommand": "npm --prefix ./frontend install --legacy-peer-deps",
+  "installCommand": "cd frontend && npm install --legacy-peer-deps",
   "framework": "vite",
   "rewrites": [
     {
