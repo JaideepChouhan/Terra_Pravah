@@ -1,0 +1,36 @@
+﻿python : INFO:backend.services.dtm_builder:[  0%] Starting DTM build pipeline à
+At line:1 char:1
++ python test_build.py > build_result.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (INFO:backend.se...uild pipeline à 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+INFO:backend.services.dtm_builder:[  5%] Reading LAS file à
+INFO:backend.services.dtm_builder:Reading LAS file: 
+D:\GIT\Terra_Pravah\point_cloud_data\67169_5NKR_CHAKHIRASINGH.las
+INFO:backend.services.dtm_builder:  Total points loaded: 9,839,175
+INFO:backend.services.dtm_builder:[ 15%] Downsampling point cloud à
+INFO:backend.services.dtm_builder:  Grid downsampled: 9,839,175 \u2192 
+5,096,661 points
+INFO:backend.services.dtm_builder:[ 25%] Extracting ground points (PMF) à
+INFO:backend.services.dtm_builder:  Overall terrain roughness (Z std): 2.261 m
+INFO:backend.services.dtm_builder:  Window  1m \u2192 threshold 0.70m \u2192 
+4,707,082 candidates (92.4%)
+INFO:backend.services.dtm_builder:  Window  2m \u2192 threshold 1.20m \u2192 
+4,528,887 candidates (88.9%)
+INFO:backend.services.dtm_builder:  Window  4m \u2192 threshold 2.20m \u2192 
+4,422,950 candidates (86.8%)
+INFO:backend.services.dtm_builder:  Window  8m \u2192 threshold 4.20m \u2192 
+4,736,137 candidates (92.9%)
+INFO:backend.services.dtm_builder:  Terrain type: ROUGH ù using union of all 
+window masks
+INFO:backend.services.dtm_builder:  Ground points: 4,979,320 / 5,096,661 
+(97.7%)
+INFO:backend.services.dtm_builder:  Bounds: X [437199.28 û 438109.44], Y 
+[3302948.11 û 3303944.85]
+INFO:backend.services.dtm_builder:[ 40%] Interpolating DTM (IDW) à
+INFO:backend.services.dtm_builder:  Building KDTree for 4,979,320 ground 
+points à
+INFO:backend.services.dtm_builder:  Interpolating 997╫911 = 908,267 cells 
+(resolution=1.0m) à

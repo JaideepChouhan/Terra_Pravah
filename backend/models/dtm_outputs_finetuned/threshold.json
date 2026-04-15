@@ -1,0 +1,8 @@
+{
+  "model": "best_epoch+TTA",
+  "model_path": "/kaggle/working/logs/best_model.pth",
+  "threshold": 0.5599999999999997,
+  "val_accuracy": 0.9396974663985403,
+  "val_f1": 0.9072706537468459,
+  "tta_passes": 8
+}

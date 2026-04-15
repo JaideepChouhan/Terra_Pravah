@@ -1,0 +1,120 @@
+﻿Register: 409
+Login: 200
+Create: 201
+python : Traceback (most recent call last):
+At line:1 char:1
++ python run_test2.py > test2_out.log 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last) 
+   ::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\site-package
+s\urllib3\connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\site-package
+s\urllib3\connectionpool.py", line 536, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\site-package
+s\urllib3\connection.py", line 461, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File 
+"C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\http\client.py", 
+line 1428, in getresponse
+    response.begin()
+  File 
+"C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\http\client.py", 
+line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File 
+"C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\http\client.py", 
+line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\socket.py", 
+line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [WinError 10054] An existing connection was forcibly 
+closed by the remote host
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\site-package
+s\requests\adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\site-package
+s\urllib3\connectionpool.py", line 844, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\site-package
+s\urllib3\util\retry.py", line 470, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\site-package
+s\urllib3\util\util.py", line 38, in reraise
+    raise value.with_traceback(tb)
+  File "C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\site-package
+s\urllib3\connectionpool.py", line 790, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\site-package
+s\urllib3\connectionpool.py", line 536, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\site-package
+s\urllib3\connection.py", line 461, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File 
+"C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\http\client.py", 
+line 1428, in getresponse
+    response.begin()
+  File 
+"C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\http\client.py", 
+line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File 
+"C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\http\client.py", 
+line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\socket.py", 
+line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.ProtocolError: ('Connection aborted.', 
+ConnectionResetError(10054, 'An existing connection was forcibly closed by the 
+remote host', None, 10054, None))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\GIT\Terra_Pravah\run_test2.py", line 39, in <module>
+    res = s.post(f'{BASE_URL}/uploads/build-dtm', headers=headers, json={
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\site-package
+s\requests\sessions.py", line 637, in post
+    return self.request("POST", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\site-package
+s\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\site-package
+s\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\shail\AppData\Local\Programs\Python\Python312\Lib\site-package
+s\requests\adapters.py", line 501, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', 
+ConnectionResetError(10054, 'An existing connection was forcibly closed by the 
+remote host', None, 10054, None))
