@@ -6,13 +6,11 @@ import {
   ChartBarIcon,
   DocumentTextIcon,
   ClockIcon,
-  ArrowTrendingUpIcon,
-  ArrowTrendingDownIcon,
   PlusIcon,
   PlayIcon,
 } from '@heroicons/react/24/outline'
 import { useAuthStore } from '../../store/authStore'
-import { projectsApi, analysisApi } from '../../services/api'
+import { projectsApi } from '../../services/api'
 
 interface DashboardStats {
   totalProjects: number

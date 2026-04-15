@@ -5,22 +5,17 @@ import {
   Download, 
   FileJson, 
   FileText, 
-  Settings, 
   Play,
   Loader2,
-  CheckCircle,
   XCircle,
-  Clock,
   Layers,
   MapPin,
   Activity,
   Droplets,
-  TrendingDown,
   RefreshCw,
   ChevronDown,
   ChevronUp,
   AlertTriangle,
-  Gauge,
   Ruler
 } from 'lucide-react'
 import DrainageViewer, { VisualizationControls } from '../../components/DrainageViewer'

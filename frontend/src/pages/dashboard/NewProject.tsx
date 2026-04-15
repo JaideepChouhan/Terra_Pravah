@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { 
   ArrowLeft, 
   Upload, 
@@ -25,7 +25,6 @@ interface FileInfo {
 type Step = 'details' | 'upload' | 'configure' | 'complete'
 
 export default function NewProject() {
-  const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
   
   // Step tracking

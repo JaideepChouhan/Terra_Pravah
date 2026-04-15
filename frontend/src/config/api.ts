@@ -58,7 +58,7 @@ export const API_ENDPOINTS = {
  * Get authorization headers with JWT token
  */
 export const getAuthHeaders = (token?: string) => {
-  const headers = { ...API_CONFIG.headers };
+  const headers: Record<string, string> = { ...API_CONFIG.headers };
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }

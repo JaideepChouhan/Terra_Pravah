@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { MapPin, Layers, Maximize2, RefreshCw, Mountain } from 'lucide-react'
+import { Layers, Maximize2, RefreshCw, Mountain } from 'lucide-react'
 
 interface DrainageViewerProps {
   projectId: string
@@ -108,7 +108,7 @@ export default function DrainageViewer({
       setLoading(true)
       const token = localStorage.getItem('token')
       if (token === 'demo-token-123') {
-        iframeRef.current.srcDoc = getSrcDoc() || ''
+        iframeRef.current.srcdoc = getSrcDoc() || ''
       } else {
         iframeRef.current.src = getVisualizationUrl()
       }

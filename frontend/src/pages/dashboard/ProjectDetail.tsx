@@ -16,12 +16,9 @@ import {
   Activity,
   Layers,
   Droplets,
-  TrendingDown,
   FileText,
   BarChart3,
   ChevronRight,
-  Gauge,
-  Ruler,
   Mountain
 } from 'lucide-react'
 import DrainageViewer from '../../components/DrainageViewer'
