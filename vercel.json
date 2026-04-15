@@ -3,7 +3,6 @@
   "outputDirectory": "frontend/dist",
   "installCommand": "npm --prefix ./frontend install --legacy-peer-deps",
   "framework": "vite",
-  "root": ".",
   "rewrites": [
     {
       "source": "/(.*)",
